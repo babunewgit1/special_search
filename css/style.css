@@ -87,7 +87,7 @@ label {
   gap: 20px;
 }
 
-.item_img img {
+.item_wrapper img {
   display: block;
   width: 100%;
 }
