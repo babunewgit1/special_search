@@ -99,7 +99,7 @@ fetch("https://jettly.com/api/1.1/wf/webflow_one_way_flight", {
         categoryCheckboxWrapper.appendChild(checkboxWrapper);
       });
 
-      // Attach event listeners to checkboxes (but don't change count on click)
+      // Attach event listeners to checkboxes
       const checkboxes = categoryCheckboxWrapper.querySelectorAll(
         "input[type='checkbox']"
       );
@@ -126,6 +126,9 @@ fetch("https://jettly.com/api/1.1/wf/webflow_one_way_flight", {
           selectedClasses.includes(item.class_text)
         );
       }
+
+      // Reset current page when filtering
+      currentPage = 1;
 
       // Render the filtered items and pagination
       renderPage(currentPage, tempFilteredSets);
