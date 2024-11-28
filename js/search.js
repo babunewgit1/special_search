@@ -2,8 +2,18 @@
 const mainWrapper = document.querySelector(".search_right");
 const pagination = document.querySelector(".pagination");
 const categoryCheckboxWrapper = document.querySelector(".sr_catagory_checkbox");
+const descriptionCheckboxWrapper = document.querySelector(".dis_checkbox");
+const sellerCheckboxWrapper = document.querySelector(".seller_checkbox"); // Added seller_checkbox wrapper
 const rangeSlider = document.getElementById("range");
 const rangeValueDisplay = document.getElementById("range_value");
+const departureReadyCheckbox = document.getElementById("departureReady");
+const highTimeCrewCheckbox = document.getElementById("highTimeCrew");
+const departureReadyCountLabel = departureReadyCheckbox
+  .closest("label")
+  .querySelector("span");
+const highTimeCrewCountLabel = highTimeCrewCheckbox
+  .closest("label")
+  .querySelector("span");
 
 // Data payload for the API request
 const data = {
@@ -35,46 +45,144 @@ fetch("https://jettly.com/api/1.1/wf/webflow_one_way_flight", {
       }
     }
 
-    console.log(aircraftSets);
-
     // Pagination variables
     const itemsPerPage = 10;
     let currentPage = 1;
 
     // Filtered aircraft list
-    let filteredByRangeSlider = [...aircraftSets]; // The array filtered by range slider
+    let filteredByRangeSlider = [...aircraftSets];
     let selectedClasses = [];
+    let selectedDescriptions = [];
+    let selectedOperators = []; // Store selected operators
     let minYear = Math.min(
       ...aircraftSets.map((item) => item.year_of_manufacture_number)
     );
-    let maxYear = new Date().getFullYear(); // Current year as the max year
+    let maxYear = new Date().getFullYear();
 
     // Initialize range slider
     rangeSlider.min = minYear;
     rangeSlider.max = maxYear;
-    rangeSlider.value = minYear; // Default value is the minimum year
-
-    // Display the initial range value
+    rangeSlider.value = minYear;
     rangeValueDisplay.textContent = `Filter by year: ${minYear}`;
 
-    // Event listener for the range slider to filter aircraft by year
     rangeSlider.addEventListener("input", (e) => {
       const selectedYear = parseInt(e.target.value, 10);
       rangeValueDisplay.textContent = `Filter by year: ${selectedYear}`;
       filterByYear(selectedYear);
     });
 
-    // Function to filter aircraft based on the selected year from the range slider
+    const updateCheckboxCounts = () => {
+      // Update counts for "Departure Ready"
+      const departureReadyCount = filteredByRangeSlider.filter(
+        (item) => item.departure_ready__boolean === true
+      ).length;
+      departureReadyCountLabel.textContent = `(${departureReadyCount})`;
+
+      // Update counts for "High Time Crew"
+      const highTimeCrewCount = filteredByRangeSlider.filter(
+        (item) => item.high_time_crew__boolean === true
+      ).length;
+      highTimeCrewCountLabel.textContent = `(${highTimeCrewCount})`;
+
+      // Update counts for class_text checkboxes
+      const classCounts = filteredByRangeSlider.reduce((acc, item) => {
+        acc[item.class_text] = (acc[item.class_text] || 0) + 1;
+        return acc;
+      }, {});
+
+      categoryCheckboxWrapper
+        .querySelectorAll(".checkbox_item")
+        .forEach((item) => {
+          const checkbox = item.querySelector("input[type='checkbox']");
+          const label = item.querySelector("label span");
+          const className = checkbox.value;
+
+          const count = classCounts[className] || 0; // Default to 0 if no matches
+          label.textContent = `(${count})`;
+        });
+
+      // Update counts for description_text checkboxes
+      const descriptionCounts = filteredByRangeSlider.reduce((acc, item) => {
+        acc[item.description_text] = (acc[item.description_text] || 0) + 1;
+        return acc;
+      }, {});
+
+      descriptionCheckboxWrapper
+        .querySelectorAll(".checkbox_item")
+        .forEach((item) => {
+          const checkbox = item.querySelector("input[type='checkbox']");
+          const label = item.querySelector("label span");
+          const description = checkbox.value;
+
+          const count = descriptionCounts[description] || 0; // Default to 0 if no matches
+          label.textContent = `(${count})`;
+        });
+
+      // Update counts for operator_txt_text checkboxes
+      const operatorCounts = filteredByRangeSlider.reduce((acc, item) => {
+        acc[item.operator_txt_text] = (acc[item.operator_txt_text] || 0) + 1;
+        return acc;
+      }, {});
+
+      sellerCheckboxWrapper
+        .querySelectorAll(".checkbox_item")
+        .forEach((item) => {
+          const checkbox = item.querySelector("input[type='checkbox']");
+          const label = item.querySelector("label span");
+          const operator = checkbox.value;
+
+          const count = operatorCounts[operator] || 0; // Default to 0 if no matches
+          label.textContent = `(${count})`;
+        });
+    };
+
     const filterByYear = (year) => {
       filteredByRangeSlider = aircraftSets.filter(
         (item) => item.year_of_manufacture_number >= year
       );
-      filterByClass(); // Re-apply class filtering after year filtering
+      filterData();
     };
 
-    // Generate category checkboxes for all unique "class_text" values
-    const generateCheckboxes = () => {
-      // Count occurrences of each unique class_text value
+    const filterData = () => {
+      let filteredSets = filteredByRangeSlider;
+
+      if (selectedClasses.length > 0) {
+        filteredSets = filteredSets.filter((item) =>
+          selectedClasses.includes(item.class_text)
+        );
+      }
+
+      if (selectedDescriptions.length > 0) {
+        filteredSets = filteredSets.filter((item) =>
+          selectedDescriptions.includes(item.description_text)
+        );
+      }
+
+      if (selectedOperators.length > 0) {
+        filteredSets = filteredSets.filter((item) =>
+          selectedOperators.includes(item.operator_txt_text)
+        );
+      }
+
+      if (departureReadyCheckbox.checked) {
+        filteredSets = filteredSets.filter(
+          (item) => item.departure_ready__boolean === true
+        );
+      }
+
+      if (highTimeCrewCheckbox.checked) {
+        filteredSets = filteredSets.filter(
+          (item) => item.high_time_crew__boolean === true
+        );
+      }
+
+      currentPage = 1;
+      renderPage(currentPage, filteredSets);
+      renderPagination(filteredSets);
+      updateCheckboxCounts();
+    };
+
+    const generateClassCheckboxes = () => {
       const classCounts = aircraftSets.reduce((acc, item) => {
         acc[item.class_text] = (acc[item.class_text] || 0) + 1;
         return acc;
@@ -82,24 +190,18 @@ fetch("https://jettly.com/api/1.1/wf/webflow_one_way_flight", {
 
       categoryCheckboxWrapper.innerHTML = "";
 
-      // Create a checkbox for each unique class_text
       Object.entries(classCounts).forEach(([className, count]) => {
         const checkboxWrapper = document.createElement("div");
         checkboxWrapper.classList.add("checkbox_item");
-
-        // Add checkbox and label
         checkboxWrapper.innerHTML = `
           <label>
             <input type="checkbox" value="${className}" />
-            ${className}
+            ${className} <span>(${count})</span>
           </label>
-          <p class="count-text">${count} available</p>
         `;
-
         categoryCheckboxWrapper.appendChild(checkboxWrapper);
       });
 
-      // Attach event listeners to checkboxes
       const checkboxes = categoryCheckboxWrapper.querySelectorAll(
         "input[type='checkbox']"
       );
@@ -113,52 +215,88 @@ fetch("https://jettly.com/api/1.1/wf/webflow_one_way_flight", {
               (classText) => classText !== value
             );
           }
-          filterByClass();
+          filterData();
         });
       });
     };
 
-    // Filter function for class_text (applies after range slider filtering)
-    const filterByClass = () => {
-      let tempFilteredSets = filteredByRangeSlider; // Use the filtered array by range slider
-      if (selectedClasses.length > 0) {
-        tempFilteredSets = tempFilteredSets.filter((item) =>
-          selectedClasses.includes(item.class_text)
-        );
-      }
+    const generateDescriptionCheckboxes = () => {
+      const descriptionCounts = aircraftSets.reduce((acc, item) => {
+        acc[item.description_text] = (acc[item.description_text] || 0) + 1;
+        return acc;
+      }, {});
 
-      // Reset current page when filtering
-      currentPage = 1;
+      descriptionCheckboxWrapper.innerHTML = "";
 
-      // Render the filtered items and pagination
-      renderPage(currentPage, tempFilteredSets);
-      renderPagination(tempFilteredSets);
-      updateCheckboxCounts(); // Re-update the checkbox counts after filtering
-    };
+      Object.entries(descriptionCounts).forEach(([description, count]) => {
+        const checkboxWrapper = document.createElement("div");
+        checkboxWrapper.classList.add("checkbox_item");
+        checkboxWrapper.innerHTML = `
+          <label>
+            <input type="checkbox" value="${description}" />
+            ${description} <span>(${count})</span>
+          </label>
+        `;
+        descriptionCheckboxWrapper.appendChild(checkboxWrapper);
+      });
 
-    // Function to update the checkbox counts based on the filtered data
-    const updateCheckboxCounts = () => {
-      // Get all checkboxes and their corresponding count elements
-      const checkboxes = categoryCheckboxWrapper.querySelectorAll(
+      const checkboxes = descriptionCheckboxWrapper.querySelectorAll(
         "input[type='checkbox']"
       );
       checkboxes.forEach((checkbox) => {
-        const className = checkbox.value;
-        const countElement = checkbox
-          .closest(".checkbox_item")
-          .querySelector(".count-text");
-
-        // Calculate how many items of the same class exist in the filtered list
-        const countInFilteredSets = filteredByRangeSlider.filter(
-          (item) => item.class_text === className
-        ).length;
-
-        // Update the text in the <p> tag
-        countElement.textContent = `${countInFilteredSets} available`;
+        checkbox.addEventListener("change", () => {
+          const value = checkbox.value;
+          if (checkbox.checked) {
+            selectedDescriptions.push(value);
+          } else {
+            selectedDescriptions = selectedDescriptions.filter(
+              (descText) => descText !== value
+            );
+          }
+          filterData();
+        });
       });
     };
 
-    // Function to render items for the current page
+    // Function to generate operator checkboxes for ".seller_checkbox"
+    const generateSellerCheckboxes = () => {
+      const operatorCounts = aircraftSets.reduce((acc, item) => {
+        acc[item.operator_txt_text] = (acc[item.operator_txt_text] || 0) + 1;
+        return acc;
+      }, {});
+
+      sellerCheckboxWrapper.innerHTML = ""; // Clear existing checkboxes
+
+      Object.entries(operatorCounts).forEach(([operator, count]) => {
+        const checkboxWrapper = document.createElement("div");
+        checkboxWrapper.classList.add("checkbox_item");
+        checkboxWrapper.innerHTML = `
+          <label>
+            <input type="checkbox" value="${operator}" />
+            ${operator} <span>(${count})</span>
+          </label>
+        `;
+        sellerCheckboxWrapper.appendChild(checkboxWrapper);
+      });
+
+      const checkboxes = sellerCheckboxWrapper.querySelectorAll(
+        "input[type='checkbox']"
+      );
+      checkboxes.forEach((checkbox) => {
+        checkbox.addEventListener("change", () => {
+          const value = checkbox.value;
+          if (checkbox.checked) {
+            selectedOperators.push(value);
+          } else {
+            selectedOperators = selectedOperators.filter(
+              (operator) => operator !== value
+            );
+          }
+          filterData();
+        });
+      });
+    };
+
     const renderPage = (page, filteredSets) => {
       mainWrapper.innerHTML = "";
       const start = (page - 1) * itemsPerPage;
@@ -179,7 +317,6 @@ fetch("https://jettly.com/api/1.1/wf/webflow_one_way_flight", {
       });
     };
 
-    // Function to render pagination controls
     const renderPagination = (filteredSets) => {
       pagination.innerHTML = "";
       const totalPages = Math.ceil(filteredSets.length / itemsPerPage);
@@ -200,10 +337,16 @@ fetch("https://jettly.com/api/1.1/wf/webflow_one_way_flight", {
       }
     };
 
-    // Generate and attach category checkboxes
-    generateCheckboxes();
+    // Initialize the checkboxes
+    generateClassCheckboxes();
+    generateDescriptionCheckboxes();
+    generateSellerCheckboxes(); // Added to generate operator checkboxes
 
-    // Initial render
+    departureReadyCheckbox.addEventListener("change", filterData);
+    highTimeCrewCheckbox.addEventListener("change", filterData);
+
+    // Initial update for counts and render
+    updateCheckboxCounts();
     renderPage(currentPage, filteredByRangeSlider);
     renderPagination(filteredByRangeSlider);
   })
