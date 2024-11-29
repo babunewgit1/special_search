@@ -33,53 +33,6 @@ const data = {
 };
 
 // Function to generate generic checkboxes
-const generateCheckboxes = (wrapper, items, key, labelFormatter) => {
-  wrapper.innerHTML = "";
-  const counts = items.reduce((acc, item) => {
-    const keyValue = item[key];
-    acc[keyValue] = (acc[keyValue] || 0) + 1;
-    return acc;
-  }, {});
-
-  Object.entries(counts).forEach(([value, count]) => {
-    const checkboxWrapper = document.createElement("div");
-    checkboxWrapper.classList.add("checkbox_item");
-    checkboxWrapper.innerHTML = `
-      <label>
-        <input type="checkbox" value="${value}" />
-        ${labelFormatter(value)} <span>(${count})</span>
-      </label>
-    `;
-    wrapper.appendChild(checkboxWrapper);
-  });
-
-  const checkboxes = wrapper.querySelectorAll("input[type='checkbox']");
-  checkboxes.forEach((checkbox) => {
-    checkbox.addEventListener("change", () => {
-      const value = checkbox.value;
-      if (checkbox.checked) {
-        if (wrapper === categoryCheckboxWrapper) selectedClasses.push(value);
-        if (wrapper === descriptionCheckboxWrapper)
-          selectedDescriptions.push(value);
-        if (wrapper === sellerCheckboxWrapper) selectedOperators.push(value);
-      } else {
-        if (wrapper === categoryCheckboxWrapper)
-          selectedClasses = selectedClasses.filter(
-            (classText) => classText !== value
-          );
-        if (wrapper === descriptionCheckboxWrapper)
-          selectedDescriptions = selectedDescriptions.filter(
-            (descText) => descText !== value
-          );
-        if (wrapper === sellerCheckboxWrapper)
-          selectedOperators = selectedOperators.filter(
-            (operator) => operator !== value
-          );
-      }
-      filterData();
-    });
-  });
-};
 
 // API Request
 fetch("https://jettly.com/api/1.1/wf/webflow_one_way_flight", {
@@ -133,6 +86,56 @@ fetch("https://jettly.com/api/1.1/wf/webflow_one_way_flight", {
       rangeValueDisplay.textContent = `Filter by year: ${selectedYear}`;
       filterByYear(selectedYear);
     });
+
+    const generateCheckboxes = (wrapper, items, key, labelFormatter) => {
+      wrapper.innerHTML = "";
+      const counts = items.reduce((acc, item) => {
+        const keyValue = item[key];
+        acc[keyValue] = (acc[keyValue] || 0) + 1;
+        return acc;
+      }, {});
+
+      Object.entries(counts).forEach(([value, count]) => {
+        const checkboxWrapper = document.createElement("div");
+        checkboxWrapper.classList.add("checkbox_item");
+        checkboxWrapper.innerHTML = `
+          <label>
+            <input type="checkbox" value="${value}" />
+            ${labelFormatter(value)} <span>(${count})</span>
+          </label>
+        `;
+        wrapper.appendChild(checkboxWrapper);
+      });
+
+      const checkboxes = wrapper.querySelectorAll("input[type='checkbox']");
+      checkboxes.forEach((checkbox) => {
+        checkbox.addEventListener("change", () => {
+          const value = checkbox.value;
+          if (checkbox.checked) {
+            if (wrapper === categoryCheckboxWrapper)
+              selectedClasses.push(value);
+            if (wrapper === descriptionCheckboxWrapper)
+              selectedDescriptions.push(value);
+            if (wrapper === sellerCheckboxWrapper)
+              selectedOperators.push(value);
+          } else {
+            if (wrapper === categoryCheckboxWrapper)
+              selectedClasses = selectedClasses.filter(
+                (classText) => classText !== value
+              );
+            if (wrapper === descriptionCheckboxWrapper)
+              selectedDescriptions = selectedDescriptions.filter(
+                (descText) => descText !== value
+              );
+            if (wrapper === sellerCheckboxWrapper)
+              selectedOperators = selectedOperators.filter(
+                (operator) => operator !== value
+              );
+          }
+          filterData();
+        });
+      });
+    };
 
     const updateCheckboxCounts = () => {
       // Update counts for "Departure Ready" and "High Time Crew"
