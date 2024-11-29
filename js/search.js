@@ -341,26 +341,36 @@ fetch("https://jettly.com/api/1.1/wf/webflow_one_way_flight", {
     };
 
     const filterData = () => {
-      let filteredSets = filteredByRangeSlider;
+      let filteredSets = [...aircraftSets];
 
+      // Filter by range slider value
+      const selectedYear = parseInt(rangeSlider.value, 10);
+      filteredSets = filteredSets.filter(
+        (item) => item.year_of_manufacture_number >= selectedYear
+      );
+
+      // Filter by selected classes
       if (selectedClasses.length > 0) {
         filteredSets = filteredSets.filter((item) =>
           selectedClasses.includes(item.class_text)
         );
       }
 
+      // Filter by selected descriptions
       if (selectedDescriptions.length > 0) {
         filteredSets = filteredSets.filter((item) =>
           selectedDescriptions.includes(item.description_text)
         );
       }
 
+      // Filter by selected operators
       if (selectedOperators.length > 0) {
         filteredSets = filteredSets.filter((item) =>
           selectedOperators.includes(item.operator_txt_text)
         );
       }
 
+      // Filter by Argus
       if (selectedArgusFilters.length > 0) {
         selectedArgusFilters.forEach((filter) => {
           if (filter === "NotRated") {
@@ -383,6 +393,7 @@ fetch("https://jettly.com/api/1.1/wf/webflow_one_way_flight", {
         });
       }
 
+      // Filter by IS-BAO
       if (selectedIsBaoFilters.length > 0) {
         selectedIsBaoFilters.forEach((filter) => {
           if (filter === "NotRated") {
@@ -397,6 +408,7 @@ fetch("https://jettly.com/api/1.1/wf/webflow_one_way_flight", {
         });
       }
 
+      // Filter by Wyvern
       if (selectedWyvernFilters.length > 0) {
         selectedWyvernFilters.forEach((filter) => {
           if (filter === "NotRated") {
@@ -415,6 +427,7 @@ fetch("https://jettly.com/api/1.1/wf/webflow_one_way_flight", {
         });
       }
 
+      // Filter by animals
       if (selectedanimalFilters.length > 0) {
         selectedanimalFilters.forEach((filter) => {
           if (filter === "Enclosed Lavatory") {
@@ -441,6 +454,7 @@ fetch("https://jettly.com/api/1.1/wf/webflow_one_way_flight", {
         });
       }
 
+      // Filter by fuel
       if (fuelFilters.length > 0) {
         fuelFilters.forEach((filter) => {
           if (filter === "0") {
@@ -451,7 +465,7 @@ fetch("https://jettly.com/api/1.1/wf/webflow_one_way_flight", {
             filteredSets = filteredSets.filter(
               (item) => item.pet_friendly__boolean === true
             );
-          } else if (filter === "2 +") {
+          } else if (filter === "2+") {
             filteredSets = filteredSets.filter(
               (item) => item.smoking_allowed__boolean === true
             );
@@ -459,6 +473,7 @@ fetch("https://jettly.com/api/1.1/wf/webflow_one_way_flight", {
         });
       }
 
+      // Filter by others
       if (selectedOthersFilters.length > 0) {
         selectedOthersFilters.forEach((filter) => {
           if (filter === "Exclude owner approval") {
@@ -485,23 +500,32 @@ fetch("https://jettly.com/api/1.1/wf/webflow_one_way_flight", {
         });
       }
 
+      // Filter by departure ready
       if (departureReadyCheckbox.checked) {
         filteredSets = filteredSets.filter(
           (item) => item.departure_ready__boolean === true
         );
       }
 
+      // Filter by high-time crew
       if (highTimeCrewCheckbox.checked) {
         filteredSets = filteredSets.filter(
           (item) => item.high_time_crew__boolean === true
         );
       }
 
-      currentPage = 1;
-      renderPage(currentPage, filteredSets);
-      renderPagination(filteredSets);
-      updateCheckboxCounts();
+      filteredByRangeSlider = filteredSets;
+
+      // Update the counts and render updated data
+      updateCheckboxCounts(); // Updates the labels
+      renderPage(currentPage, filteredByRangeSlider); // Renders the filtered data
+      renderPagination(filteredByRangeSlider); // Updates the pagination
     };
+
+    // Add event listener to the range slider
+    rangeSlider.addEventListener("input", () => {
+      filterData(); // Calls the same filter function for consistency
+    });
 
     const renderPage = (page, filteredSets) => {
       mainWrapper.innerHTML = "";
