@@ -14,6 +14,8 @@ const rangeSlider = document.getElementById("range");
 const rangeValueDisplay = document.getElementById("range_value");
 const departureReadyCheckbox = document.getElementById("departureReady");
 const highTimeCrewCheckbox = document.getElementById("highTimeCrew");
+const extRangeSlider = document.getElementById("extvalue");
+const extRangeValueDisplay = document.getElementById("exttextvalue");
 const departureReadyCountLabel = departureReadyCheckbox
   .closest("label")
   .querySelector("span");
@@ -86,6 +88,38 @@ fetch("https://jettly.com/api/1.1/wf/webflow_one_way_flight", {
       rangeValueDisplay.textContent = `Filter by year: ${selectedYear}`;
       filterByYear(selectedYear);
     });
+
+    // Find min and max values for exterior_refurbished_year_number
+    const minExtYear = Math.min(
+      ...aircraftSets.map(
+        (item) => item.exterior_refurbished_year_number || Infinity
+      )
+    );
+    const maxExtYear = Math.max(
+      ...aircraftSets.map(
+        (item) => item.exterior_refurbished_year_number || -Infinity
+      )
+    );
+
+    // Initialize the new range slider
+    extRangeSlider.min = minExtYear;
+    extRangeSlider.max = maxExtYear;
+    extRangeSlider.value = minExtYear;
+    extRangeValueDisplay.textContent = `Filter by exterior refurb year: ${minExtYear}`;
+
+    extRangeSlider.addEventListener("input", (e) => {
+      const selectedExtYear = parseInt(e.target.value, 10);
+      extRangeValueDisplay.textContent = `Filter by exterior refurb year: ${selectedExtYear}`;
+      filterByExteriorYear(selectedExtYear);
+    });
+
+    // Function to filter data by exterior_refurbished_year_number
+    const filterByExteriorYear = (year) => {
+      filteredByRangeSlider = filteredByRangeSlider.filter(
+        (item) => (item.exterior_refurbished_year_number || 0) >= year
+      );
+      filterData();
+    };
 
     const generateCheckboxes = (wrapper, items, key, labelFormatter) => {
       wrapper.innerHTML = "";
