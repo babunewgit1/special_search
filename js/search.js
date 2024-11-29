@@ -7,6 +7,9 @@ const sellerCheckboxWrapper = document.querySelector(".seller_checkbox");
 const argusCheckboxWrapper = document.querySelector(".argus_checkbox");
 const isBaoCheckboxWrapper = document.querySelector(".is_bao");
 const wyvernCheckboxWrapper = document.querySelector(".wyvern");
+const animalCheckboxWrapper = document.querySelector(".amenities");
+const othersCheckboxWrapper = document.querySelector(".othersCheck");
+const fuelCheckboxWrapper = document.querySelector(".fuel_stop");
 const rangeSlider = document.getElementById("range");
 const rangeValueDisplay = document.getElementById("range_value");
 const departureReadyCheckbox = document.getElementById("departureReady");
@@ -89,6 +92,8 @@ fetch("https://jettly.com/api/1.1/wf/webflow_one_way_flight", {
   .then((response) => response.json())
   .then((apiData) => {
     const aircraftSets = [];
+    const longestFlight = apiData.response.longest_flight_leg;
+    console.log(longestFlight);
     if (apiData.response) {
       for (const key in apiData.response) {
         if (key.startsWith("aircraft_set_")) {
@@ -109,6 +114,9 @@ fetch("https://jettly.com/api/1.1/wf/webflow_one_way_flight", {
     let selectedArgusFilters = [];
     let selectedIsBaoFilters = [];
     let selectedWyvernFilters = [];
+    let selectedanimalFilters = [];
+    let selectedOthersFilters = [];
+    let fuelFilters = [];
     let minYear = Math.min(
       ...aircraftSets.map((item) => item.year_of_manufacture_number)
     );
@@ -248,6 +256,78 @@ fetch("https://jettly.com/api/1.1/wf/webflow_one_way_flight", {
           const label = item.querySelector("label span");
           label.textContent = `(${Object.values(wyvernCounts)[index]})`;
         });
+
+      // Update counts for animal checkboxes
+      const animalCount = {
+        "Enclosed Lavatory": filteredByRangeSlider.filter(
+          (item) => item.enclosed_lavatory__boolean === true
+        ).length,
+        "Pets Allowed": filteredByRangeSlider.filter(
+          (item) => item.pet_friendly__boolean === true
+        ).length,
+        "Smoking Allowed": filteredByRangeSlider.filter(
+          (item) => item.smoking_allowed__boolean === true
+        ).length,
+        "Wi-Fi (Ground based)": filteredByRangeSlider.filter(
+          (item) => item.wi_fi_ground_based__boolean === true
+        ).length,
+        "Wi-Fi (Satellite based)": filteredByRangeSlider.filter(
+          (item) => item.wi_fi_satellite_based__boolean === true
+        ).length,
+      };
+
+      animalCheckboxWrapper
+        .querySelectorAll(".checkbox_item")
+        .forEach((item, index) => {
+          const label = item.querySelector("label span");
+          label.textContent = `(${Object.values(animalCount)[index]})`;
+        });
+
+      // Update counts for fuel checkboxes
+      const fuelCount = {
+        0: filteredByRangeSlider.filter(
+          (item) => item.enclosed_lavatory__boolean === true
+        ).length,
+        1: filteredByRangeSlider.filter(
+          (item) => item.pet_friendly__boolean === true
+        ).length,
+        "2+": filteredByRangeSlider.filter(
+          (item) => item.smoking_allowed__boolean === true
+        ).length,
+      };
+
+      fuelCheckboxWrapper
+        .querySelectorAll(".checkbox_item")
+        .forEach((item, index) => {
+          const label = item.querySelector("label span");
+          label.textContent = `(${Object.values(fuelCount)[index]})`;
+        });
+
+      // Update counts for others checkboxes
+      const othersCount = {
+        "Exclude owner approval": filteredByRangeSlider.filter(
+          (item) => item.oa_required__boolean === true
+        ).length,
+        Cargo: filteredByRangeSlider.filter(
+          (item) => item.cargo_capable__boolean === true
+        ).length,
+        Ambulance: filteredByRangeSlider.filter(
+          (item) => item.ambulance_capable__boolean === true
+        ).length,
+        "Exclude transient": filteredByRangeSlider.filter(
+          (item) => item.transient_aircraft__boolean === true
+        ).length,
+        "Exclude at homebase": filteredByRangeSlider.filter(
+          (item) => item.at_home_base__boolean === true
+        ).length,
+      };
+
+      othersCheckboxWrapper
+        .querySelectorAll(".checkbox_item")
+        .forEach((item, index) => {
+          const label = item.querySelector("label span");
+          label.textContent = `(${Object.values(othersCount)[index]})`;
+        });
     };
 
     const filterByYear = (year) => {
@@ -327,6 +407,76 @@ fetch("https://jettly.com/api/1.1/wf/webflow_one_way_flight", {
           } else if (filter === "Wingman") {
             filteredSets = filteredSets.filter(
               (item) => item.wyvern_wingman__boolean === true
+            );
+          }
+        });
+      }
+
+      if (selectedanimalFilters.length > 0) {
+        selectedanimalFilters.forEach((filter) => {
+          if (filter === "Enclosed Lavatory") {
+            filteredSets = filteredSets.filter(
+              (item) => item.enclosed_lavatory__boolean === true
+            );
+          } else if (filter === "Pets Allowed") {
+            filteredSets = filteredSets.filter(
+              (item) => item.pet_friendly__boolean === true
+            );
+          } else if (filter === "Smoking Allowed") {
+            filteredSets = filteredSets.filter(
+              (item) => item.smoking_allowed__boolean === true
+            );
+          } else if (filter === "Wi-Fi (Ground based)") {
+            filteredSets = filteredSets.filter(
+              (item) => item.wi_fi_ground_based__boolean === true
+            );
+          } else if (filter === "Wi-Fi (Satellite based)") {
+            filteredSets = filteredSets.filter(
+              (item) => item.wi_fi_satellite_based__boolean === true
+            );
+          }
+        });
+      }
+
+      if (fuelFilters.length > 0) {
+        fuelFilters.forEach((filter) => {
+          if (filter === "0") {
+            filteredSets = filteredSets.filter(
+              (item) => item.enclosed_lavatory__boolean === true
+            );
+          } else if (filter === "1") {
+            filteredSets = filteredSets.filter(
+              (item) => item.pet_friendly__boolean === true
+            );
+          } else if (filter === "2 +") {
+            filteredSets = filteredSets.filter(
+              (item) => item.smoking_allowed__boolean === true
+            );
+          }
+        });
+      }
+
+      if (selectedOthersFilters.length > 0) {
+        selectedOthersFilters.forEach((filter) => {
+          if (filter === "Exclude owner approval") {
+            filteredSets = filteredSets.filter(
+              (item) => item.oa_required__boolean === true
+            );
+          } else if (filter === "Cargo") {
+            filteredSets = filteredSets.filter(
+              (item) => item.cargo_capable__boolean === true
+            );
+          } else if (filter === "Ambulance") {
+            filteredSets = filteredSets.filter(
+              (item) => item.ambulance_capable__boolean === true
+            );
+          } else if (filter === "Exclude transient") {
+            filteredSets = filteredSets.filter(
+              (item) => item.transient_aircraft__boolean === true
+            );
+          } else if (filter === "Exclude at homebase") {
+            filteredSets = filteredSets.filter(
+              (item) => item.at_home_base__boolean === true
             );
           }
         });
@@ -526,6 +676,150 @@ fetch("https://jettly.com/api/1.1/wf/webflow_one_way_flight", {
       });
     };
 
+    const generateAnimalCheckboxes = () => {
+      const animalCount = {
+        "Enclosed Lavatory": aircraftSets.filter(
+          (item) => item.enclosed_lavatory__boolean === true
+        ).length,
+        "Pets Allowed": aircraftSets.filter(
+          (item) => item.pet_friendly__boolean === true
+        ).length,
+        "Smoking Allowed": aircraftSets.filter(
+          (item) => item.smoking_allowed__boolean === true
+        ).length,
+        "Wi-Fi (Ground based)": aircraftSets.filter(
+          (item) => item.wi_fi_ground_based__boolean === true
+        ).length,
+        "Wi-Fi (Satellite based)": aircraftSets.filter(
+          (item) => item.wi_fi_satellite_based__boolean === true
+        ).length,
+      };
+
+      animalCheckboxWrapper.innerHTML = "";
+
+      Object.entries(animalCount).forEach(([filter, count]) => {
+        const checkboxWrapper = document.createElement("div");
+        checkboxWrapper.classList.add("checkbox_item");
+        checkboxWrapper.innerHTML = `
+          <label>
+            <input type="checkbox" value="${filter}" />
+            ${filter} <span>(${count})</span>
+          </label>
+        `;
+        animalCheckboxWrapper.appendChild(checkboxWrapper);
+      });
+
+      const checkboxes = animalCheckboxWrapper.querySelectorAll(
+        "input[type='checkbox']"
+      );
+      checkboxes.forEach((checkbox) => {
+        checkbox.addEventListener("change", () => {
+          const value = checkbox.value;
+          if (checkbox.checked) {
+            selectedanimalFilters.push(value);
+          } else {
+            selectedanimalFilters = selectedanimalFilters.filter(
+              (filter) => filter !== value
+            );
+          }
+          filterData();
+        });
+      });
+    };
+
+    const generateFuelCheckboxes = () => {
+      const fuelCount = {
+        0: aircraftSets.filter(
+          (item) => item.enclosed_lavatory__boolean === true
+        ).length,
+        1: aircraftSets.filter((item) => item.pet_friendly__boolean === true)
+          .length,
+        "2 +": aircraftSets.filter(
+          (item) => item.smoking_allowed__boolean === true
+        ).length,
+      };
+
+      fuelCheckboxWrapper.innerHTML = "";
+
+      Object.entries(fuelCount).forEach(([filter, count]) => {
+        const checkboxWrapper = document.createElement("div");
+        checkboxWrapper.classList.add("checkbox_item");
+        checkboxWrapper.innerHTML = `
+          <label>
+            <input type="checkbox" value="${filter}" />
+            ${filter} <span>(${count})</span>
+          </label>
+        `;
+        fuelCheckboxWrapper.appendChild(checkboxWrapper);
+      });
+
+      const checkboxes = fuelCheckboxWrapper.querySelectorAll(
+        "input[type='checkbox']"
+      );
+      checkboxes.forEach((checkbox) => {
+        checkbox.addEventListener("change", () => {
+          const value = checkbox.value;
+          if (checkbox.checked) {
+            fuelFilters.push(value);
+          } else {
+            fuelFilters = fuelFilters.filter((filter) => filter !== value);
+          }
+          filterData();
+        });
+      });
+    };
+
+    const generateOthersCheckboxes = () => {
+      const othersCheckboxCount = {
+        "Exclude owner approval": aircraftSets.filter(
+          (item) => item.oa_required__boolean === true
+        ).length,
+        Cargo: aircraftSets.filter(
+          (item) => item.cargo_capable__boolean === true
+        ).length,
+        Ambulance: aircraftSets.filter(
+          (item) => item.ambulance_capable__boolean === true
+        ).length,
+        "Exclude transient": aircraftSets.filter(
+          (item) => item.transient_aircraft__boolean === true
+        ).length,
+        "Exclude at homebase": aircraftSets.filter(
+          (item) => item.at_home_base__boolean === true
+        ).length,
+      };
+
+      othersCheckboxWrapper.innerHTML = "";
+
+      Object.entries(othersCheckboxCount).forEach(([filter, count]) => {
+        const checkboxWrapper = document.createElement("div");
+        checkboxWrapper.classList.add("checkbox_item");
+        checkboxWrapper.innerHTML = `
+          <label>
+            <input type="checkbox" value="${filter}" />
+            ${filter} <span>(${count})</span>
+          </label>
+        `;
+        othersCheckboxWrapper.appendChild(checkboxWrapper);
+      });
+
+      const checkboxes = othersCheckboxWrapper.querySelectorAll(
+        "input[type='checkbox']"
+      );
+      checkboxes.forEach((checkbox) => {
+        checkbox.addEventListener("change", () => {
+          const value = checkbox.value;
+          if (checkbox.checked) {
+            selectedOthersFilters.push(value);
+          } else {
+            selectedOthersFilters = selectedOthersFilters.filter(
+              (filter) => filter !== value
+            );
+          }
+          filterData();
+        });
+      });
+    };
+
     // Generate the filters
     generateCheckboxes(
       categoryCheckboxWrapper,
@@ -548,6 +842,9 @@ fetch("https://jettly.com/api/1.1/wf/webflow_one_way_flight", {
     generateArgusCheckboxes();
     generateIsBaoCheckboxes();
     generateWyvernCheckboxes();
+    generateAnimalCheckboxes();
+    generateOthersCheckboxes();
+    generateFuelCheckboxes();
 
     departureReadyCheckbox.addEventListener("change", filterData);
     highTimeCrewCheckbox.addEventListener("change", filterData);
