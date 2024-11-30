@@ -38,9 +38,13 @@
 
     <div class="search">
       <div class="container">
+        <p id="finalresult"></p>
         <div class="search_wrapper">
           <div class="search_left">
             <div class="range_filter">
+              <div class="searchBox">
+                <input id="searchBox" type="text" placeholder="Search" />
+              </div>
               <div class="filter_section">
                 <input id="range" type="range" />
                 <p id="range_value">Filter by year: 2024</p>
@@ -116,6 +120,11 @@
               </div>
               <br />
               <br />
+
+              <div class="ins">
+                <input type="range" id="insslider" />
+                <p id="instextvalue"></p>
+              </div>
             </div>
           </div>
           <div class="item_reslt_wrapper">

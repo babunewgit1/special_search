@@ -14,6 +14,14 @@ const rangeSlider = document.getElementById("range");
 const rangeValueDisplay = document.getElementById("range_value");
 const departureReadyCheckbox = document.getElementById("departureReady");
 const highTimeCrewCheckbox = document.getElementById("highTimeCrew");
+const extSlider = document.getElementById("extslider");
+const extValueDisplay = document.getElementById("exttextvalue");
+const intSlider = document.getElementById("intslider");
+const intValueDisplay = document.getElementById("inttextvalue");
+const insSlider = document.getElementById("insslider");
+const insValueDisplay = document.getElementById("instextvalue");
+const searchInputBox = document.getElementById("searchBox");
+
 const departureReadyCountLabel = departureReadyCheckbox
   .closest("label")
   .querySelector("span");
@@ -45,8 +53,6 @@ fetch("https://jettly.com/api/1.1/wf/webflow_one_way_flight", {
   .then((response) => response.json())
   .then((apiData) => {
     const aircraftSets = [];
-    const longestFlight = apiData.response.longest_flight_leg;
-    console.log(longestFlight);
     if (apiData.response) {
       for (const key in apiData.response) {
         if (key.startsWith("aircraft_set_")) {
@@ -54,6 +60,9 @@ fetch("https://jettly.com/api/1.1/wf/webflow_one_way_flight", {
         }
       }
     }
+
+    const finalResultParagraph = document.getElementById("finalresult");
+    finalResultParagraph.textContent = `Total results: ${aircraftSets.length}`;
 
     // Pagination variables
     const itemsPerPage = 10;
@@ -75,6 +84,30 @@ fetch("https://jettly.com/api/1.1/wf/webflow_one_way_flight", {
     );
     let maxYear = new Date().getFullYear();
 
+    let minYearExt = Math.min(
+      ...aircraftSets
+        .map((item) => item.exterior_refurbished_year_number)
+        .filter((year) => typeof year === "number" && !isNaN(year))
+    );
+
+    let minYearInt = Math.min(
+      ...aircraftSets
+        .map((item) => item.refurbished_year_number)
+        .filter((year) => typeof year === "number" && !isNaN(year))
+    );
+
+    let minYearIns = Math.min(
+      ...aircraftSets
+        .map((item) => item.insured_amount_number)
+        .filter((year) => typeof year === "number" && !isNaN(year))
+    );
+
+    let maxYearIns = Math.max(
+      ...aircraftSets
+        .map((item) => item.insured_amount_number)
+        .filter((year) => typeof year === "number" && !isNaN(year))
+    );
+
     // Initialize range slider
     rangeSlider.min = minYear;
     rangeSlider.max = maxYear;
@@ -85,6 +118,56 @@ fetch("https://jettly.com/api/1.1/wf/webflow_one_way_flight", {
       const selectedYear = parseInt(e.target.value, 10);
       rangeValueDisplay.textContent = `Filter by year: ${selectedYear}`;
       filterByYear(selectedYear);
+    });
+
+    // Initialize extrange slider
+    extSlider.min = minYearExt;
+    extSlider.max = maxYear;
+    extSlider.value = minYearExt;
+    extValueDisplay.textContent = `Filter by year: ${minYearExt}`;
+
+    extSlider.addEventListener("input", (e) => {
+      const selectedYear = parseInt(e.target.value, 10);
+      extValueDisplay.textContent = `Filter by year: ${selectedYear}`;
+      extFilterByYear(selectedYear);
+    });
+
+    // Initialize Intrange slider
+    intSlider.min = minYearInt;
+    intSlider.max = maxYear;
+    intSlider.value = minYearInt;
+    intValueDisplay.textContent = `Filter by year: ${minYearInt}`;
+
+    intSlider.addEventListener("input", (e) => {
+      const selectedYear = parseInt(e.target.value, 10);
+      intValueDisplay.textContent = `Filter by year: ${selectedYear}`;
+      intFilterByYear(selectedYear);
+    });
+
+    // Initialize Insrange slider
+    insSlider.min = minYearIns;
+    insSlider.max = maxYearIns;
+    insSlider.step = 250000;
+    insSlider.value = minYearIns;
+    insValueDisplay.textContent = `Filter by year: ${minYearIns}`;
+
+    insSlider.addEventListener("input", (e) => {
+      const selectedYear = parseInt(e.target.value, 10);
+      insValueDisplay.textContent = `Filter by year: ${selectedYear}`;
+      insFilterByYear(selectedYear);
+    });
+
+    searchInputBox.addEventListener("input", (e) => {
+      const searchTerm = e.target.value.toLowerCase().trim();
+      filteredByRangeSlider = aircraftSets.filter((item) =>
+        item.description_text.toLowerCase().includes(searchTerm)
+      );
+
+      // Reset pagination and re-render data
+      currentPage = 1; // Reset to the first page
+      renderPage(currentPage, filteredByRangeSlider);
+      renderPagination(filteredByRangeSlider);
+      updateCheckboxCounts(); // Update checkbox counts based on the filtered data
     });
 
     const generateCheckboxes = (wrapper, items, key, labelFormatter) => {
@@ -336,6 +419,27 @@ fetch("https://jettly.com/api/1.1/wf/webflow_one_way_flight", {
     const filterByYear = (year) => {
       filteredByRangeSlider = aircraftSets.filter(
         (item) => item.year_of_manufacture_number >= year
+      );
+      filterData();
+    };
+
+    const extFilterByYear = (year) => {
+      filteredByRangeSlider = aircraftSets.filter(
+        (item) => item.exterior_refurbished_year_number >= year
+      );
+      filterData();
+    };
+
+    const intFilterByYear = (year) => {
+      filteredByRangeSlider = aircraftSets.filter(
+        (item) => item.refurbished_year_number >= year
+      );
+      filterData();
+    };
+
+    const insFilterByYear = (year) => {
+      filteredByRangeSlider = aircraftSets.filter(
+        (item) => item.insured_amount_number >= year
       );
       filterData();
     };
