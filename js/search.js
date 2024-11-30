@@ -631,9 +631,35 @@ fetch("https://jettly.com/api/1.1/wf/webflow_one_way_flight", {
 
     const renderPagination = (filteredSets) => {
       pagination.innerHTML = "";
-      const totalPages = Math.ceil(filteredSets.length / itemsPerPage);
 
-      for (let i = 1; i <= totalPages; i++) {
+      const totalPages = Math.ceil(filteredSets.length / itemsPerPage);
+      const maxButtonsToShow = 5;
+
+      // Calculate the range of buttons to show
+      const startPage = Math.max(
+        1,
+        currentPage - Math.floor(maxButtonsToShow / 2)
+      );
+      const endPage = Math.min(totalPages, startPage + maxButtonsToShow - 1);
+
+      // Adjust startPage if near the end
+      const adjustedStartPage = Math.max(1, endPage - maxButtonsToShow + 1);
+
+      // Add "Prev" button
+      const prevButton = document.createElement("button");
+      prevButton.textContent = "Prev";
+      prevButton.disabled = currentPage === 1;
+      prevButton.addEventListener("click", () => {
+        if (currentPage > 1) {
+          currentPage--;
+          renderPage(currentPage, filteredSets);
+          renderPagination(filteredSets);
+        }
+      });
+      pagination.appendChild(prevButton);
+
+      // Add numbered buttons
+      for (let i = adjustedStartPage; i <= endPage; i++) {
         const button = document.createElement("button");
         button.textContent = i;
         button.className = "pagination-btn";
@@ -647,6 +673,19 @@ fetch("https://jettly.com/api/1.1/wf/webflow_one_way_flight", {
 
         pagination.appendChild(button);
       }
+
+      // Add "Next" button
+      const nextButton = document.createElement("button");
+      nextButton.textContent = "Next";
+      nextButton.disabled = currentPage === totalPages;
+      nextButton.addEventListener("click", () => {
+        if (currentPage < totalPages) {
+          currentPage++;
+          renderPage(currentPage, filteredSets);
+          renderPagination(filteredSets);
+        }
+      });
+      pagination.appendChild(nextButton);
     };
 
     const generateArgusCheckboxes = () => {
