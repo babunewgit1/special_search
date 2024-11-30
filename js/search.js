@@ -601,6 +601,13 @@ fetch("https://jettly.com/api/1.1/wf/webflow_one_way_flight", {
         );
       }
 
+      // Display no results message if filteredSets is empty
+      if (filteredSets.length === 0) {
+        mainWrapper.innerHTML = `<p class="no-results">No results found for the selected filters.</p>`;
+        pagination.innerHTML = ""; // Clear pagination
+        return;
+      }
+
       currentPage = 1;
       renderPage(currentPage, filteredSets);
       renderPagination(filteredSets);
