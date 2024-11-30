@@ -53,6 +53,7 @@ fetch("https://jettly.com/api/1.1/wf/webflow_one_way_flight", {
   .then((response) => response.json())
   .then((apiData) => {
     const aircraftSets = [];
+    const longestFlight = apiData.response.longest_flight_leg;
     if (apiData.response) {
       for (const key in apiData.response) {
         if (key.startsWith("aircraft_set_")) {
@@ -372,13 +373,13 @@ fetch("https://jettly.com/api/1.1/wf/webflow_one_way_flight", {
       // Update counts for fuel checkboxes
       const fuelCount = {
         0: filteredByRangeSlider.filter(
-          (item) => item.enclosed_lavatory__boolean === true
+          (item) => item.range_number < longestFlight
         ).length,
         1: filteredByRangeSlider.filter(
-          (item) => item.pet_friendly__boolean === true
+          (item) => item.range_number * 2 > longestFlight
         ).length,
-        "2+": filteredByRangeSlider.filter(
-          (item) => item.smoking_allowed__boolean === true
+        "2 +": filteredByRangeSlider.filter(
+          (item) => item.range_number * 2 < longestFlight
         ).length,
       };
 
@@ -549,15 +550,15 @@ fetch("https://jettly.com/api/1.1/wf/webflow_one_way_flight", {
         fuelFilters.forEach((filter) => {
           if (filter === "0") {
             filteredSets = filteredSets.filter(
-              (item) => item.enclosed_lavatory__boolean === true
+              (item) => item.range_number < longestFlight
             );
           } else if (filter === "1") {
             filteredSets = filteredSets.filter(
-              (item) => item.pet_friendly__boolean === true
+              (item) => item.range_number * 2 > longestFlight
             );
           } else if (filter === "2 +") {
             filteredSets = filteredSets.filter(
-              (item) => item.smoking_allowed__boolean === true
+              (item) => item.range_number * 2 < longestFlight
             );
           }
         });
@@ -882,13 +883,12 @@ fetch("https://jettly.com/api/1.1/wf/webflow_one_way_flight", {
 
     const generateFuelCheckboxes = () => {
       const fuelCount = {
-        0: aircraftSets.filter(
-          (item) => item.enclosed_lavatory__boolean === true
-        ).length,
-        1: aircraftSets.filter((item) => item.pet_friendly__boolean === true)
+        0: aircraftSets.filter((item) => item.range_number < longestFlight)
+          .length,
+        1: aircraftSets.filter((item) => item.range_number * 2 > longestFlight)
           .length,
         "2 +": aircraftSets.filter(
-          (item) => item.smoking_allowed__boolean === true
+          (item) => item.range_number * 2 < longestFlight
         ).length,
       };
 
