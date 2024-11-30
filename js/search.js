@@ -112,11 +112,11 @@ fetch("https://jettly.com/api/1.1/wf/webflow_one_way_flight", {
     rangeSlider.min = minYear;
     rangeSlider.max = maxYear;
     rangeSlider.value = minYear;
-    rangeValueDisplay.textContent = `Filter by year: ${minYear}`;
+    rangeValueDisplay.textContent = `Newer than: ${minYear}`;
 
     rangeSlider.addEventListener("input", (e) => {
       const selectedYear = parseInt(e.target.value, 10);
-      rangeValueDisplay.textContent = `Filter by year: ${selectedYear}`;
+      rangeValueDisplay.textContent = `Newer than: ${selectedYear}`;
       filterByYear(selectedYear);
     });
 
@@ -124,11 +124,11 @@ fetch("https://jettly.com/api/1.1/wf/webflow_one_way_flight", {
     extSlider.min = minYearExt;
     extSlider.max = maxYear;
     extSlider.value = minYearExt;
-    extValueDisplay.textContent = `Filter by year: ${minYearExt}`;
+    extValueDisplay.textContent = `Greater than: ${minYearExt}`;
 
     extSlider.addEventListener("input", (e) => {
       const selectedYear = parseInt(e.target.value, 10);
-      extValueDisplay.textContent = `Filter by year: ${selectedYear}`;
+      extValueDisplay.textContent = `Greater than: ${selectedYear}`;
       extFilterByYear(selectedYear);
     });
 
@@ -136,11 +136,11 @@ fetch("https://jettly.com/api/1.1/wf/webflow_one_way_flight", {
     intSlider.min = minYearInt;
     intSlider.max = maxYear;
     intSlider.value = minYearInt;
-    intValueDisplay.textContent = `Filter by year: ${minYearInt}`;
+    intValueDisplay.textContent = `Greater than: ${minYearInt}`;
 
     intSlider.addEventListener("input", (e) => {
       const selectedYear = parseInt(e.target.value, 10);
-      intValueDisplay.textContent = `Filter by year: ${selectedYear}`;
+      intValueDisplay.textContent = `Greater than: ${selectedYear}`;
       intFilterByYear(selectedYear);
     });
 
@@ -149,11 +149,11 @@ fetch("https://jettly.com/api/1.1/wf/webflow_one_way_flight", {
     insSlider.max = maxYearIns;
     insSlider.step = 250000;
     insSlider.value = minYearIns;
-    insValueDisplay.textContent = `Filter by year: ${minYearIns}`;
+    insValueDisplay.textContent = `Greater than: ${minYearIns}`;
 
     insSlider.addEventListener("input", (e) => {
       const selectedYear = parseInt(e.target.value, 10);
-      insValueDisplay.textContent = `Filter by year: ${selectedYear}`;
+      insValueDisplay.textContent = `Greater than: ${selectedYear}`;
       insFilterByYear(selectedYear);
     });
 
@@ -285,13 +285,13 @@ fetch("https://jettly.com/api/1.1/wf/webflow_one_way_flight", {
 
       // Update counts for Argus checkboxes
       const argusCounts = {
-        NotRated: filteredByRangeSlider.filter(
+        "Not Rated": filteredByRangeSlider.filter(
           (item) => item.argus_not_rated__boolean === true
         ).length,
         Gold: filteredByRangeSlider.filter(
           (item) => item.argus_gold__boolean === true
         ).length,
-        GoldPlus: filteredByRangeSlider.filter(
+        "Gold +": filteredByRangeSlider.filter(
           (item) => item.argus_gold____boolean === true
         ).length,
         Platinum: filteredByRangeSlider.filter(
@@ -308,7 +308,7 @@ fetch("https://jettly.com/api/1.1/wf/webflow_one_way_flight", {
 
       // Update counts for IS-BAO checkboxes
       const isBaoCounts = {
-        NotRated: filteredByRangeSlider.filter(
+        "Not Rated": filteredByRangeSlider.filter(
           (item) => item.is_bao_not_rated__boolean === true
         ).length,
         Registered: filteredByRangeSlider.filter(
@@ -325,13 +325,13 @@ fetch("https://jettly.com/api/1.1/wf/webflow_one_way_flight", {
 
       // Update counts for Wyvern checkboxes
       const wyvernCounts = {
-        NotRated: filteredByRangeSlider.filter(
+        "Not Rated": filteredByRangeSlider.filter(
           (item) => item.wyvern_not_rated__boolean === true
         ).length,
-        Registered: filteredByRangeSlider.filter(
+        "Wyvern Registered": filteredByRangeSlider.filter(
           (item) => item.wyvern_registered__boolean === true
         ).length,
-        Wingman: filteredByRangeSlider.filter(
+        "Wyvern Wingman": filteredByRangeSlider.filter(
           (item) => item.wyvern_wingman__boolean === true
         ).length,
       };
@@ -467,7 +467,7 @@ fetch("https://jettly.com/api/1.1/wf/webflow_one_way_flight", {
 
       if (selectedArgusFilters.length > 0) {
         selectedArgusFilters.forEach((filter) => {
-          if (filter === "NotRated") {
+          if (filter === "Not Rated") {
             filteredSets = filteredSets.filter(
               (item) => item.argus_not_rated__boolean === true
             );
@@ -475,7 +475,7 @@ fetch("https://jettly.com/api/1.1/wf/webflow_one_way_flight", {
             filteredSets = filteredSets.filter(
               (item) => item.argus_gold__boolean === true
             );
-          } else if (filter === "GoldPlus") {
+          } else if (filter === "Gold +") {
             filteredSets = filteredSets.filter(
               (item) => item.argus_gold____boolean === true
             );
@@ -489,7 +489,7 @@ fetch("https://jettly.com/api/1.1/wf/webflow_one_way_flight", {
 
       if (selectedIsBaoFilters.length > 0) {
         selectedIsBaoFilters.forEach((filter) => {
-          if (filter === "NotRated") {
+          if (filter === "Not Rated") {
             filteredSets = filteredSets.filter(
               (item) => item.is_bao_not_rated__boolean === true
             );
@@ -503,15 +503,15 @@ fetch("https://jettly.com/api/1.1/wf/webflow_one_way_flight", {
 
       if (selectedWyvernFilters.length > 0) {
         selectedWyvernFilters.forEach((filter) => {
-          if (filter === "NotRated") {
+          if (filter === "Not Rated") {
             filteredSets = filteredSets.filter(
               (item) => item.wyvern_not_rated__boolean === true
             );
-          } else if (filter === "Registered") {
+          } else if (filter === "Wyvern Registered") {
             filteredSets = filteredSets.filter(
               (item) => item.wyvern_registered__boolean === true
             );
-          } else if (filter === "Wingman") {
+          } else if (filter === "Wyvern Wingman") {
             filteredSets = filteredSets.filter(
               (item) => item.wyvern_wingman__boolean === true
             );
@@ -651,12 +651,12 @@ fetch("https://jettly.com/api/1.1/wf/webflow_one_way_flight", {
 
     const generateArgusCheckboxes = () => {
       const argusCounts = {
-        NotRated: aircraftSets.filter(
+        "Not Rated": aircraftSets.filter(
           (item) => item.argus_not_rated__boolean === true
         ).length,
         Gold: aircraftSets.filter((item) => item.argus_gold__boolean === true)
           .length,
-        GoldPlus: aircraftSets.filter(
+        "Gold +": aircraftSets.filter(
           (item) => item.argus_gold____boolean === true
         ).length,
         Platinum: aircraftSets.filter(
@@ -698,7 +698,7 @@ fetch("https://jettly.com/api/1.1/wf/webflow_one_way_flight", {
 
     const generateIsBaoCheckboxes = () => {
       const isBaoCounts = {
-        NotRated: aircraftSets.filter(
+        "Not Rated": aircraftSets.filter(
           (item) => item.is_bao_not_rated__boolean === true
         ).length,
         Registered: aircraftSets.filter(
@@ -740,13 +740,13 @@ fetch("https://jettly.com/api/1.1/wf/webflow_one_way_flight", {
 
     const generateWyvernCheckboxes = () => {
       const wyvernCounts = {
-        NotRated: aircraftSets.filter(
+        "Not Rated": aircraftSets.filter(
           (item) => item.wyvern_not_rated__boolean === true
         ).length,
-        Registered: aircraftSets.filter(
+        "Wyvern Registered": aircraftSets.filter(
           (item) => item.wyvern_registered__boolean === true
         ).length,
-        Wingman: aircraftSets.filter(
+        "Wyvern Wingman": aircraftSets.filter(
           (item) => item.wyvern_wingman__boolean === true
         ).length,
       };

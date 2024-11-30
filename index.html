@@ -38,37 +38,16 @@
 
     <div class="search">
       <div class="container">
-        <p id="finalresult"></p>
         <div class="search_wrapper">
           <div class="search_left">
             <div class="range_filter">
+              <p id="finalresult"></p>
               <div class="searchBox">
                 <input id="searchBox" type="text" placeholder="Search" />
               </div>
-              <div class="filter_section">
-                <input id="range" type="range" />
-                <p id="range_value">Filter by year: 2024</p>
-              </div>
-              <div class="sr_catagory">
-                <div class="sr_catagory_checkbox"></div>
-              </div>
-              <br />
-              <br />
-              <br />
-              <div class="discheck">
-                <div class="dis_checkbox"></div>
-              </div>
-              <br />
-              <br />
-              <br />
-              <div class="discheck">
-                <div class="seller_checkbox"></div>
-              </div>
-              <br />
-              <br />
-              <br />
-              <div class="sr_catagory">
-                <div class="dr_catagory_checkbox">
+              <div class="sr_catagory mt45">
+                <h5 class="headingText">Departure Ready</h5>
+                <div class="dr_catagory_checkbox checkbox_item_wrapper">
                   <label for="departureReady">
                     <input type="checkbox" id="departureReady" />
                     Departure Ready <span>(0)</span>
@@ -82,48 +61,77 @@
                   </label>
                 </div>
               </div>
-
-              <br />
-              <br />
-              <div class="argus_checkbox"></div>
-              <br />
-              <br />
-              <div class="is_bao"></div>
-              <br />
-              <br />
-              <div class="wyvern"></div>
-              <br />
-              <br />
-              <br />
-              <div class="amenities"></div>
-              <br />
-              <br />
-              <br />
-              <div class="othersCheck"></div>
-              <br />
-              <br />
-              <br />
-              <div class="fuel_stop"></div>
-
-              <br /><br />
-              <br />
-              <div class="ext">
-                <input type="range" id="extslider" />
-                <p id="exttextvalue"></p>
+              <div class="filter_section mt45">
+                <h5>Year of Make</h5>
+                <input id="range" type="range" />
+                <p id="range_value"></p>
               </div>
-              <br />
-              <br />
-
-              <div class="int">
-                <input type="range" id="intslider" />
-                <p id="inttextvalue"></p>
+              <div class="sr_catagory mt45">
+                <h5 class="headingText">Categories</h5>
+                <div class="sr_catagory_checkbox checkbox_item_wrapper"></div>
               </div>
-              <br />
-              <br />
+              <div class="discheck mt45">
+                <h5 class="headingText">Types</h5>
+                <div class="dis_checkbox checkbox_item_wrapper"></div>
+              </div>
+              <div class="discheck mt45">
+                <h5 class="headingText">Sellers</h5>
+                <div class="seller_checkbox checkbox_item_wrapper"></div>
+              </div>
 
-              <div class="ins">
-                <input type="range" id="insslider" />
-                <p id="instextvalue"></p>
+              <div class="fulecheck mt45">
+                <h5 class="headingText">Fuel Stops</h5>
+                <div class="fuel_stop"></div>
+              </div>
+
+              <div class="safty_checkbox mt45">
+                <h5 class="headingText">Safety</h5>
+                <div class="argus">
+                  <h6 class="subheading">ARGUS</h6>
+                  <div class="argus_checkbox"></div>
+                </div>
+                <div class="argus">
+                  <h6 class="subheading">IS-BAO</h6>
+                  <div class="is_bao"></div>
+                </div>
+                <div class="argus">
+                  <h6 class="subheading">Wyvern</h6>
+                  <div class="wyvern"></div>
+                </div>
+              </div>
+              <div class="aminaty_wrapper mt45">
+                <h5 class="headingText">Amenities</h5>
+                <div class="amenities"></div>
+              </div>
+
+              <div class="referbist mt45">
+                <h5 class="headingText">Refurbished Year</h5>
+                <div class="ext_wrapper">
+                  <h6 class="subheading">Exterior</h6>
+                  <div class="ext">
+                    <input type="range" id="extslider" />
+                    <p id="exttextvalue"></p>
+                  </div>
+                </div>
+                <div class="int_wrapper">
+                  <h6 class="subheading">Interior</h6>
+                  <div class="int">
+                    <input type="range" id="intslider" />
+                    <p id="inttextvalue"></p>
+                  </div>
+                </div>
+              </div>
+              <div class="insurence mt45">
+                <h5 class="headingText">Min. Insurance</h5>
+                <div class="ins">
+                  <input type="range" id="insslider" />
+                  <p id="instextvalue"></p>
+                </div>
+              </div>
+
+              <div class="otherfiters mt45">
+                <h5 class="headingText">Other</h5>
+                <div class="othersCheck"></div>
               </div>
             </div>
           </div>
