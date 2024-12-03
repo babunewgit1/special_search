@@ -1,0 +1,96 @@
+.dr_catagory_checkbox input,
+.ht_catagory_checkbox input,
+.checkbox_item input {
+  accent-color: #ff5d47;
+  margin-right: 5px;
+  position: relative;
+  top: 1px;
+}
+
+.dr_catagory_checkbox label,
+.ht_catagory_checkbox label,
+.checkbox_item label {
+  display: inline-block;
+  color: #1e1e1e;
+  font-weight: normal;
+  margin-bottom: 10px;
+  position: relative;
+}
+
+.ht_catagory_checkbox label {
+  margin-bottom: 0;
+}
+
+.sr_main_left_filter input[type="range"] {
+  display: block;
+  width: 100%;
+  accent-color: #ff5d47;
+  border-radius: 0px;
+  outline: none;
+}
+
+p#range_value {
+  font-size: 16px;
+  color: #1e1e1e;
+  margin-top: 10px;
+}
+
+.sr_catagory_checkbox,
+.dis_checkbox,
+.seller_checkbox,
+.fuel_stop,
+.argus_checkbox,
+.is_bao,
+.wyvern,
+.amenities,
+.otherscheck {
+  margin-top: 1rem;
+}
+
+.checkbox_item:last-child label {
+  margin-bottom: 0;
+}
+
+.dp_ready_wrapper,
+.filter_drop {
+  padding-left: 16px;
+  max-height: 340px;
+  overflow-x: hidden;
+  overflow-y: auto;
+  padding-right: 20px;
+}
+
+.filter_drop::-webkit-scrollbar {
+  width: 6px;
+}
+
+.filter_drop::-webkit-scrollbar-track {
+  background-color: #d7d6d6;
+  border-radius: 6px;
+}
+
+.filter_drop::-webkit-scrollbar-thumb {
+  background: #ff5d47;
+  border-radius: 6px;
+}
+
+.argus .filter_drop {
+  padding-left: 0;
+}
+
+.ext input,
+.int input,
+#insslider {
+  margin: 1rem 0px;
+}
+
+.ext #exttextvalue,
+.int #inttextvalue {
+  text-transform: capitalize;
+  font-weight: normal;
+  color: #1e1e1e;
+}
+
+.argus .filter_drop {
+  padding-right: 0;
+}

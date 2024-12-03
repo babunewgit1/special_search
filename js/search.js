@@ -1,3 +1,33 @@
+const storedData = sessionStorage.getItem("one_way");
+let way;
+if (storedData) {
+  const findWay = JSON.parse(storedData);
+  const wayValue = findWay.way;
+  way = wayValue;
+} else {
+  console.log("'one_way' data not found in sessionStorage.");
+}
+
+if (way === "one_way") {
+  const oneWayData = sessionStorage.getItem("one_way");
+
+  if (oneWayData) {
+    const sessionData = JSON.parse(oneWayData);
+    apiUrl = "https://jettly.com/api/1.1/wf/webflow_one_way_flight";
+    data = {
+      "from airport id": sessionData.fromId,
+      "to airport id": sessionData.toId,
+      date_as_text: sessionData.dateAsText,
+      time_as_text: sessionData.timeAsText,
+      App_Out_Date_As_Text: sessionData.appDate,
+      pax: sessionData.pax,
+      date: sessionData.timeStamp,
+    };
+  } else {
+    console.error("No data found in sessionStorage under the key 'one_way'");
+  }
+}
+
 // Select DOM elements
 const mainWrapper = document.querySelector(".search_right");
 const pagination = document.querySelector(".pagination");
@@ -8,7 +38,7 @@ const argusCheckboxWrapper = document.querySelector(".argus_checkbox");
 const isBaoCheckboxWrapper = document.querySelector(".is_bao");
 const wyvernCheckboxWrapper = document.querySelector(".wyvern");
 const animalCheckboxWrapper = document.querySelector(".amenities");
-const othersCheckboxWrapper = document.querySelector(".othersCheck");
+const othersCheckboxWrapper = document.querySelector(".otherscheck");
 const fuelCheckboxWrapper = document.querySelector(".fuel_stop");
 const rangeSlider = document.getElementById("range");
 const rangeValueDisplay = document.getElementById("range_value");
@@ -21,6 +51,7 @@ const intValueDisplay = document.getElementById("inttextvalue");
 const insSlider = document.getElementById("insslider");
 const insValueDisplay = document.getElementById("instextvalue");
 const searchInputBox = document.getElementById("searchBox");
+const finalResultParagraph = document.getElementById("finalresult");
 
 const departureReadyCountLabel = departureReadyCheckbox
   .closest("label")
@@ -29,21 +60,8 @@ const highTimeCrewCountLabel = highTimeCrewCheckbox
   .closest("label")
   .querySelector("span");
 
-// Data payload for the API request
-const data = {
-  "from airport id": "1498592405823x491126318927854300",
-  "to airport id": "1498583419008x958192316116765200",
-  date_as_text: "2024-11-29",
-  time_as_text: "11:45 AM",
-  App_Out_Date_As_Text: "2024-11-29",
-  pax: "2",
-  date: "1732924800",
-};
-
-// Function to generate generic checkboxes
-
 // API Request
-fetch("https://jettly.com/api/1.1/wf/webflow_one_way_flight", {
+fetch(apiUrl, {
   method: "POST",
   headers: {
     "Content-Type": "application/json",
@@ -62,8 +80,7 @@ fetch("https://jettly.com/api/1.1/wf/webflow_one_way_flight", {
       }
     }
 
-    const finalResultParagraph = document.getElementById("finalresult");
-    finalResultParagraph.textContent = `Total results: ${aircraftSets.length}`;
+    finalResultParagraph.textContent = ` ${aircraftSets.length} `;
 
     // Pagination variables
     const itemsPerPage = 10;
@@ -222,18 +239,59 @@ fetch("https://jettly.com/api/1.1/wf/webflow_one_way_flight", {
     };
 
     const updateCheckboxCounts = () => {
-      // Update counts for "Departure Ready" and "High Time Crew"
+      const recalculateFuelCounts = () => {
+        const fuelCount = {
+          Direct: 0,
+          "1 Stop": 0,
+          "2 Stop": 0,
+        };
+
+        filteredByRangeSlider.forEach((item) => {
+          if (item.range_number < longestFlight) {
+            // Categorize as Direct
+            fuelCount["Direct"]++;
+          } else if (item.range_number * 2 > longestFlight) {
+            // Categorize as 1 Stop
+            fuelCount["1 Stop"]++;
+          } else if (item.range_number * 2 < longestFlight) {
+            // Categorize as 2 Stop
+            fuelCount["2 Stop"]++;
+          }
+        });
+
+        return fuelCount;
+      };
+
+      // Get the updated fuel counts
+      const fuelCount = recalculateFuelCounts();
+
+      // Update the fuel stop checkbox counts in the UI
+      fuelCheckboxWrapper.querySelectorAll(".checkbox_item").forEach((item) => {
+        const checkbox = item.querySelector("input[type='checkbox']");
+        const label = item.querySelector("label span");
+        const filter = checkbox.value;
+
+        // Check if fuelCount has a valid value for this filter
+        if (fuelCount.hasOwnProperty(filter)) {
+          label.textContent = `(${fuelCount[filter] || 0})`;
+        } else {
+          label.textContent = `(0)`;
+        }
+      });
+
+      // Update departure ready counts
       const departureReadyCount = filteredByRangeSlider.filter(
         (item) => item.departure_ready__boolean === true
       ).length;
       departureReadyCountLabel.textContent = `(${departureReadyCount})`;
 
+      // Update high-time crew counts
       const highTimeCrewCount = filteredByRangeSlider.filter(
         (item) => item.high_time_crew__boolean === true
       ).length;
       highTimeCrewCountLabel.textContent = `(${highTimeCrewCount})`;
 
-      // Update counts for class_text checkboxes
+      // Update class text counts
       const classCounts = filteredByRangeSlider.reduce((acc, item) => {
         acc[item.class_text] = (acc[item.class_text] || 0) + 1;
         return acc;
@@ -246,11 +304,10 @@ fetch("https://jettly.com/api/1.1/wf/webflow_one_way_flight", {
           const label = item.querySelector("label span");
           const className = checkbox.value;
 
-          const count = classCounts[className] || 0;
-          label.textContent = `(${count})`;
+          label.textContent = `(${classCounts[className] || 0})`;
         });
 
-      // Update counts for description_text checkboxes
+      // Update description text counts
       const descriptionCounts = filteredByRangeSlider.reduce((acc, item) => {
         acc[item.description_text] = (acc[item.description_text] || 0) + 1;
         return acc;
@@ -263,11 +320,10 @@ fetch("https://jettly.com/api/1.1/wf/webflow_one_way_flight", {
           const label = item.querySelector("label span");
           const description = checkbox.value;
 
-          const count = descriptionCounts[description] || 0;
-          label.textContent = `(${count})`;
+          label.textContent = `(${descriptionCounts[description] || 0})`;
         });
 
-      // Update counts for operator_txt_text checkboxes
+      // Update operator text counts
       const operatorCounts = filteredByRangeSlider.reduce((acc, item) => {
         acc[item.operator_txt_text] = (acc[item.operator_txt_text] || 0) + 1;
         return acc;
@@ -280,11 +336,10 @@ fetch("https://jettly.com/api/1.1/wf/webflow_one_way_flight", {
           const label = item.querySelector("label span");
           const operator = checkbox.value;
 
-          const count = operatorCounts[operator] || 0;
-          label.textContent = `(${count})`;
+          label.textContent = `(${operatorCounts[operator] || 0})`;
         });
 
-      // Update counts for Argus checkboxes
+      // Update Argus counts
       const argusCounts = {
         "Not Rated": filteredByRangeSlider.filter(
           (item) => item.argus_not_rated__boolean === true
@@ -304,10 +359,10 @@ fetch("https://jettly.com/api/1.1/wf/webflow_one_way_flight", {
         .querySelectorAll(".checkbox_item")
         .forEach((item, index) => {
           const label = item.querySelector("label span");
-          label.textContent = `(${Object.values(argusCounts)[index]})`;
+          label.textContent = `(${Object.values(argusCounts)[index] || 0})`;
         });
 
-      // Update counts for IS-BAO checkboxes
+      // Update IS-BAO counts
       const isBaoCounts = {
         "Not Rated": filteredByRangeSlider.filter(
           (item) => item.is_bao_not_rated__boolean === true
@@ -321,10 +376,10 @@ fetch("https://jettly.com/api/1.1/wf/webflow_one_way_flight", {
         .querySelectorAll(".checkbox_item")
         .forEach((item, index) => {
           const label = item.querySelector("label span");
-          label.textContent = `(${Object.values(isBaoCounts)[index]})`;
+          label.textContent = `(${Object.values(isBaoCounts)[index] || 0})`;
         });
 
-      // Update counts for Wyvern checkboxes
+      // Update Wyvern counts
       const wyvernCounts = {
         "Not Rated": filteredByRangeSlider.filter(
           (item) => item.wyvern_not_rated__boolean === true
@@ -341,11 +396,11 @@ fetch("https://jettly.com/api/1.1/wf/webflow_one_way_flight", {
         .querySelectorAll(".checkbox_item")
         .forEach((item, index) => {
           const label = item.querySelector("label span");
-          label.textContent = `(${Object.values(wyvernCounts)[index]})`;
+          label.textContent = `(${Object.values(wyvernCounts)[index] || 0})`;
         });
 
-      // Update counts for animal checkboxes
-      const animalCount = {
+      // Update animal counts
+      const animalCounts = {
         "Enclosed Lavatory": filteredByRangeSlider.filter(
           (item) => item.enclosed_lavatory__boolean === true
         ).length,
@@ -367,31 +422,11 @@ fetch("https://jettly.com/api/1.1/wf/webflow_one_way_flight", {
         .querySelectorAll(".checkbox_item")
         .forEach((item, index) => {
           const label = item.querySelector("label span");
-          label.textContent = `(${Object.values(animalCount)[index]})`;
+          label.textContent = `(${Object.values(animalCounts)[index] || 0})`;
         });
 
-      // Update counts for fuel checkboxes
-      const fuelCount = {
-        0: filteredByRangeSlider.filter(
-          (item) => item.range_number < longestFlight
-        ).length,
-        1: filteredByRangeSlider.filter(
-          (item) => item.range_number * 2 > longestFlight
-        ).length,
-        "2 +": filteredByRangeSlider.filter(
-          (item) => item.range_number * 2 < longestFlight
-        ).length,
-      };
-
-      fuelCheckboxWrapper
-        .querySelectorAll(".checkbox_item")
-        .forEach((item, index) => {
-          const label = item.querySelector("label span");
-          label.textContent = `(${Object.values(fuelCount)[index]})`;
-        });
-
-      // Update counts for others checkboxes
-      const othersCount = {
+      // Update others counts
+      const othersCounts = {
         "Exclude owner approval": filteredByRangeSlider.filter(
           (item) => item.oa_required__boolean === true
         ).length,
@@ -413,7 +448,7 @@ fetch("https://jettly.com/api/1.1/wf/webflow_one_way_flight", {
         .querySelectorAll(".checkbox_item")
         .forEach((item, index) => {
           const label = item.querySelector("label span");
-          label.textContent = `(${Object.values(othersCount)[index]})`;
+          label.textContent = `(${Object.values(othersCounts)[index] || 0})`;
         });
     };
 
@@ -546,24 +581,6 @@ fetch("https://jettly.com/api/1.1/wf/webflow_one_way_flight", {
         });
       }
 
-      if (fuelFilters.length > 0) {
-        fuelFilters.forEach((filter) => {
-          if (filter === "0") {
-            filteredSets = filteredSets.filter(
-              (item) => item.range_number < longestFlight
-            );
-          } else if (filter === "1") {
-            filteredSets = filteredSets.filter(
-              (item) => item.range_number * 2 > longestFlight
-            );
-          } else if (filter === "2 +") {
-            filteredSets = filteredSets.filter(
-              (item) => item.range_number * 2 < longestFlight
-            );
-          }
-        });
-      }
-
       if (selectedOthersFilters.length > 0) {
         selectedOthersFilters.forEach((filter) => {
           if (filter === "Exclude owner approval") {
@@ -602,7 +619,22 @@ fetch("https://jettly.com/api/1.1/wf/webflow_one_way_flight", {
         );
       }
 
-      // Display no results message if filteredSets is empty
+      if (fuelFilters.length > 0) {
+        filteredSets = filteredSets.filter((item) => {
+          let stopCategory;
+          if (item.range_number < longestFlight) {
+            stopCategory = "Direct";
+          } else if (item.range_number * 2 > longestFlight) {
+            stopCategory = "1 Stop";
+          } else if (item.range_number * 2 < longestFlight) {
+            stopCategory = "2 Stop";
+          }
+
+          // Check if the item's stop category matches any selected fuel filter
+          return fuelFilters.includes(stopCategory);
+        });
+      }
+
       if (filteredSets.length === 0) {
         mainWrapper.innerHTML = `<p class="no-results">No results found for the selected filters.</p>`;
         pagination.innerHTML = ""; // Clear pagination
@@ -621,16 +653,57 @@ fetch("https://jettly.com/api/1.1/wf/webflow_one_way_flight", {
       const end = start + itemsPerPage;
       const itemsToRender = filteredSets.slice(start, end);
 
+      // direct data not in aircarft (common data for a single search)
+      const distance = apiData.response.total_distance;
+
       itemsToRender.forEach((item) => {
+        const stopInfo =
+          item.range_number < longestFlight
+            ? "Direct"
+            : item.range_number * 2 > longestFlight
+            ? "1 Stop"
+            : "2 Stop";
+
+        const totalDistance = distance / item.cruise_speed_avg_fixedrate_number;
+        const totalHours = Math.floor(totalDistance);
+        const totalMinutes = Math.round((totalDistance - totalHours) * 60);
+        const calculateTotal = Math.round(
+          (distance / item.cruise_speed_avg_fixedrate_number) *
+            item.price_per_hour_fixedrate_number
+        );
+
         mainWrapper.innerHTML += `
           <div class="item_wrapper">
             <div class="item_img">
               <img src="${item.exterior_image1_image}" alt="" />
             </div>
             <div class="item_cnt">
-              <p>${item.description_text}</p>
-              <p>Year: ${item.year_of_manufacture_number}</p>
-              <p>Class: ${item.class_text}</p>
+              <h4>${item.description_text}</h4>
+              <p>${item.class_text} <img class="seat_logo" src="https://cdn.prod.website-files.com/6713759f858863c516dbaa19/674f4ca8521e970e24495468_seat.png" alt="seat_icon" /> <span>${item.pax_number}</span> seats</p>
+              <img src="${item.operator_logo_image}" alt="operator logo" />
+            </div>
+            <div class="item_book">
+            <div class="destination_flight">
+              <div class="portcodename">
+                <p>${apiData.response.departure_main_code}</p>
+                <img src="https://cdn.prod.website-files.com/6713759f858863c516dbaa19/674f7273cb8e26b728b6fdd7_plan-road.png" alt="Plan road" />
+                <p>${apiData.response.arrival_main_code}</p>
+              </div>
+            </div>
+            <div class="itemstop">
+              <p>${stopInfo}</p>
+              <span>|</span>
+              <p>${totalHours} H ${totalMinutes} M</p>
+            </div>
+            <div class="price">
+              <h3>$ ${calculateTotal}</h3>
+              <h5>$ ${item.price_per_hour_fixedrate_number}/hr</h5>
+              <p>Taxes calculated at checkout</p>
+            </div>
+            <div className="bookingbutton">
+              <a class="button fill_button" href="#">Request A Book</a>
+              <a class="button fill_button grey_button" href="#">View Details <img src="https://cdn.prod.website-files.com/6713759f858863c516dbaa19/67459d1f63b186d24efc3bbe_Jettly-Search-Results-Page-(List-View-Details-Tab).png" alt="" /></a>
+            </div>
             </div>
           </div>
         `;
@@ -883,15 +956,23 @@ fetch("https://jettly.com/api/1.1/wf/webflow_one_way_flight", {
 
     const generateFuelCheckboxes = () => {
       const fuelCount = {
-        0: aircraftSets.filter((item) => item.range_number < longestFlight)
-          .length,
-        1: aircraftSets.filter((item) => item.range_number * 2 > longestFlight)
-          .length,
-        "2 +": aircraftSets.filter(
-          (item) => item.range_number * 2 < longestFlight
-        ).length,
+        Direct: 0, // Flights with range_number less than longestFlight
+        "1 Stop": 0, // Flights with range_number * 2 greater than longestFlight
+        "2 Stop": 0, // Flights with range_number * 2 less than longestFlight
       };
 
+      // Categorize each item into one fuel stop category
+      aircraftSets.forEach((item) => {
+        if (item.range_number < longestFlight) {
+          fuelCount["Direct"]++;
+        } else if (item.range_number * 2 > longestFlight) {
+          fuelCount["1 Stop"]++;
+        } else {
+          fuelCount["2 Stop"]++;
+        }
+      });
+
+      // Clear and generate checkbox UI
       fuelCheckboxWrapper.innerHTML = "";
 
       Object.entries(fuelCount).forEach(([filter, count]) => {
