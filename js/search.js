@@ -86,18 +86,6 @@ fetch(apiUrl, {
     const aircraftSets = [];
     const longestFlight = apiData.response.longest_flight_leg;
     flightRequestId = apiData.response.flightrequest;
-
-    console.log(apiData.response);
-
-    // date collection and formation for dropdown
-    // const departureDates =
-    //   apiData.response.flight_legs[0].departure_dates_as_texts_list_text[0];
-    // const date = new Date(departureDates);
-    // const options = { year: "numeric", month: "short", day: "numeric" };
-    // const formattedDate = new Intl.DateTimeFormat("en-US", options).format(
-    //   date
-    // );
-
     if (apiData.response) {
       for (const key in apiData.response) {
         if (key.startsWith("aircraft_set_")) {
@@ -2404,7 +2392,6 @@ fetch(apiUrl, {
       },
       spaceBetween: 10,
     });
-    // dom
   })
   .catch((error) => console.error("Error:", error));
 
