@@ -83,6 +83,18 @@ fetch(apiUrl, {
   .then((apiData) => {
     const aircraftSets = [];
     const longestFlight = apiData.response.longest_flight_leg;
+
+    console.log(apiData.response);
+
+    // date collection and formation for dropdown
+    const departureDates =
+      apiData.response.flight_legs[0].departure_dates_as_texts_list_text[0];
+    const date = new Date(departureDates);
+    const options = { year: "numeric", month: "short", day: "numeric" };
+    const formattedDate = new Intl.DateTimeFormat("en-US", options).format(
+      date
+    );
+
     if (apiData.response) {
       for (const key in apiData.response) {
         if (key.startsWith("aircraft_set_")) {
@@ -662,19 +674,21 @@ fetch(apiUrl, {
 
     const renderPage = (page, filteredSets) => {
       // direct data not in aircarft (common data for a single search)
-      const distance = apiData.response.total_distance;
+      const distance =
+        apiData.response.flight_legs[0].total_distance__statute_m__number;
+
       const hotDeals = apiData.response.hot_deal_aircraft;
       mainWrapper.innerHTML = "";
       if (hotDeals) {
         if (page === 1) {
           hotDeals.forEach((item, index) => {
             sliderClass = index;
-            const stopInfo =
-              item.range_number < longestFlight
-                ? "Direct"
-                : item.range_number * 2 > longestFlight
-                ? "1 Stop"
-                : "2 Stop";
+            // const stopInfo =
+            //   item.range_number < longestFlight
+            //     ? "Direct"
+            //     : item.range_number * 2 > longestFlight
+            //     ? "1 Stop"
+            //     : "2 Stop";
 
             const totalDistance =
               distance / item.cruise_speed_avg_fixedrate_number;
@@ -736,6 +750,41 @@ fetch(apiUrl, {
                   .join("")
               : `<p class="Notfoundarray">Amenities Not Listed? Contact Us for the Latest Details!</p>`;
 
+            const arrivedTime = apiData.response.flight_legs[0].date_date;
+            const dateObject = new Date(arrivedTime * 1000);
+            const formattedDateStart = dateObject.toLocaleDateString("en-US", {
+              year: "numeric",
+              month: "short",
+              day: "numeric",
+            });
+            const formattedTimeStart = dateObject.toLocaleTimeString("en-US", {
+              hour: "numeric",
+              minute: "2-digit",
+              hour12: true,
+            });
+
+            const hours = Math.floor(totalDistance);
+            const minutes = Math.round((totalDistance - hours) * 60);
+            const totalSeconds = hours * 3600 + minutes * 60;
+            const finalTime = arrivedTime + totalSeconds;
+
+            const dateObjectAfter = new Date(finalTime * 1000);
+            const formattedDateEnd = dateObjectAfter.toLocaleDateString(
+              "en-US",
+              {
+                year: "numeric",
+                month: "short",
+                day: "numeric",
+              }
+            );
+            const formattedTimeEnd = dateObjectAfter.toLocaleTimeString(
+              "en-US",
+              {
+                hour: "numeric",
+                minute: "2-digit",
+                hour12: true,
+              }
+            );
             mainWrapper.innerHTML += `
               <div class="item_block_wrapper hotwrapper">
                 <div class="item_wrapper">
@@ -891,6 +940,298 @@ fetch(apiUrl, {
                         </div>
                       </div>
                     </div>
+                    <div data-cnt="tab${index}it" class="item_tab_one">
+                      <div class="inttabDet">
+                        <h3>Flight legs</h3>
+                        <div class="intdet_wrapper">
+                          <div class="intdet_left">
+                            <img src="${item.operator_logo_image}" alt="" />
+                          </div>
+                          <div class="intdet_middle">
+                            <div class="intdet_middle_date">
+                              <p class="takeoffdate">${formattedDateStart}</p>
+                              <p class="landdate"> - Lands ${formattedDateEnd}</p>
+                            </div>
+                            <div class="inted_middle_time">
+                              <p>${formattedTimeStart} - ${formattedTimeEnd}</p>
+                            </div>
+                            <div class="airportformatname">
+                              <p>${
+                                apiData.response.flight_legs[0]
+                                  .mobile_app_from_airport_name_short_text
+                              } (${
+              apiData.response.flight_legs[0]
+                .mobile_app_from_airport_iata_code_text
+                ? apiData.response.flight_legs[0]
+                    .mobile_app_from_airport_iata_code_text
+                : apiData.response.flight_legs[0]
+                    .mobile_app_from_airport_icao_code_text
+                ? apiData.response.flight_legs[0]
+                    .mobile_app_from_airport_icao_code_text
+                : apiData.response.flight_legs[0]
+                    .mobile_app_from_airport_faa_code_text
+            })</p>
+
+          <p>${
+            apiData.response.flight_legs[0]
+              .mobile_app_to_airport_name_short_text
+          } (${
+              apiData.response.flight_legs[0]
+                .mobile_app_to_airport_iata_code_text
+                ? apiData.response.flight_legs[0]
+                    .mobile_app_to_airport_iata_code_text
+                : apiData.response.flight_legs[0]
+                    .mobile_app_to_airport_icao_code_text
+                ? apiData.response.flight_legs[0]
+                    .mobile_app_to_airport_icao_code_text
+                : apiData.response.flight_legs[0]
+                    .mobile_app_to_airport_faa_code_text
+            })</p>
+                            </div>
+                            <div class="operator_textlist">
+                              <p>${item.operator_txt_text} . ${
+              item.class_text
+            } . ${item.description_text}</p>
+                            </div>   
+                            ${
+                              item.range_number >= longestFlight
+                                ? `<div class="fuelstop"><p> <img src="https://cdn.prod.website-files.com/6713759f858863c516dbaa19/6753e62479df68bd6de939cd_Jettly-Search-Results-Page-(List-View-Itinerary-Tab).png" alt="" /> Possible fuel stop enroute -  <span>+20 mins</span></p></div>`
+                                : ""
+                            }
+                           
+                          </div>
+                          <div class="indetright_wrapper">
+                            <div class="indet_right">
+                              <img src="https://cdn.prod.website-files.com/6713759f858863c516dbaa19/6753e928907492da22caf7fe_flighticon.png" alt="" />
+                              <span>Flight time</span>
+                              <p>${totalHours} H ${totalMinutes} M</p>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div data-cnt="tab${index}op" class="item_tab_one">
+                      <div class="opadetails">
+                        <h3>Operator</h3>
+                        <div class="opadet_wrapper">
+                          <div class="opadet_top">
+                            <div class="opadet_top_left">
+                              <p>${item.operator_txt_text}</p>
+                              <img src="${item.operator_logo_image}" alt="" />
+                            </div>
+                            <div class="opadet_top_middle">
+                              <p><span>Response rate:</span> 100%</p>
+                              <p><span>Avg. response time:</span> <1 Hrs.</p>
+                              <p><span>Aircraft:</span> 2</p>
+                              <p><span>Address:</span> ${
+                                item
+                                  .base_airport_fixed_address_geographic_address
+                                  .address
+                              }</p>
+                              <p><span>Hours:</span> 24 Hours</p>
+                              <p><span>Certificate ID:</span> Ask us</p>
+                            </div>
+                            <div class="opadet_top_right">
+                              <iframe src="https://www.google.com/maps?q=${
+                                item
+                                  .base_airport_fixed_address_geographic_address
+                                  .address
+                              }&output=embed" frameborder="0"></iframe>
+                            </div>
+                          </div>
+                          <div class="opadet_bottom">
+                            <div class="opadet_bottom_heading">
+                              <ul>
+                                <li><img src="https://cdn.prod.website-files.com/6713759f858863c516dbaa19/6754085d1d9a01ce66e3a259_Jettly-Search-Results-Page-(List-View-Operators-Tab)-Recovered.png" alt="" /></li>
+                                <li>0.00  |  0</li>
+                                <li><span>Reviews</span></li>
+                              </ul>
+                            </div>
+                            <div class="opadet_bottom_review">
+                              <div class="opadet_bottom_review_left">
+                                <div class="reviewitem_block">
+                                  <div class="obarleft">
+                                    <p>5 Stars</p>
+                                  </div>
+                                  <div class="obarmiddle">
+                                    <span></span>
+                                  </div>
+                                  <div class="obaright">
+                                    <p>(0)</p>
+                                  </div>
+                                </div>
+                                <div class="reviewitem_block">
+                                  <div class="obarleft">
+                                    <p>4 Stars</p>
+                                  </div>
+                                  <div class="obarmiddle">
+                                    <span></span>
+                                  </div>
+                                  <div class="obaright">
+                                    <p>(0)</p>
+                                  </div>
+                                </div>
+                                <div class="reviewitem_block">
+                                  <div class="obarleft">
+                                    <p>3 Stars</p>
+                                  </div>
+                                  <div class="obarmiddle">
+                                    <span></span>
+                                  </div>
+                                  <div class="obaright">
+                                    <p>(0)</p>
+                                  </div>
+                                </div>
+                                <div class="reviewitem_block">
+                                  <div class="obarleft">
+                                    <p>2 Stars</p>
+                                  </div>
+                                  <div class="obarmiddle">
+                                    <span></span>
+                                  </div>
+                                  <div class="obaright">
+                                    <p>(0)</p>
+                                  </div>
+                                </div>
+                                <div class="reviewitem_block">
+                                  <div class="obarleft">
+                                    <p>1 Star</p>
+                                  </div>
+                                  <div class="obarmiddle">
+                                    <span></span>
+                                  </div>
+                                  <div class="obaright">
+                                    <p>(0)</p>
+                                  </div>
+                                </div>
+                              </div>
+                              <div class="opadet_bottom_review_right">
+                                <h3>Rating Breakdown</h3>
+                                <div class="opadet_bottom_review_right_item">
+                                  <p>Seller communication level <span>0.0 <img src="https://cdn.prod.website-files.com/6713759f858863c516dbaa19/67540aa6fb2976ffafcecdf2_Jettly-Search-Results-Page-(List-View-Operators-Tab)-Recovered.png" alt="" /></span></p>
+                                  <p>Recommended to other passengers <span>0.0 <img src="https://cdn.prod.website-files.com/6713759f858863c516dbaa19/67540aa6fb2976ffafcecdf2_Jettly-Search-Results-Page-(List-View-Operators-Tab)-Recovered.png" alt="" /></span></p>
+                                  <p>Service as described <span>0.0 <img src="https://cdn.prod.website-files.com/6713759f858863c516dbaa19/67540aa6fb2976ffafcecdf2_Jettly-Search-Results-Page-(List-View-Operators-Tab)-Recovered.png" alt="" /></span></p>
+                                   <p>Flight cancellation rate <span>0% <img src="https://cdn.prod.website-files.com/6713759f858863c516dbaa19/67540aa6fb2976ffafcecdf2_Jettly-Search-Results-Page-(List-View-Operators-Tab)-Recovered.png" alt="" /></span></p>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div data-cnt="tab${index}pl" class="item_tab_one">
+                      <div class="poli_wrapper">
+                        <h3>Available fare classes</h3>  
+                        <div class="poli_box_wrapper">
+                          <div class="polibox">
+                            <div class="polibox_heading">
+                              <h3>Value <span>+ $0</span></h3>                              
+                            </div>
+                            <div class="polibox_cnt">
+                              <div class="polibox_cnt_item">
+                                <div class="checkicon">
+                                  <img src="https://cdn.prod.website-files.com/6713759f858863c516dbaa19/6754150613f571f3ecee0471_check.png" alt="" />
+                                </div>
+                                <p><span>$95 Change Fee:</span> Applies to all flight modifications.</p>
+                              </div>
+                              <div class="polibox_cnt_item">
+                                <div class="checkicon">
+                                  <img src="https://cdn.prod.website-files.com/6713759f858863c516dbaa19/6754150613f571f3ecee0471_check.png" alt="" />
+                                </div>
+                                <p><span>Non-Refundable:</span> Flight fare is non-refundable for client-initiated cancellations.</p>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="polibox polibox_two">
+                            <div class="polibox_heading">
+                              <h3>Flex <span>+ 5%</span></h3>
+                              <span class="recom">Recommended</span>                              
+                            </div>
+                            <div class="polibox_cnt">
+                              <div class="polibox_cnt_item">
+                                <div class="checkicon">
+                                  <img src="https://cdn.prod.website-files.com/6713759f858863c516dbaa19/6754150613f571f3ecee0471_check.png" alt="" />
+                                </div>
+                                <p class="capitalize"><span>No Change Fee</span></p>
+                              </div>
+                              <div class="polibox_cnt_item">
+                                <div class="checkicon">
+                                  <img src="https://cdn.prod.website-files.com/6713759f858863c516dbaa19/6754150613f571f3ecee0471_check.png" alt="" />
+                                </div>
+                                <p><span>No Fee:</span> Cancel more than 336 hours (14 days) before departure.</p>
+                              </div>
+                              <div class="polibox_cnt_item">
+                                <div class="checkicon">
+                                  <img src="https://cdn.prod.website-files.com/6713759f858863c516dbaa19/6754150613f571f3ecee0471_check.png" alt="" />
+                                </div>
+                                <p><span>100% Fee:</span> Cancel within 24 hours of departure (no refund).</p>
+                              </div>
+                              <div class="polibox_cnt_item">
+                                <div class="checkicon">
+                                  <img src="https://cdn.prod.website-files.com/6713759f858863c516dbaa19/6754150613f571f3ecee0471_check.png" alt="" />
+                                </div>
+                                <p><span>75% Fee:</span> Cancel 24 – 96 hours before departure.</p>
+                              </div>
+                              <div class="polibox_cnt_item">
+                                <div class="checkicon">
+                                  <img src="https://cdn.prod.website-files.com/6713759f858863c516dbaa19/6754150613f571f3ecee0471_check.png" alt="" />
+                                </div>
+                                <p><span>50% Fee:</span> Cancel 96 – 336 hours before departure.</p>
+                              </div>
+                              <div class="polibox_cnt_item">
+                                <div class="checkicon">
+                                  <img src="https://cdn.prod.website-files.com/6713759f858863c516dbaa19/6754150613f571f3ecee0471_check.png" alt="" />
+                                </div>
+                                <p class="capitalize"><span>Cancellations refunded in Jettly flight credits only</span></p>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="polibox">
+                            <div class="polibox_heading">
+                              <h3>Premium <span>+ 10%</span></h3>
+                            </div>
+                            <div class="polibox_cnt">
+                              <div class="polibox_cnt_item">
+                                <div class="checkicon">
+                                  <img src="https://cdn.prod.website-files.com/6713759f858863c516dbaa19/6754150613f571f3ecee0471_check.png" alt="" />
+                                </div>
+                                <p class="capitalize"><span>No Change Fee</span></p>
+                              </div>
+                              <div class="polibox_cnt_item">
+                                <div class="checkicon">
+                                  <img src="https://cdn.prod.website-files.com/6713759f858863c516dbaa19/6754150613f571f3ecee0471_check.png" alt="" />
+                                </div>
+                                <p><span>No Fee:</span> Cancel more than 168 hours (7 days) before departure.</p>
+                              </div>
+                              <div class="polibox_cnt_item">
+                                <div class="checkicon">
+                                  <img src="https://cdn.prod.website-files.com/6713759f858863c516dbaa19/6754150613f571f3ecee0471_check.png" alt="" />
+                                </div>
+                                <p><span>100% Fee:</span> Cancel within 24 hours of departure (no refund).</p>
+                              </div>
+                              <div class="polibox_cnt_item">
+                                <div class="checkicon">
+                                  <img src="https://cdn.prod.website-files.com/6713759f858863c516dbaa19/6754150613f571f3ecee0471_check.png" alt="" />
+                                </div>
+                                <p><span>75% Fee:</span> Cancel 24 – 96 hours before departure.</p>
+                              </div>
+                              <div class="polibox_cnt_item">
+                                <div class="checkicon">
+                                  <img src="https://cdn.prod.website-files.com/6713759f858863c516dbaa19/6754150613f571f3ecee0471_check.png" alt="" />
+                                </div>
+                                <p><span>50% Fee:</span> Cancel 96 – 168 hours before departure.</p>
+                              </div>
+                              <div class="polibox_cnt_item">
+                                <div class="checkicon">
+                                  <img src="https://cdn.prod.website-files.com/6713759f858863c516dbaa19/6754150613f571f3ecee0471_check.png" alt="" />
+                                </div>
+                                <p class="capitalize"><span>Cancellations refunded to original payment method or in Jettly flight credits</span></p>
+                              </div>
+                            </div>
+                          </div>
+                        </div>  
+                      </div>
+                    </div>
                   </div>
                   </div>
                 </div>
@@ -967,6 +1308,36 @@ fetch(apiUrl, {
                 })
                 .join("")
             : `<p class="Notfoundarray">Amenities Not Listed? Contact Us for the Latest Details!</p>`;
+
+          const arrivedTime = apiData.response.flight_legs[0].date_date;
+          const dateObject = new Date(arrivedTime * 1000);
+          const formattedDateStart = dateObject.toLocaleDateString("en-US", {
+            year: "numeric",
+            month: "short",
+            day: "numeric",
+          });
+          const formattedTimeStart = dateObject.toLocaleTimeString("en-US", {
+            hour: "numeric",
+            minute: "2-digit",
+            hour12: true,
+          });
+
+          const hours = Math.floor(totalDistance);
+          const minutes = Math.round((totalDistance - hours) * 60);
+          const totalSeconds = hours * 3600 + minutes * 60;
+          const finalTime = arrivedTime + totalSeconds;
+
+          const dateObjectAfter = new Date(finalTime * 1000);
+          const formattedDateEnd = dateObjectAfter.toLocaleDateString("en-US", {
+            year: "numeric",
+            month: "short",
+            day: "numeric",
+          });
+          const formattedTimeEnd = dateObjectAfter.toLocaleTimeString("en-US", {
+            hour: "numeric",
+            minute: "2-digit",
+            hour12: true,
+          });
 
           mainWrapper.innerHTML += `
             <div class="item_block_wrapper">
@@ -1117,6 +1488,297 @@ fetch(apiUrl, {
                             ${words}
                           </div>
                         </div>
+                      </div>
+                    </div>
+                    <div data-cnt="tab${index}it" class="item_tab_one">
+                      <div class="inttabDet">
+                        <h3>Flight legs</h3>
+                        <div class="intdet_wrapper">
+                          <div class="intdet_left">
+                            <img src="${item.operator_logo_image}" alt="" />
+                          </div>
+                          <div class="intdet_middle">
+                            <div class="intdet_middle_date">
+                              <p class="takeoffdate">${formattedDateStart}</p>
+                              <p class="landdate"> - Lands ${formattedDateEnd}</p>
+                            </div>
+                            <div class="inted_middle_time">
+                              <p>${formattedTimeStart} - ${formattedTimeEnd}</p>
+                            </div>
+                            <div class="airportformatname">
+                              <p>${
+                                apiData.response.flight_legs[0]
+                                  .mobile_app_from_airport_name_short_text
+                              } (${
+            apiData.response.flight_legs[0]
+              .mobile_app_from_airport_iata_code_text
+              ? apiData.response.flight_legs[0]
+                  .mobile_app_from_airport_iata_code_text
+              : apiData.response.flight_legs[0]
+                  .mobile_app_from_airport_icao_code_text
+              ? apiData.response.flight_legs[0]
+                  .mobile_app_from_airport_icao_code_text
+              : apiData.response.flight_legs[0]
+                  .mobile_app_from_airport_faa_code_text
+          })</p>
+
+          <p>${
+            apiData.response.flight_legs[0]
+              .mobile_app_to_airport_name_short_text
+          } (${
+            apiData.response.flight_legs[0].mobile_app_to_airport_iata_code_text
+              ? apiData.response.flight_legs[0]
+                  .mobile_app_to_airport_iata_code_text
+              : apiData.response.flight_legs[0]
+                  .mobile_app_to_airport_icao_code_text
+              ? apiData.response.flight_legs[0]
+                  .mobile_app_to_airport_icao_code_text
+              : apiData.response.flight_legs[0]
+                  .mobile_app_to_airport_faa_code_text
+          })</p>
+                            </div>
+                            <div class="operator_textlist">
+                              <p>${item.operator_txt_text} . ${
+            item.class_text
+          } . ${item.description_text}</p>
+                            </div>   
+                            ${
+                              item.range_number >= longestFlight
+                                ? `<div class="fuelstop"><p> <img src="https://cdn.prod.website-files.com/6713759f858863c516dbaa19/6753e62479df68bd6de939cd_Jettly-Search-Results-Page-(List-View-Itinerary-Tab).png" alt="" /> Possible fuel stop enroute -  <span>+20 mins</span></p></div>`
+                                : ""
+                            }
+                           
+                          </div>
+                          <div class="indetright_wrapper">
+                            <div class="indet_right">
+                              <img src="https://cdn.prod.website-files.com/6713759f858863c516dbaa19/6753e928907492da22caf7fe_flighticon.png" alt="" />
+                              <span>Flight time</span>
+                              <p>${totalHours} H ${totalMinutes} M</p>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div data-cnt="tab${index}op" class="item_tab_one">
+                      <div class="opadetails">
+                        <h3>Operator</h3>
+                        <div class="opadet_wrapper">
+                          <div class="opadet_top">
+                            <div class="opadet_top_left">
+                              <p>${item.operator_txt_text}</p>
+                              <img src="${item.operator_logo_image}" alt="" />
+                            </div>
+                            <div class="opadet_top_middle">
+                              <p><span>Response rate:</span> 100%</p>
+                              <p><span>Avg. response time:</span> <1 Hrs.</p>
+                              <p><span>Aircraft:</span> 2</p>
+                              <p><span>Address:</span> ${
+                                item
+                                  .base_airport_fixed_address_geographic_address
+                                  .address
+                              }</p>
+                              <p><span>Hours:</span> 24 Hours</p>
+                              <p><span>Certificate ID:</span> Ask us</p>
+                            </div>
+                            <div class="opadet_top_right">
+                              <iframe src="https://www.google.com/maps?q=${
+                                item
+                                  .base_airport_fixed_address_geographic_address
+                                  .address
+                              }&output=embed" frameborder="0"></iframe>
+                            </div>
+                          </div>
+                          <div class="opadet_bottom">
+                            <div class="opadet_bottom_heading">
+                              <ul>
+                                <li><img src="https://cdn.prod.website-files.com/6713759f858863c516dbaa19/6754085d1d9a01ce66e3a259_Jettly-Search-Results-Page-(List-View-Operators-Tab)-Recovered.png" alt="" /></li>
+                                <li>0.00  |  0</li>
+                                <li><span>Reviews</span></li>
+                              </ul>
+                            </div>
+                            <div class="opadet_bottom_review">
+                              <div class="opadet_bottom_review_left">
+                                <div class="reviewitem_block">
+                                  <div class="obarleft">
+                                    <p>5 Stars</p>
+                                  </div>
+                                  <div class="obarmiddle">
+                                    <span></span>
+                                  </div>
+                                  <div class="obaright">
+                                    <p>(0)</p>
+                                  </div>
+                                </div>
+                                <div class="reviewitem_block">
+                                  <div class="obarleft">
+                                    <p>4 Stars</p>
+                                  </div>
+                                  <div class="obarmiddle">
+                                    <span></span>
+                                  </div>
+                                  <div class="obaright">
+                                    <p>(0)</p>
+                                  </div>
+                                </div>
+                                <div class="reviewitem_block">
+                                  <div class="obarleft">
+                                    <p>3 Stars</p>
+                                  </div>
+                                  <div class="obarmiddle">
+                                    <span></span>
+                                  </div>
+                                  <div class="obaright">
+                                    <p>(0)</p>
+                                  </div>
+                                </div>
+                                <div class="reviewitem_block">
+                                  <div class="obarleft">
+                                    <p>2 Stars</p>
+                                  </div>
+                                  <div class="obarmiddle">
+                                    <span></span>
+                                  </div>
+                                  <div class="obaright">
+                                    <p>(0)</p>
+                                  </div>
+                                </div>
+                                <div class="reviewitem_block">
+                                  <div class="obarleft">
+                                    <p>1 Star</p>
+                                  </div>
+                                  <div class="obarmiddle">
+                                    <span></span>
+                                  </div>
+                                  <div class="obaright">
+                                    <p>(0)</p>
+                                  </div>
+                                </div>
+                              </div>
+                              <div class="opadet_bottom_review_right">
+                                <h3>Rating Breakdown</h3>
+                                <div class="opadet_bottom_review_right_item">
+                                  <p>Seller communication level <span>0.0 <img src="https://cdn.prod.website-files.com/6713759f858863c516dbaa19/67540aa6fb2976ffafcecdf2_Jettly-Search-Results-Page-(List-View-Operators-Tab)-Recovered.png" alt="" /></span></p>
+                                  <p>Recommended to other passengers <span>0.0 <img src="https://cdn.prod.website-files.com/6713759f858863c516dbaa19/67540aa6fb2976ffafcecdf2_Jettly-Search-Results-Page-(List-View-Operators-Tab)-Recovered.png" alt="" /></span></p>
+                                  <p>Service as described <span>0.0 <img src="https://cdn.prod.website-files.com/6713759f858863c516dbaa19/67540aa6fb2976ffafcecdf2_Jettly-Search-Results-Page-(List-View-Operators-Tab)-Recovered.png" alt="" /></span></p>
+                                   <p>Flight cancellation rate <span>0% <img src="https://cdn.prod.website-files.com/6713759f858863c516dbaa19/67540aa6fb2976ffafcecdf2_Jettly-Search-Results-Page-(List-View-Operators-Tab)-Recovered.png" alt="" /></span></p>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div data-cnt="tab${index}pl" class="item_tab_one">
+                      <div class="poli_wrapper">
+                        <h3>Available fare classes</h3>  
+                        <div class="poli_box_wrapper">
+                          <div class="polibox">
+                            <div class="polibox_heading">
+                              <h3>Value <span>+ $0</span></h3>                              
+                            </div>
+                            <div class="polibox_cnt">
+                              <div class="polibox_cnt_item">
+                                <div class="checkicon">
+                                  <img src="https://cdn.prod.website-files.com/6713759f858863c516dbaa19/6754150613f571f3ecee0471_check.png" alt="" />
+                                </div>
+                                <p><span>$95 Change Fee:</span> Applies to all flight modifications.</p>
+                              </div>
+                              <div class="polibox_cnt_item">
+                                <div class="checkicon">
+                                  <img src="https://cdn.prod.website-files.com/6713759f858863c516dbaa19/6754150613f571f3ecee0471_check.png" alt="" />
+                                </div>
+                                <p><span>Non-Refundable:</span> Flight fare is non-refundable for client-initiated cancellations.</p>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="polibox polibox_two">
+                            <div class="polibox_heading">
+                              <h3>Flex <span>+ 5%</span></h3>
+                              <span class="recom">Recommended</span>                              
+                            </div>
+                            <div class="polibox_cnt">
+                              <div class="polibox_cnt_item">
+                                <div class="checkicon">
+                                  <img src="https://cdn.prod.website-files.com/6713759f858863c516dbaa19/6754150613f571f3ecee0471_check.png" alt="" />
+                                </div>
+                                <p class="capitalize"><span>No Change Fee</span></p>
+                              </div>
+                              <div class="polibox_cnt_item">
+                                <div class="checkicon">
+                                  <img src="https://cdn.prod.website-files.com/6713759f858863c516dbaa19/6754150613f571f3ecee0471_check.png" alt="" />
+                                </div>
+                                <p><span>No Fee:</span> Cancel more than 336 hours (14 days) before departure.</p>
+                              </div>
+                              <div class="polibox_cnt_item">
+                                <div class="checkicon">
+                                  <img src="https://cdn.prod.website-files.com/6713759f858863c516dbaa19/6754150613f571f3ecee0471_check.png" alt="" />
+                                </div>
+                                <p><span>100% Fee:</span> Cancel within 24 hours of departure (no refund).</p>
+                              </div>
+                              <div class="polibox_cnt_item">
+                                <div class="checkicon">
+                                  <img src="https://cdn.prod.website-files.com/6713759f858863c516dbaa19/6754150613f571f3ecee0471_check.png" alt="" />
+                                </div>
+                                <p><span>75% Fee:</span> Cancel 24 – 96 hours before departure.</p>
+                              </div>
+                              <div class="polibox_cnt_item">
+                                <div class="checkicon">
+                                  <img src="https://cdn.prod.website-files.com/6713759f858863c516dbaa19/6754150613f571f3ecee0471_check.png" alt="" />
+                                </div>
+                                <p><span>50% Fee:</span> Cancel 96 – 336 hours before departure.</p>
+                              </div>
+                              <div class="polibox_cnt_item">
+                                <div class="checkicon">
+                                  <img src="https://cdn.prod.website-files.com/6713759f858863c516dbaa19/6754150613f571f3ecee0471_check.png" alt="" />
+                                </div>
+                                <p class="capitalize"><span>Cancellations refunded in Jettly flight credits only</span></p>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="polibox">
+                            <div class="polibox_heading">
+                              <h3>Premium <span>+ 10%</span></h3>
+                            </div>
+                            <div class="polibox_cnt">
+                              <div class="polibox_cnt_item">
+                                <div class="checkicon">
+                                  <img src="https://cdn.prod.website-files.com/6713759f858863c516dbaa19/6754150613f571f3ecee0471_check.png" alt="" />
+                                </div>
+                                <p class="capitalize"><span>No Change Fee</span></p>
+                              </div>
+                              <div class="polibox_cnt_item">
+                                <div class="checkicon">
+                                  <img src="https://cdn.prod.website-files.com/6713759f858863c516dbaa19/6754150613f571f3ecee0471_check.png" alt="" />
+                                </div>
+                                <p><span>No Fee:</span> Cancel more than 168 hours (7 days) before departure.</p>
+                              </div>
+                              <div class="polibox_cnt_item">
+                                <div class="checkicon">
+                                  <img src="https://cdn.prod.website-files.com/6713759f858863c516dbaa19/6754150613f571f3ecee0471_check.png" alt="" />
+                                </div>
+                                <p><span>100% Fee:</span> Cancel within 24 hours of departure (no refund).</p>
+                              </div>
+                              <div class="polibox_cnt_item">
+                                <div class="checkicon">
+                                  <img src="https://cdn.prod.website-files.com/6713759f858863c516dbaa19/6754150613f571f3ecee0471_check.png" alt="" />
+                                </div>
+                                <p><span>75% Fee:</span> Cancel 24 – 96 hours before departure.</p>
+                              </div>
+                              <div class="polibox_cnt_item">
+                                <div class="checkicon">
+                                  <img src="https://cdn.prod.website-files.com/6713759f858863c516dbaa19/6754150613f571f3ecee0471_check.png" alt="" />
+                                </div>
+                                <p><span>50% Fee:</span> Cancel 96 – 168 hours before departure.</p>
+                              </div>
+                              <div class="polibox_cnt_item">
+                                <div class="checkicon">
+                                  <img src="https://cdn.prod.website-files.com/6713759f858863c516dbaa19/6754150613f571f3ecee0471_check.png" alt="" />
+                                </div>
+                                <p class="capitalize"><span>Cancellations refunded to original payment method or in Jettly flight credits</span></p>
+                              </div>
+                            </div>
+                          </div>
+                        </div>  
                       </div>
                     </div>
                 </div>

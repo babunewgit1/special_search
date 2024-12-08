@@ -641,7 +641,22 @@ oneWaySubmit.addEventListener("click", function () {
   const timeAsText = document.querySelector(".oneWayTime").value;
   const pax = document.querySelector(".onewaypax").value;
   const appDate = dateAsText;
-  const timeStamp = Math.floor(new Date(dateAsText).getTime() / 1000);
+
+  console.log(dateAsText, timeAsText);
+
+  // Combine the date and time strings
+  const combinedDateTime = `${dateAsText} ${timeAsText}`;
+
+  // Create a Date object with the combined date and time string
+  const dateObject = new Date(combinedDateTime);
+
+  // Check if the dateObject correctly parses the date and time
+  console.log("Parsed Date:", dateObject.toString());
+
+  // Adjust for UTC if needed
+  const timeStamp = Math.floor(dateObject.getTime() / 1000);
+
+  console.log("UNIX Timestamp:", timeStamp);
 
   if (
     fromId &&
