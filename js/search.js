@@ -53,6 +53,8 @@ const insValueDisplay = document.getElementById("instextvalue");
 const searchInputBox = document.getElementById("searchBox");
 const finalResultParagraph = document.getElementById("finalresult");
 let sliderClass;
+let operatorId;
+let flightRequestId;
 
 const departureReadyCountLabel = departureReadyCheckbox
   .closest("label")
@@ -83,17 +85,18 @@ fetch(apiUrl, {
   .then((apiData) => {
     const aircraftSets = [];
     const longestFlight = apiData.response.longest_flight_leg;
+    flightRequestId = apiData.response.flightrequest;
 
     console.log(apiData.response);
 
     // date collection and formation for dropdown
-    const departureDates =
-      apiData.response.flight_legs[0].departure_dates_as_texts_list_text[0];
-    const date = new Date(departureDates);
-    const options = { year: "numeric", month: "short", day: "numeric" };
-    const formattedDate = new Intl.DateTimeFormat("en-US", options).format(
-      date
-    );
+    // const departureDates =
+    //   apiData.response.flight_legs[0].departure_dates_as_texts_list_text[0];
+    // const date = new Date(departureDates);
+    // const options = { year: "numeric", month: "short", day: "numeric" };
+    // const formattedDate = new Intl.DateTimeFormat("en-US", options).format(
+    //   date
+    // );
 
     if (apiData.response) {
       for (const key in apiData.response) {
@@ -785,6 +788,7 @@ fetch(apiUrl, {
                 hour12: true,
               }
             );
+
             mainWrapper.innerHTML += `
               <div class="item_block_wrapper hotwrapper">
                 <div class="item_wrapper">
@@ -970,12 +974,10 @@ fetch(apiUrl, {
                     .mobile_app_from_airport_icao_code_text
                 : apiData.response.flight_legs[0]
                     .mobile_app_from_airport_faa_code_text
-            })</p>
-
-          <p>${
-            apiData.response.flight_legs[0]
-              .mobile_app_to_airport_name_short_text
-          } (${
+            }) - ${
+              apiData.response.flight_legs[0]
+                .mobile_app_to_airport_name_short_text
+            } (${
               apiData.response.flight_legs[0]
                 .mobile_app_to_airport_iata_code_text
                 ? apiData.response.flight_legs[0]
@@ -987,6 +989,8 @@ fetch(apiUrl, {
                 : apiData.response.flight_legs[0]
                     .mobile_app_to_airport_faa_code_text
             })</p>
+
+          
                             </div>
                             <div class="operator_textlist">
                               <p>${item.operator_txt_text} . ${
@@ -1230,6 +1234,64 @@ fetch(apiUrl, {
                             </div>
                           </div>
                         </div>  
+                      </div>
+                    </div>
+                    <div data-cnt="tab${index}py" class="item_tab_one">
+                      <div class="payment_tab">
+                        <h3>Payments</h3>
+                        <div class="payment_wrapper">
+                          <div class="paymenttab_left">
+                            <div class="paymenttab_left_item">
+                              <div class="paymenttab_item_img">
+                                <img src="https://cdn.prod.website-files.com/6713759f858863c516dbaa19/6754150613f571f3ecee0471_check.png" alt="" />
+                              </div>
+                              <p>Pay in full upon aircraft availability confirmation by Alto Aerospace</p>
+                            </div>
+                            <div class="paymenttab_left_item">
+                              <div class="paymenttab_item_img">
+                                <img src="https://cdn.prod.website-files.com/6713759f858863c516dbaa19/6754150613f571f3ecee0471_check.png" alt="" />
+                              </div>
+                              <p>Acceptable payment methods : Visa, MasterCard, American Express, Wire, ACH, Cryptocurrency</p>
+                            </div>
+                            <div class="paymenttab_left_item">
+                              <div class="paymenttab_item_img">
+                                <img src="https://cdn.prod.website-files.com/6713759f858863c516dbaa19/6754150613f571f3ecee0471_check.png" alt="" />
+                              </div>
+                              <p>You will receive an invoice for the trip once the aircraft is confirmed</p>
+                            </div>
+                          </div>
+                          <div class="paymenttab_right">
+                            <p>Upon confirmation</p>
+                            <div class="paymenttab_right_percent">
+                              <div class="paybar">
+                              </div>
+                              <div class="paybar_text">
+                                <img src="https://cdn.prod.website-files.com/6713759f858863c516dbaa19/6754150613f571f3ecee0471_check.png" alt="" />
+                                <span>100%</span>
+                              </div>
+                            </div>
+                            <p>Pay in full once the aircraft is confirmed available by Alto Aerospace.</p>
+                            <div class="payment">
+                              <img src="https://cdn.prod.website-files.com/6713759f858863c516dbaa19/6755a86f952bce124bed0a9d_payment.png" alt="" />
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div data-cnt="tab${index}ask" class="item_tab_one">
+                      <div class="payment_tab">
+                        <h3>Message Alto Aerospace</h3>
+                        <div class="payment_wrapper askform">
+                          <form>
+                            <textarea required placeholder="Type your message here"></textarea>
+                            <input type="hidden" value=${
+                              item.managed_a_c_operator_custom_managed_air_operator
+                            } />
+                            <div class="submitbtn">
+                              <button type="submit"><img src="https://cdn.prod.website-files.com/6713759f858863c516dbaa19/6755b3a876accbd14f83880f_plan.png" alt="" /></button>
+                            </div>
+                          </form>
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -1520,9 +1582,7 @@ fetch(apiUrl, {
                   .mobile_app_from_airport_icao_code_text
               : apiData.response.flight_legs[0]
                   .mobile_app_from_airport_faa_code_text
-          })</p>
-
-          <p>${
+          }) - ${
             apiData.response.flight_legs[0]
               .mobile_app_to_airport_name_short_text
           } (${
@@ -1536,6 +1596,8 @@ fetch(apiUrl, {
               : apiData.response.flight_legs[0]
                   .mobile_app_to_airport_faa_code_text
           })</p>
+
+          
                             </div>
                             <div class="operator_textlist">
                               <p>${item.operator_txt_text} . ${
@@ -1781,6 +1843,64 @@ fetch(apiUrl, {
                         </div>  
                       </div>
                     </div>
+                    <div data-cnt="tab${index}py" class="item_tab_one">
+                      <div class="payment_tab">
+                        <h3>Payments</h3>
+                        <div class="payment_wrapper">
+                          <div class="paymenttab_left">
+                            <div class="paymenttab_left_item">
+                              <div class="paymenttab_item_img">
+                                <img src="https://cdn.prod.website-files.com/6713759f858863c516dbaa19/6754150613f571f3ecee0471_check.png" alt="" />
+                              </div>
+                              <p>Pay in full upon aircraft availability confirmation by Alto Aerospace</p>
+                            </div>
+                            <div class="paymenttab_left_item">
+                              <div class="paymenttab_item_img">
+                                <img src="https://cdn.prod.website-files.com/6713759f858863c516dbaa19/6754150613f571f3ecee0471_check.png" alt="" />
+                              </div>
+                              <p>Acceptable payment methods : Visa, MasterCard, American Express, Wire, ACH, Cryptocurrency</p>
+                            </div>
+                            <div class="paymenttab_left_item">
+                              <div class="paymenttab_item_img">
+                                <img src="https://cdn.prod.website-files.com/6713759f858863c516dbaa19/6754150613f571f3ecee0471_check.png" alt="" />
+                              </div>
+                              <p>You will receive an invoice for the trip once the aircraft is confirmed</p>
+                            </div>
+                          </div>
+                          <div class="paymenttab_right">
+                            <p>Upon confirmation</p>
+                            <div class="paymenttab_right_percent">
+                              <div class="paybar">
+                              </div>
+                              <div class="paybar_text">
+                                <img src="https://cdn.prod.website-files.com/6713759f858863c516dbaa19/6754150613f571f3ecee0471_check.png" alt="" />
+                                <span>100%</span>
+                              </div>
+                            </div>
+                            <p>Pay in full once the aircraft is confirmed available by Alto Aerospace.</p>
+                            <div class="payment">
+                              <img src="https://cdn.prod.website-files.com/6713759f858863c516dbaa19/6755a86f952bce124bed0a9d_payment.png" alt="" />
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div data-cnt="tab${index}ask" class="item_tab_one">
+                      <div class="payment_tab">
+                        <h3>Message Alto Aerospace</h3>
+                        <div class="payment_wrapper askform">
+                          <form>
+                            <textarea required placeholder="Type your message here"></textarea>
+                            <input type="hidden" value=${
+                              item.managed_a_c_operator_custom_managed_air_operator
+                            } />
+                            <div class="submitbtn">
+                              <button type="submit"><img src="https://cdn.prod.website-files.com/6713759f858863c516dbaa19/6755b3a876accbd14f83880f_plan.png" alt="" /></button>
+                            </div>
+                          </form>
+                        </div>
+                      </div>
+                    </div>
                 </div>
                 </div>
               </div>
@@ -1793,6 +1913,7 @@ fetch(apiUrl, {
 
       attachDetailsButtonListeners();
       tabControl();
+      submitMessage();
     };
 
     const renderPagination = (filteredSets) => {
@@ -2225,6 +2346,43 @@ fetch(apiUrl, {
             });
           });
         });
+    }
+
+    //! Message submit api
+    function submitMessage() {
+      const messageForms = document.querySelectorAll(".askform form");
+      messageForms.forEach((formBox) => {
+        formBox.addEventListener("submit", async (e) => {
+          e.preventDefault();
+          const message = e.target[0].value;
+          const operatorId = e.target[1].value;
+
+          const payload = {
+            operator_id: operatorId,
+            flight_request_id: flightRequestId,
+            message_text: message,
+          };
+          try {
+            const response = await fetch(
+              "https://jettly.com/api/1.1/wf/send_message",
+              {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+                body: JSON.stringify(payload),
+              }
+            );
+            if (response.ok) {
+              alert("Message sent successfully:");
+            } else {
+              alert("Failed to send message:");
+            }
+          } catch (error) {
+            alert("Error occurred while sending message:");
+          }
+        });
+      });
     }
 
     var swiper = new Swiper(`.slide${sliderClass}block`, {
