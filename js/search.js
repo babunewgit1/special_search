@@ -8,7 +8,7 @@ function debounce(fn, delay) {
 }
 
 // Global variables
-let apiData; // Will hold the fetched API data
+let apiData;
 let aircraftSets = [];
 let filteredByRangeSlider = [];
 let longestFlight;
@@ -63,7 +63,6 @@ const highTimeCrewCountLabel = highTimeCrewCheckbox
   .closest("label")
   .querySelector("span");
 
-// Show/hide loader
 const showLoader = () => {
   loader.style.display = "flex";
 };
@@ -72,8 +71,6 @@ const hideLoader = () => {
 };
 
 showLoader();
-
-// FUNCTIONS DEFINED BEFORE USAGE:
 
 function recalculateFuelCounts(items) {
   const fuelCount = {
@@ -299,6 +296,49 @@ function renderPage(page, filteredSets) {
   attachDetailsButtonListeners();
   tabControl();
   submitMessage();
+  initializeSwipers();
+}
+
+function initializeSwipers() {
+  const slideBlocks = document.querySelectorAll(
+    "[class*='slide'][class*='block'], [class*='slide'][class*='int']"
+  );
+  const uniqueIndexes = new Set();
+  slideBlocks.forEach((block) => {
+    const classes = block.className.split(" ");
+    classes.forEach((cl) => {
+      const matchBlock = cl.match(/slide(\d+)block/);
+      const matchInt = cl.match(/slide(\d+)int/);
+      if (matchBlock) {
+        uniqueIndexes.add(matchBlock[1]);
+      }
+      if (matchInt) {
+        uniqueIndexes.add(matchInt[1]);
+      }
+    });
+  });
+
+  uniqueIndexes.forEach((sliderClass) => {
+    new Swiper(`.slide${sliderClass}block`, {
+      slidesPerView: 3,
+      loop: true,
+      navigation: {
+        nextEl: `.nav${sliderClass}next`,
+        prevEl: `.nav${sliderClass}prev`,
+      },
+      spaceBetween: 10,
+    });
+
+    new Swiper(`.slide${sliderClass}int`, {
+      slidesPerView: 3,
+      loop: true,
+      navigation: {
+        nextEl: `.int${sliderClass}next`,
+        prevEl: `.int${sliderClass}prev`,
+      },
+      spaceBetween: 10,
+    });
+  });
 }
 
 function renderPagination(filteredSets) {
@@ -327,13 +367,11 @@ function renderPagination(filteredSets) {
     button.textContent = i;
     button.className = "pagination-btn";
     if (i === currentPage) button.classList.add("active");
-
     button.addEventListener("click", () => {
       currentPage = i;
       renderPage(currentPage, filteredSets);
       renderPagination(filteredSets);
     });
-
     pagination.appendChild(button);
   }
 
@@ -401,7 +439,6 @@ function submitMessage() {
       e.preventDefault();
       const message = e.target[0].value;
       const operatorId = e.target[1].value;
-
       const payload = {
         operator_id: operatorId,
         flight_request_id: flightRequestId,
@@ -430,6 +467,7 @@ function submitMessage() {
   });
 }
 
+// FULL HOT DEAL HTML
 function getHotDealHtml(
   item,
   index,
@@ -447,7 +485,6 @@ function getHotDealHtml(
   words,
   apiData
 ) {
-  // FULL HOT DEAL HTML:
   return `
   <div class="item_wrapper">
     <div class="hot_headls_logo">
@@ -899,8 +936,7 @@ function getHotDealHtml(
             <div class="paymenttab_right">
               <p>Upon confirmation</p>
               <div class="paymenttab_right_percent">
-                <div class="paybar">
-                </div>
+                <div class="paybar"></div>
                 <div class="paybar_text">
                   <img src="https://cdn.prod.website-files.com/6713759f858863c516dbaa19/6754150613f571f3ecee0471_check.png" alt="" />
                   <span>100%</span>
@@ -932,10 +968,10 @@ function getHotDealHtml(
       </div>
     </div>
     </div>
-  </div>
   `;
 }
 
+// FULL REGULAR ITEM HTML
 function getRegularItemHtml(
   item,
   index,
@@ -954,7 +990,6 @@ function getRegularItemHtml(
   words,
   apiData
 ) {
-  // FULL REGULAR ITEM HTML:
   return `
     <div class="item_wrapper">
       <div class="item_img">
@@ -1402,8 +1437,7 @@ function getRegularItemHtml(
                 <div class="paymenttab_right">
                   <p>Upon confirmation</p>
                   <div class="paymenttab_right_percent">
-                    <div class="paybar">
-                    </div>
+                    <div class="paybar"></div>
                     <div class="paybar_text">
                       <img src="https://cdn.prod.website-files.com/6713759f858863c516dbaa19/6754150613f571f3ecee0471_check.png" alt="" />
                       <span>100%</span>
@@ -1533,47 +1567,48 @@ function createItemBlock(item, index, isHotDeal, fragment, distance) {
     ? "item_block_wrapper hotwrapper"
     : "item_block_wrapper";
 
-  itemWrapper.innerHTML = isHotDeal
-    ? getHotDealHtml(
-        item,
-        index,
-        calculateTotal,
-        totalHours,
-        totalMinutes,
-        formattedDateStart,
-        formattedDateEnd,
-        formattedTimeStart,
-        formattedTimeEnd,
-        allImageExt,
-        allImageInt,
-        checkExtLength,
-        checkIntLength,
-        words,
-        apiData
-      )
-    : getRegularItemHtml(
-        item,
-        index,
-        calculateTotal,
-        totalHours,
-        totalMinutes,
-        stopInfo,
-        formattedDateStart,
-        formattedDateEnd,
-        formattedTimeStart,
-        formattedTimeEnd,
-        allImageExt,
-        allImageInt,
-        checkExtLength,
-        checkIntLength,
-        words,
-        apiData
-      );
+  if (isHotDeal) {
+    itemWrapper.innerHTML = getHotDealHtml(
+      item,
+      index,
+      calculateTotal,
+      totalHours,
+      totalMinutes,
+      formattedDateStart,
+      formattedDateEnd,
+      formattedTimeStart,
+      formattedTimeEnd,
+      allImageExt,
+      allImageInt,
+      checkExtLength,
+      checkIntLength,
+      words,
+      apiData
+    );
+  } else {
+    itemWrapper.innerHTML = getRegularItemHtml(
+      item,
+      index,
+      calculateTotal,
+      totalHours,
+      totalMinutes,
+      stopInfo,
+      formattedDateStart,
+      formattedDateEnd,
+      formattedTimeStart,
+      formattedTimeEnd,
+      allImageExt,
+      allImageInt,
+      checkExtLength,
+      checkIntLength,
+      words,
+      apiData
+    );
+  }
 
   fragment.appendChild(itemWrapper);
 }
 
-// Debounced filter and search
 const debouncedFilterData = debounce(() => {
   filterData();
 }, 300);
@@ -1650,7 +1685,6 @@ function filterData() {
   renderPagination(filteredSets);
 }
 
-// Handle search input
 const handleSearchInput = () => {
   const searchTerm = searchInputBox.value.toLowerCase().trim();
   filteredByRangeSlider = aircraftSets.filter((item) =>
@@ -1661,8 +1695,7 @@ const handleSearchInput = () => {
 
 searchInputBox.addEventListener("input", handleSearchInput);
 
-// Fetch data
-// Replace apiUrl and data as per your actual values:
+// Replace apiUrl and data as per your actual values
 const apiUrl = "https://jettly.com/api/1.1/wf/webflow_one_way_flight";
 const storedData = sessionStorage.getItem("one_way");
 let way;
@@ -1702,7 +1735,7 @@ fetch(apiUrl, {
 })
   .then((response) => response.json())
   .then((responseData) => {
-    apiData = responseData; // store globally
+    apiData = responseData;
     longestFlight = apiData.response.longest_flight_leg;
     flightRequestId = apiData.response.flightrequest;
 
@@ -1748,7 +1781,6 @@ fetch(apiUrl, {
         .filter((year) => typeof year === "number" && !isNaN(year))
     );
 
-    // Initialize sliders
     rangeSlider.min = minYear;
     rangeSlider.max = maxYear;
     rangeSlider.value = minYear;
@@ -2124,7 +2156,7 @@ fetch(apiUrl, {
         });
     }
 
-    // Generate filters
+    // Generate all filters
     generateCheckboxes(
       categoryCheckboxWrapper,
       aircraftSets,
@@ -2153,7 +2185,6 @@ fetch(apiUrl, {
     generateOthersCheckboxes();
     generateFuelCheckboxes();
 
-    // Initial render
     filterData();
   })
   .catch((error) => console.error("Error:", error));
