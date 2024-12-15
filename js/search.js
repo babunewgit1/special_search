@@ -55,6 +55,7 @@ const insValueDisplay = document.getElementById("instextvalue");
 const searchInputBox = document.getElementById("searchBox");
 const finalResultParagraph = document.getElementById("finalresult");
 const loader = document.querySelector(".loading_animation");
+const filterTextElement = document.querySelector(".filter_number");
 
 const departureReadyCountLabel = departureReadyCheckbox
   .closest("label")
@@ -62,6 +63,22 @@ const departureReadyCountLabel = departureReadyCheckbox
 const highTimeCrewCountLabel = highTimeCrewCheckbox
   .closest("label")
   .querySelector("span");
+
+function updateSelectedFilterCount() {
+  let totalSelected = 0;
+  totalSelected += selectedClasses.length;
+  totalSelected += selectedDescriptions.length;
+  totalSelected += selectedOperators.length;
+  totalSelected += selectedArgusFilters.length;
+  totalSelected += selectedIsBaoFilters.length;
+  totalSelected += selectedWyvernFilters.length;
+  totalSelected += selectedanimalFilters.length;
+  totalSelected += selectedOthersFilters.length;
+  totalSelected += fuelFilters.length;
+  if (departureReadyCheckbox.checked) totalSelected += 1;
+  if (highTimeCrewCheckbox.checked) totalSelected += 1;
+  filterTextElement.textContent = `${totalSelected}`;
+}
 
 const showLoader = () => {
   loader.style.display = "flex";
@@ -485,6 +502,9 @@ function getHotDealHtml(
   words,
   apiData
 ) {
+  const operatorAddress =
+    item.base_airport_fixed_address_geographic_address?.address ||
+    "Address not available";
   return `
   <div class="item_wrapper">
     <div class="hot_headls_logo">
@@ -704,16 +724,12 @@ function getHotDealHtml(
                 <p><span>Response rate:</span> 100%</p>
                 <p><span>Avg. response time:</span> <1 Hrs.</p>
                 <p><span>Aircraft:</span> 2</p>
-                <p><span>Address:</span> ${
-                  item.base_airport_fixed_address_geographic_address.address
-                }</p>
+                <p><span>Address:</span> ${operatorAddress}</p>
                 <p><span>Hours:</span> 24 Hours</p>
                 <p><span>Certificate ID:</span> Ask us</p>
               </div>
               <div class="opadet_top_right">
-                <iframe src="https://www.google.com/maps?q=${
-                  item.base_airport_fixed_address_geographic_address.address
-                }&output=embed" frameborder="0"></iframe>
+                <iframe src="https://www.google.com/maps?q=${operatorAddress}&output=embed" frameborder="0"></iframe>
               </div>
             </div>
             <div class="opadet_bottom">
@@ -990,6 +1006,9 @@ function getRegularItemHtml(
   words,
   apiData
 ) {
+  const operatorAddress =
+    item.base_airport_fixed_address_geographic_address?.address ||
+    "Address not available";
   return `
     <div class="item_wrapper">
       <div class="item_img">
@@ -1205,16 +1224,12 @@ function getRegularItemHtml(
                     <p><span>Response rate:</span> 100%</p>
                     <p><span>Avg. response time:</span> <1 Hrs.</p>
                     <p><span>Aircraft:</span> 2</p>
-                    <p><span>Address:</span> ${
-                      item.base_airport_fixed_address_geographic_address.address
-                    }</p>
+                    <p><span>Address:</span> ${operatorAddress}</p>
                     <p><span>Hours:</span> 24 Hours</p>
                     <p><span>Certificate ID:</span> Ask us</p>
                   </div>
                   <div class="opadet_top_right">
-                    <iframe src="https://www.google.com/maps?q=${
-                      item.base_airport_fixed_address_geographic_address.address
-                    }&output=embed" frameborder="0"></iframe>
+                    <iframe src="https://www.google.com/maps?q=${operatorAddress}&output=embed" frameborder="0"></iframe>
                   </div>
                 </div>
                 <div class="opadet_bottom">
@@ -1674,13 +1689,13 @@ function filterData() {
     mainWrapper.innerHTML = `<p class="no-results">No results found for the selected filters.</p>`;
     pagination.innerHTML = "";
     finalResultParagraph.textContent = `0`;
-    updateCheckboxCounts(filteredSets);
+    // updateCheckboxCounts(filteredSets);
     return;
   }
 
   finalResultParagraph.textContent = ` ${filteredSets.length} `;
   currentPage = 1;
-  updateCheckboxCounts(filteredSets);
+  // updateCheckboxCounts(filteredSets);
   renderPage(currentPage, filteredSets);
   renderPagination(filteredSets);
 }
@@ -1697,7 +1712,7 @@ searchInputBox.addEventListener("input", handleSearchInput);
 
 // Replace apiUrl and data as per your actual values
 const apiUrl = "https://jettly.com/api/1.1/wf/webflow_one_way_flight";
-const storedData = sessionStorage.getItem("one_way");
+const storedData = sessionStorage.getItem("storeData");
 let way;
 if (storedData) {
   const findWay = JSON.parse(storedData);
@@ -1708,10 +1723,10 @@ if (storedData) {
 }
 
 let data;
-if (way === "one_way") {
-  const oneWayData = sessionStorage.getItem("one_way");
-  if (oneWayData) {
-    const sessionData = JSON.parse(oneWayData);
+if (way === "one way") {
+  const getStoredData = sessionStorage.getItem("storeData");
+  if (getStoredData) {
+    const sessionData = JSON.parse(getStoredData);
     data = {
       "from airport id": sessionData.fromId,
       "to airport id": sessionData.toId,
@@ -1748,6 +1763,7 @@ fetch(apiUrl, {
     }
 
     finalResultParagraph.textContent = ` ${aircraftSets.length} `;
+    updateCheckboxCounts(aircraftSets);
     hideLoader();
 
     filteredByRangeSlider = [...aircraftSets];
@@ -1838,8 +1854,15 @@ fetch(apiUrl, {
       debouncedFilterData();
     });
 
-    departureReadyCheckbox.addEventListener("change", debouncedFilterData);
-    highTimeCrewCheckbox.addEventListener("change", debouncedFilterData);
+    departureReadyCheckbox.addEventListener("change", () => {
+      debouncedFilterData();
+      updateSelectedFilterCount();
+    });
+
+    highTimeCrewCheckbox.addEventListener("change", () => {
+      debouncedFilterData();
+      updateSelectedFilterCount();
+    });
 
     function generateCheckboxes(
       wrapper,
@@ -1881,6 +1904,7 @@ fetch(apiUrl, {
             if (idx > -1) targetArray.splice(idx, 1);
           }
           debouncedFilterData();
+          updateSelectedFilterCount();
         });
       });
     }

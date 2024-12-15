@@ -1,248 +1,97 @@
-var swiper = new Swiper(".feature_swipper", {
-  slidesPerView: 9,
-  spaceBetween: 30,
-  navigation: {
-    nextEl: ".fea_right",
-    prevEl: ".fea_left",
-  },
-  breakpoints: {
-    0: {
-      slidesPerView: 3,
-      spaceBetween: 20,
-    },
-    577: {
-      slidesPerView: 4,
-      spaceBetween: 20,
-    },
-    768: {
-      slidesPerView: 5,
-      spaceBetween: 40,
-    },
-    992: {
-      slidesPerView: 9,
-      spaceBetween: 50,
-    },
-  },
+const addWay = document.querySelector(".sa_way_name");
+const flightWay = document.querySelectorAll(".sa_way_name_list");
+const formIdInput = document.querySelector(".onewayform");
+const toIdInput = document.querySelector(".onewayto");
+const fromId = document.querySelector(".onewayformid");
+const toId = document.querySelector(".onewaytoid");
+const dateAsText = document.querySelector(".onewaydate");
+const timeAsText = document.querySelector(".oneWayTime");
+const pax = document.querySelector(".onewaypax");
+const searchBox = document.querySelectorAll(".sa_way_search");
+const jetInput = document.querySelectorAll(".jetinput");
+const sugg = document.querySelector(".searchsugg");
+const drpDownCollection = document.querySelectorAll(".from_cl_wrapper");
+
+// getting data form session storage
+const getsessionDate = sessionStorage.getItem("storeData");
+const getstoredData = JSON.parse(getsessionDate);
+
+// show which way had selected by user
+function dropdownList() {
+  document.querySelector(".sa_way").addEventListener("click", () => {
+    document.querySelector(".sa_way_dropdown").style.display = "block";
+  });
+  addWay.textContent = getstoredData.way;
+  flightWay.forEach((flightList) => {
+    flightList.addEventListener("click", () => {
+      addWay.textContent = flightList.textContent;
+      flightList.parentElement.style.display = "none";
+    });
+  });
+}
+
+// making tab
+flightWay.forEach((item) => {
+  item.addEventListener("click", () => {
+    drpDownCollection.forEach((clItem) => {
+      clItem.style.display = "none";
+    });
+
+    const wayFlightAttr = item.getAttribute("way");
+    searchBox.forEach((search) => {
+      const searchAttr = search.getAttribute("id");
+
+      if (wayFlightAttr === searchAttr) {
+        search.classList.add("active_way");
+      } else {
+        search.classList.remove("active_way");
+      }
+    });
+  });
 });
 
-var swiper = new Swiper(".myswiper", {
-  slidesPerView: 3,
-  spaceBetween: 30,
-  navigation: {
-    nextEl: ".city_right",
-    prevEl: ".city_left",
-  },
-  breakpoints: {
-    0: {
-      slidesPerView: 1.2,
-      spaceBetween: 10,
-    },
-    577: {
-      slidesPerView: 1.4,
-      spaceBetween: 10,
-    },
-    768: {
-      slidesPerView: 1.5,
-      spaceBetween: 30,
-    },
-    992: {
-      slidesPerView: 3,
-      spaceBetween: 20,
-    },
-  },
-});
+//fill input with session storage data
+function fillInput() {
+  if (getstoredData.formIdInput) {
+    formIdInput.value = getstoredData.formIdInput;
+  }
+  if (getstoredData.toIdInput) {
+    toIdInput.value = getstoredData.toIdInput;
+  }
 
-var swiper = new Swiper(".rent_swipper", {
-  slidesPerView: 4,
-  spaceBetween: 30,
-  navigation: {
-    nextEl: ".rent_right",
-    prevEl: ".rent_left",
-  },
-  breakpoints: {
-    0: {
-      slidesPerView: 1.2,
-      spaceBetween: 10,
-    },
-    577: {
-      slidesPerView: 1.4,
-      spaceBetween: 10,
-    },
-    768: {
-      slidesPerView: 1.5,
-      spaceBetween: 30,
-    },
-    992: {
-      slidesPerView: 3,
-      spaceBetween: 20,
-    },
-    1440: {
-      slidesPerView: 4,
-      spaceBetween: 30,
-    },
-  },
-});
+  if (getstoredData.fromId) {
+    fromId.textContent = getstoredData.fromId;
+  }
 
-var swiper = new Swiper(".exp_swipper", {
-  slidesPerView: 4,
-  spaceBetween: 30,
-  navigation: {
-    nextEl: ".exp_right",
-    prevEl: ".exp_left",
-  },
+  if (getstoredData.toId) {
+    toId.textContent = getstoredData.toId;
+  }
+  if (getstoredData.dateAsText) {
+    dateAsText.value = getstoredData.dateAsText;
+  }
+  if (getstoredData.timeAsText) {
+    timeAsText.value = getstoredData.timeAsText;
+  }
+  if (getstoredData.pax) {
+    pax.value = getstoredData.pax;
+  }
+}
 
-  breakpoints: {
-    0: {
-      slidesPerView: 1.2,
-      spaceBetween: 10,
-    },
-    577: {
-      slidesPerView: 1.4,
-      spaceBetween: 10,
-    },
-    768: {
-      slidesPerView: 1.5,
-      spaceBetween: 30,
-    },
-    992: {
-      slidesPerView: 3,
-      spaceBetween: 20,
-    },
-    1440: {
-      slidesPerView: 4,
-      spaceBetween: 30,
-    },
-  },
-});
+// show jet input
+jetInput.forEach((jetInput) => {
+  jetInput.addEventListener("focus", () => {
+    sugg.style.display = "block";
+    const inputTarget = jetInput.getAttribute("target");
+    drpDownCollection.forEach((dropitem) => {
+      const dropAttr = dropitem.getAttribute("id");
 
-var swiper = new Swiper(".blog_swipper", {
-  slidesPerView: 1,
-  spaceBetween: 30,
-  navigation: {
-    nextEl: ".blg_right",
-    prevEl: ".blg_left",
-  },
-  breakpoints: {
-    0: {
-      slidesPerView: 1.2,
-      spaceBetween: 10,
-    },
-    577: {
-      slidesPerView: 1.4,
-      spaceBetween: 10,
-    },
-    768: {
-      slidesPerView: 1.5,
-      spaceBetween: 30,
-    },
-    992: {
-      slidesPerView: 1,
-      spaceBetween: 20,
-    },
-    1440: {
-      slidesPerView: 2,
-      spaceBetween: 30,
-    },
-  },
-});
-
-var swiper = new Swiper(".ptswipper", {
-  slidesPerView: 5,
-  spaceBetween: 24,
-  navigation: {
-    nextEl: ".pt_right",
-    prevEl: ".pt_left",
-  },
-
-  breakpoints: {
-    0: {
-      slidesPerView: 2,
-      spaceBetween: 10,
-    },
-    577: {
-      slidesPerView: 3,
-      spaceBetween: 10,
-    },
-    768: {
-      slidesPerView: 5,
-      spaceBetween: 30,
-    },
-    992: {
-      slidesPerView: 5,
-      spaceBetween: 20,
-    },
-    1440: {
-      slidesPerView: 5,
-      spaceBetween: 30,
-    },
-  },
-});
-
-var swiper = new Swiper(".rv_slider_wrapper", {
-  slidesPerView: 4,
-  spaceBetween: 24,
-  navigation: {
-    nextEl: ".rbx_right",
-    prevEl: ".rvxleft",
-  },
-
-  breakpoints: {
-    0: {
-      slidesPerView: 1.2,
-      spaceBetween: 10,
-    },
-    577: {
-      slidesPerView: 1.4,
-      spaceBetween: 10,
-    },
-    768: {
-      slidesPerView: 1.5,
-      spaceBetween: 30,
-    },
-    992: {
-      slidesPerView: 2,
-      spaceBetween: 20,
-    },
-    1440: {
-      slidesPerView: 3,
-      spaceBetween: 20,
-    },
-    1760: {
-      slidesPerView: 4,
-      spaceBetween: 30,
-    },
-  },
-});
-
-var swiper = new Swiper(".lg_swipper", {
-  slidesPerView: 6,
-  spaceBetween: 30,
-  pagination: {
-    el: ".swiper-pagination",
-    clickable: true,
-  },
-  autoplay: {
-    delay: 5000,
-  },
-
-  breakpoints: {
-    0: {
-      slidesPerView: 3,
-      spaceBetween: 10,
-    },
-    577: {
-      slidesPerView: 3,
-      spaceBetween: 10,
-    },
-    768: {
-      slidesPerView: 3,
-      spaceBetween: 30,
-    },
-    992: {
-      slidesPerView: 6,
-      spaceBetween: 20,
-    },
-  },
+      if (inputTarget === dropAttr) {
+        dropitem.style.display = "block";
+      } else {
+        dropitem.style.display = "none";
+      }
+    });
+  });
 });
 
 // ===================================
@@ -367,118 +216,6 @@ tothinput.addEventListener("focus", function () {
   tothlist.style.display = "block";
   fmthlist.style.display = "none";
 });
-
-// =================================
-//    apply for all
-// ================================
-
-//! reset the input field in page reload
-const allInput = document.querySelectorAll('.hmtrip form input[type="text"]');
-window.addEventListener("load", function () {
-  allInput.forEach((item) => {
-    item.value = "";
-  });
-});
-
-//! hide the list box when click in tab link
-const tabLink = document.querySelectorAll(".tab_link_box");
-tabLink.forEach((item) => {
-  item.addEventListener("click", function () {
-    itemList.style.display = "none";
-    itemListTo.style.display = "none";
-    fmtwlist.style.display = "none";
-    totwlist.style.display = "none";
-    tothlist.style.display = "none";
-    fmthlist.style.display = "none";
-  });
-});
-
-//! star rating
-document.addEventListener("DOMContentLoaded", () => {
-  const items = document.querySelectorAll(".rv_slide_item");
-  items.forEach((item) => {
-    const rating = parseFloat(item.querySelector(".ratting").textContent);
-
-    const starContainer = item.querySelector(".star-rating");
-    starContainer.innerHTML = "";
-
-    const maxStars = 5;
-    for (let i = 1; i <= maxStars; i++) {
-      const star = document.createElement("span");
-      star.classList.add("star");
-      if (i <= Math.floor(rating)) {
-        star.classList.add("filled");
-      } else if (i === Math.ceil(rating) && rating % 1 !== 0) {
-        star.classList.add("half-filled");
-      } else {
-        star.classList.add("empty");
-      }
-
-      starContainer.appendChild(star);
-    }
-  });
-});
-
-//! read more
-const paragraphs = document.querySelectorAll(".rv_slide_item_parra");
-const maxLength = 180;
-
-paragraphs.forEach((paragraph) => {
-  const fullText = paragraph.textContent;
-
-  if (fullText.length > maxLength) {
-    paragraph.textContent = fullText.slice(0, maxLength) + "...";
-
-    const readMoreContainer = paragraph.nextElementSibling;
-    if (readMoreContainer && readMoreContainer.classList.contains("readbtn")) {
-      const readMoreButton = document.createElement("button");
-      readMoreButton.textContent = "Read More";
-      readMoreContainer.appendChild(readMoreButton);
-
-      document.querySelector(".review_text_para").textContent = "";
-
-      readMoreButton.addEventListener("click", () => {
-        document.querySelector(".review_text_para").textContent = fullText;
-      });
-    }
-  }
-});
-
-//! input value increament and dicrement
-
-function inputUpDown(fninput, fnminusButton, fnplusButton) {
-  const input = document.getElementById(fninput);
-  const minusButton = document.getElementById(fnminusButton);
-  const plusButton = document.getElementById(fnplusButton);
-
-  plusButton.addEventListener("click", () => {
-    const currentValue = parseInt(input.value) || 0;
-    input.value = currentValue + 1;
-    checkMinusButton();
-  });
-
-  minusButton.addEventListener("click", () => {
-    const currentValue = parseInt(input.value) || 1;
-    if (currentValue > 0) {
-      input.value = currentValue - 1;
-    }
-    checkMinusButton();
-  });
-
-  function checkMinusButton() {
-    if (parseInt(input.value) <= 1) {
-      minusButton.classList.add("disabled");
-    } else {
-      minusButton.classList.remove("disabled");
-    }
-  }
-
-  checkMinusButton();
-}
-
-inputUpDown("ivone", "minone", "maxone");
-inputUpDown("Pex-2", "mintwo", "maxtwo");
-inputUpDown("ivthree", "minthree", "maxthree");
 
 class TimePicker {
   constructor(element) {
@@ -624,10 +361,38 @@ document
   .querySelectorAll(".time-picker")
   .forEach((picker) => new TimePicker(picker));
 
-// !=====================================================
-//!           Home page api submission
-//! =====================================================
+// pex increase decireas
+function inputUpDown(fninput, fnminusButton, fnplusButton) {
+  const input = document.getElementById(fninput);
+  const minusButton = document.getElementById(fnminusButton);
+  const plusButton = document.getElementById(fnplusButton);
 
+  plusButton.addEventListener("click", () => {
+    const currentValue = parseInt(input.value) || 0;
+    input.value = currentValue + 1;
+    checkMinusButton();
+  });
+
+  minusButton.addEventListener("click", () => {
+    const currentValue = parseInt(input.value) || 1;
+    if (currentValue > 0) {
+      input.value = currentValue - 1;
+    }
+    checkMinusButton();
+  });
+
+  function checkMinusButton() {
+    if (parseInt(input.value) <= 1) {
+      minusButton.classList.add("disabled");
+    } else {
+      minusButton.classList.remove("disabled");
+    }
+  }
+
+  checkMinusButton();
+}
+
+// send data to session storage
 const oneWaySubmit = document.querySelector(".onewaysubmit");
 const roundTripSubmit = document.querySelector(".roundtrip");
 const multiCitySubmit = document.querySelector(".multicity");
@@ -675,3 +440,10 @@ oneWaySubmit.addEventListener("click", function () {
     alert("Please fill up the form properly");
   }
 });
+
+dropdownList();
+fillInput();
+
+inputUpDown("ivone", "minone", "maxone");
+inputUpDown("Pex-2", "mintwo", "maxtwo");
+inputUpDown("ivthree", "minthree", "maxthree");
