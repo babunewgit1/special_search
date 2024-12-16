@@ -98,7 +98,7 @@ function recalculateFuelCounts(items) {
   };
 
   items.forEach((item) => {
-    if (item.range_number < longestFlight) {
+    if (item.range_number > longestFlight) {
       fuelCount["Direct"]++;
     } else if (item.range_number * 2 > longestFlight) {
       fuelCount["1 Stop"]++;
@@ -276,7 +276,7 @@ function applyOthersFilters(sets, filters) {
 function applyFuelFilters(sets, filters) {
   return sets.filter((item) => {
     let stopCategory;
-    if (item.range_number < longestFlight) {
+    if (item.range_number > longestFlight) {
       stopCategory = "Direct";
     } else if (item.range_number * 2 > longestFlight) {
       stopCategory = "1 Stop";
@@ -1615,7 +1615,7 @@ function createItemBlock(item, index, isHotDeal, fragment, distance) {
     : `<p class="Notfoundarray">Amenities Not Listed? Contact Us for the Latest Details!</p>`;
 
   const stopInfo =
-    item.range_number < longestFlight
+    item.range_number > longestFlight
       ? "Direct"
       : item.range_number * 2 > longestFlight
       ? "1 Stop"
@@ -2207,7 +2207,7 @@ fetch(apiUrl, {
       };
 
       aircraftSets.forEach((item) => {
-        if (item.range_number < longestFlight) {
+        if (item.range_number > longestFlight) {
           fuelCount["Direct"]++;
         } else if (item.range_number * 2 > longestFlight) {
           fuelCount["1 Stop"]++;
