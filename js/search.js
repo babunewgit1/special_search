@@ -29,6 +29,7 @@ let fuelFilters = [];
 // Pagination variables
 const itemsPerPage = 20;
 let currentPage = 1;
+let globalIndex = 0; // Added a global index to ensure unique indexing for hot deals and regular items.
 
 // DOM elements
 const mainWrapper = document.querySelector(".search_right");
@@ -295,8 +296,9 @@ function renderPage(page, filteredSets) {
   const fragment = document.createDocumentFragment();
 
   if (hotDeals && page === 1) {
-    hotDeals.forEach((item, index) => {
-      createItemBlock(item, index, true, fragment, distance);
+    hotDeals.forEach((item) => {
+      createItemBlock(item, globalIndex, true, fragment, distance);
+      globalIndex++;
     });
   }
 
@@ -304,8 +306,9 @@ function renderPage(page, filteredSets) {
   const end = start + itemsPerPage;
   const itemsToRender = filteredSets.slice(start, end);
 
-  itemsToRender.forEach((item, index) => {
-    createItemBlock(item, index, false, fragment, distance);
+  itemsToRender.forEach((item) => {
+    createItemBlock(item, globalIndex, false, fragment, distance);
+    globalIndex++;
   });
 
   mainWrapper.appendChild(fragment);
@@ -811,7 +814,7 @@ function getHotDealHtml(
             </div>
           </div>
         </div>
-      </div>
+      </div><!-- operator tab end -->
       <div data-cnt="tab${index}pl" class="item_tab_one">
         <div class="poli_wrapper">
           <h3>Available fare classes</h3>  
