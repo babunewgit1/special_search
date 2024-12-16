@@ -317,6 +317,7 @@ function renderPage(page, filteredSets) {
   tabControl();
   submitMessage();
   initializeSwipers();
+  initializeSimpleSliders();
 }
 
 function initializeSwipers() {
@@ -508,14 +509,30 @@ function getHotDealHtml(
   const operatorAddress =
     item.base_airport_fixed_address_geographic_address?.address ||
     "Address not available";
+
+  // Create a new array with both exterior and interior images
+  const allImages = [item.exterior_image1_image];
+  if (item.interior_image1_image) {
+    allImages.push(item.interior_image1_image);
+  }
   return `
   <div class="item_wrapper">
     <div class="hot_headls_logo">
       <img src="https://cdn.prod.website-files.com/6713759f858863c516dbaa19/6752921836657f93c6cd2590_hotlogo.png" alt="" />
       <span>Hot <br /> Deal </span>
     </div>
-    <div class="item_img">
-      <img src="${item.exterior_image1_image}" alt="" />
+    <div class="item_img slider-container" id="slider-${index}">
+      ${allImages
+        .map(
+          (imgSrc, imgIndex) => `
+        <div class="slide ${imgIndex === 0 ? "active" : ""}">
+          <img src="${imgSrc}" alt="Aircraft Image ${imgIndex + 1}" />
+        </div>
+      `
+        )
+        .join("")}
+      <button class="prev-btn" data-slider-id="slider-${index}">&lt;</button>
+      <button class="next-btn" data-slider-id="slider-${index}">&gt;</button>
     </div>
     <div class="item_cnt">
       <h4>${item.description_text}</h4>
@@ -937,7 +954,9 @@ function getHotDealHtml(
                 <div class="paymenttab_item_img">
                   <img src="https://cdn.prod.website-files.com/6713759f858863c516dbaa19/6754150613f571f3ecee0471_check.png" alt="" />
                 </div>
-                <p>Pay in full upon aircraft availability confirmation by Alto Aerospace</p>
+                <p>Pay in full upon aircraft availability confirmation by ${
+                  item.operator_txt_text
+                }</p>
               </div>
               <div class="paymenttab_left_item">
                 <div class="paymenttab_item_img">
@@ -961,7 +980,9 @@ function getHotDealHtml(
                   <span>100%</span>
                 </div>
               </div>
-              <p>Pay in full once the aircraft is confirmed available by Alto Aerospace.</p>
+              <p>Pay in full once the aircraft is confirmed available by ${
+                item.operator_txt_text
+              }.</p>
               <div class="payment">
                 <img src="https://cdn.prod.website-files.com/6713759f858863c516dbaa19/6755a86f952bce124bed0a9d_payment.png" alt="" />
               </div>
@@ -971,7 +992,7 @@ function getHotDealHtml(
       </div>
       <div data-cnt="tab${index}ask" class="item_tab_one">
         <div class="payment_tab">
-          <h3>Message Alto Aerospace</h3>
+          <h3>Message ${item.operator_txt_text}</h3>
           <div class="payment_wrapper askform">
             <form>
               <textarea required placeholder="Type your message here"></textarea>
@@ -1012,10 +1033,26 @@ function getRegularItemHtml(
   const operatorAddress =
     item.base_airport_fixed_address_geographic_address?.address ||
     "Address not available";
+
+  // Create a new array with both exterior and interior images
+  const allImages = [item.exterior_image1_image];
+  if (item.interior_image1_image) {
+    allImages.push(item.interior_image1_image);
+  }
   return `
     <div class="item_wrapper">
-      <div class="item_img">
-        <img src="${item.exterior_image1_image}" alt="" />
+      <div class="item_img slider-container" id="slider-${index}">
+        ${allImages
+          .map(
+            (imgSrc, imgIndex) => `
+          <div class="slide ${imgIndex === 0 ? "active" : ""}">
+            <img src="${imgSrc}" alt="Aircraft Image ${imgIndex + 1}" />
+          </div>
+        `
+          )
+          .join("")}
+        <button class="prev-btn" data-slider-id="slider-${index}">&lt;</button>
+        <button class="next-btn" data-slider-id="slider-${index}">&gt;</button>
       </div>
       <div class="item_cnt">
         <h4>${item.description_text}</h4>
@@ -1437,7 +1474,9 @@ function getRegularItemHtml(
                     <div class="paymenttab_item_img">
                       <img src="https://cdn.prod.website-files.com/6713759f858863c516dbaa19/6754150613f571f3ecee0471_check.png" alt="" />
                     </div>
-                    <p>Pay in full upon aircraft availability confirmation by Alto Aerospace</p>
+                    <p>Pay in full upon aircraft availability confirmation by ${
+                      item.operator_txt_text
+                    }</p>
                   </div>
                   <div class="paymenttab_left_item">
                     <div class="paymenttab_item_img">
@@ -1461,7 +1500,9 @@ function getRegularItemHtml(
                       <span>100%</span>
                     </div>
                   </div>
-                  <p>Pay in full once the aircraft is confirmed available by Alto Aerospace.</p>
+                  <p>Pay in full once the aircraft is confirmed available by ${
+                    item.operator_txt_text
+                  }.</p>
                   <div class="payment">
                     <img src="https://cdn.prod.website-files.com/6713759f858863c516dbaa19/6755a86f952bce124bed0a9d_payment.png" alt="" />
                   </div>
@@ -1471,7 +1512,7 @@ function getRegularItemHtml(
           </div>
           <div data-cnt="tab${index}ask" class="item_tab_one">
             <div class="payment_tab">
-              <h3>Message Alto Aerospace</h3>
+              <h3>Message ${item.operator_txt_text}</h3>
               <div class="payment_wrapper askform">
                 <form>
                   <textarea required placeholder="Type your message here"></textarea>
@@ -1817,11 +1858,19 @@ fetch(apiUrl, {
     extSlider.min = minYearExt;
     extSlider.max = maxYear;
     extSlider.value = minYearExt;
-    extValueDisplay.textContent = `Greater than: ${minYearExt}`;
+    if (minYearExt > 0) {
+      extValueDisplay.textContent = `Greater than: ${minYearExt}`;
+    } else {
+      extValueDisplay.textContent = "";
+    }
 
     extSlider.addEventListener("input", (e) => {
       const selectedYear = parseInt(e.target.value, 10);
-      extValueDisplay.textContent = `Greater than: ${selectedYear}`;
+      if (selectedYear > 0) {
+        extValueDisplay.textContent = `Greater than: ${selectedYear}`;
+      } else {
+        extValueDisplay.textContent = "";
+      }
       filteredByRangeSlider = aircraftSets.filter(
         (item) => item.exterior_refurbished_year_number >= selectedYear
       );
@@ -1831,11 +1880,19 @@ fetch(apiUrl, {
     intSlider.min = minYearInt;
     intSlider.max = maxYear;
     intSlider.value = minYearInt;
-    intValueDisplay.textContent = `Greater than: ${minYearInt}`;
+    if (minYearInt > 0) {
+      intValueDisplay.textContent = `Greater than: ${minYearInt}`;
+    } else {
+      intValueDisplay.textContent = "";
+    }
 
     intSlider.addEventListener("input", (e) => {
       const selectedYear = parseInt(e.target.value, 10);
-      intValueDisplay.textContent = `Greater than: ${selectedYear}`;
+      if (selectedYear > 0) {
+        intValueDisplay.textContent = `Greater than: ${selectedYear}`;
+      } else {
+        intValueDisplay.textContent = "";
+      }
       filteredByRangeSlider = aircraftSets.filter(
         (item) => item.refurbished_year_number >= selectedYear
       );
@@ -1846,11 +1903,19 @@ fetch(apiUrl, {
     insSlider.max = maxYearIns;
     insSlider.step = 250000;
     insSlider.value = minYearIns;
-    insValueDisplay.textContent = `Greater than: ${minYearIns}`;
+    if (minYearIns > 0) {
+      insValueDisplay.textContent = `Greater than: ${minYearIns}`;
+    } else {
+      insValueDisplay.textContent = "";
+    }
 
     insSlider.addEventListener("input", (e) => {
       const selectedYear = parseInt(e.target.value, 10);
-      insValueDisplay.textContent = `Greater than: ${selectedYear}`;
+      if (selectedYear > 0) {
+        insValueDisplay.textContent = `Greater than: ${selectedYear}`;
+      } else {
+        insValueDisplay.textContent = "";
+      }
       filteredByRangeSlider = aircraftSets.filter(
         (item) => item.insured_amount_number >= selectedYear
       );
@@ -2218,4 +2283,39 @@ fetch(apiUrl, {
 
 function showTab() {
   this.closest(".item_tab_block").classList.toggle("active_tab");
+}
+
+// Function to initialize all sliders
+function initializeSimpleSliders() {
+  // Select all slider containers
+  const sliders = document.querySelectorAll(".slider-container");
+
+  sliders.forEach((slider) => {
+    const slides = slider.querySelectorAll(".slide");
+    const nextBtn = slider.querySelector(".next-btn");
+    const prevBtn = slider.querySelector(".prev-btn");
+    let currentSlide = 0;
+
+    // Function to show a specific slide
+    function showSlide(index) {
+      slides.forEach((slide, idx) => {
+        slide.classList.toggle("active", idx === index);
+      });
+    }
+
+    // Show the first slide initially
+    showSlide(currentSlide);
+
+    // Event listener for Next button
+    nextBtn.addEventListener("click", () => {
+      currentSlide = (currentSlide + 1) % slides.length;
+      showSlide(currentSlide);
+    });
+
+    // Event listener for Prev button
+    prevBtn.addEventListener("click", () => {
+      currentSlide = (currentSlide - 1 + slides.length) % slides.length;
+      showSlide(currentSlide);
+    });
+  });
 }
