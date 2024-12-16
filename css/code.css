@@ -1032,3 +1032,8 @@ img.seat_logo {
 .submitbtn {
   text-align: right;
 }
+
+.time-picker .srpagetimeinput {
+  padding: 0.75rem !important;
+  width: 100px !important;
+}
