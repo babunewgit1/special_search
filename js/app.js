@@ -299,12 +299,16 @@ const fmtwlist = document.querySelector(".fmtwlist");
 const fmtwinput = document.querySelector(".fmtwinput");
 const totwlist = document.querySelector(".totwlist");
 const totwinput = document.querySelector(".totwinput");
+const roundFromId = document.querySelector(".roundfromid");
+const roundToId = document.querySelector(".roundtoid");
 
 //! display item in from input (tab two)
 fmtwlist.addEventListener("click", function (e) {
+  roundFromId.textContent = "";
   fmtwinput.value = "";
   if (e.target.classList.contains("form_item_para")) {
     fmtwinput.value = e.target.textContent;
+    roundFromId.textContent = e.target.nextElementSibling.textContent;
     fmtwlist.style.display = "none";
   }
 });
@@ -317,9 +321,11 @@ fmtwinput.addEventListener("focus", function () {
 
 //! display item in to input (tab two)
 totwlist.addEventListener("click", function (e) {
+  roundToId.textContent = "";
   totwinput.value = "";
   if (e.target.classList.contains("form_item_para")) {
     totwinput.value = e.target.textContent;
+    roundToId.textContent = e.target.nextElementSibling.textContent;
     totwlist.style.display = "none";
   }
 });
@@ -377,6 +383,9 @@ const allInput = document.querySelectorAll('.hmtrip form input[type="text"]');
 window.addEventListener("load", function () {
   allInput.forEach((item) => {
     item.value = "";
+    document.querySelectorAll(".from_cl_wrapper").forEach((drp) => {
+      drp.style.display = "none";
+    });
   });
 });
 
@@ -638,7 +647,7 @@ oneWaySubmit.addEventListener("click", function () {
   const fromId = document.querySelector(".onewayformid").textContent;
   const toId = document.querySelector(".onewaytoid").textContent;
   const dateAsText = document.querySelector(".onewaydate").value;
-  const timeAsText = document.querySelector(".oneWayTime").value;
+  const timeAsText = "12:00 AM";
   const pax = document.querySelector(".onewaypax").value;
   const appDate = dateAsText;
 
@@ -647,15 +656,7 @@ oneWaySubmit.addEventListener("click", function () {
 
   const timeStamp = Math.floor(dateObject.getTime() / 1000);
 
-  if (
-    fromId &&
-    toId &&
-    dateAsText &&
-    timeAsText &&
-    pax &&
-    formIdInput &&
-    toIdInput
-  ) {
+  if (fromId && toId && dateAsText && pax && formIdInput && toIdInput) {
     const storeData = {
       way: "one way",
       fromId,
@@ -667,6 +668,70 @@ oneWaySubmit.addEventListener("click", function () {
       timeStamp,
       formIdInput,
       toIdInput,
+    };
+
+    sessionStorage.setItem("storeData", JSON.stringify(storeData));
+    window.location.href = `/search-result`;
+  } else {
+    alert("Please fill up the form properly");
+  }
+});
+
+// code for round trip api submition
+roundTripSubmit.addEventListener("click", function () {
+  const formIdInput = document.querySelector(".rfrom").value;
+  const toIdInput = document.querySelector(".rto").value;
+
+  const fromInputReturn = document.querySelector(".rto").value;
+  const toInputReturn = document.querySelector(".rfrom").value;
+
+  const fromId = document.querySelector(".roundfromid").textContent;
+  const toId = document.querySelector(".roundtoid").textContent;
+
+  const returnFromId = document.querySelector(".roundtoid").textContent;
+  const returnToId = document.querySelector(".roundfromid").textContent;
+
+  const dateAsText = document.querySelector(".rdepdate").value;
+  const returnDateAsText = document.querySelector(".rretdate").value;
+
+  const timeAsText = "12:00 AM";
+  const timeAsTextReturn = "12:00 AM";
+
+  const pax = document.querySelector(".rpax").value;
+  const paxReturn = pax;
+
+  const appDate = dateAsText;
+  const appDateReturn = returnDateAsText;
+
+  const combinedDateTime = `${dateAsText} ${timeAsText}`;
+  const dateObject = new Date(combinedDateTime);
+  const timeStamp = Math.floor(dateObject.getTime() / 1000);
+
+  const combinedDateTimeReturn = `${returnDateAsText} ${timeAsTextReturn}`;
+  const dateObjectReturn = new Date(combinedDateTimeReturn);
+  const timeStampReturn = Math.floor(dateObjectReturn.getTime() / 1000);
+
+  if (formIdInput && toIdInput && dateAsText && returnDateAsText && pax) {
+    const storeData = {
+      way: "round trip",
+      formIdInput,
+      toIdInput,
+      fromInputReturn,
+      toInputReturn,
+      fromId,
+      toId,
+      returnFromId,
+      returnToId,
+      dateAsText,
+      returnDateAsText,
+      timeAsText,
+      timeAsTextReturn,
+      pax,
+      paxReturn,
+      appDate,
+      appDateReturn,
+      timeStamp,
+      timeStampReturn,
     };
 
     sessionStorage.setItem("storeData", JSON.stringify(storeData));
