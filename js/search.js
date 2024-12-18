@@ -297,8 +297,7 @@ function applyFuelFilters(sets, filters) {
 
 // Function to render a page of items
 function renderPage(page, filteredSets) {
-  const distance =
-    apiData.response.flight_legs[0].total_distance__statute_m__number;
+  const distance = apiData.response.total_distance;
   const hotDeals = apiData.response.hot_deal_aircraft;
   mainWrapper.innerHTML = "";
 
