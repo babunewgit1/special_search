@@ -1231,3 +1231,7 @@ img.seat_logo {
 .next-btn:hover {
   background-color: rgba(0, 0, 0, 0.8);
 }
+
+.slide .dyslideItem img {
+  cursor: pointer;
+}
