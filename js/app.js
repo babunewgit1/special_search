@@ -383,9 +383,6 @@ const allInput = document.querySelectorAll('.hmtrip form input[type="text"]');
 window.addEventListener("load", function () {
   allInput.forEach((item) => {
     item.value = "";
-    document.querySelectorAll(".from_cl_wrapper").forEach((drp) => {
-      drp.style.display = "none";
-    });
   });
 });
 

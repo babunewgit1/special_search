@@ -386,7 +386,6 @@ function renderPagination(filteredSets) {
   const prevButton = document.createElement("button");
   prevButton.classList.add("pagiprev");
   prevButton.disabled = currentPage === 1;
-  prevButton.textContent = "Prev";
   prevButton.addEventListener("click", () => {
     if (currentPage > 1) {
       currentPage--;
@@ -412,7 +411,6 @@ function renderPagination(filteredSets) {
   const nextButton = document.createElement("button");
   nextButton.classList.add("paginext");
   nextButton.disabled = currentPage === totalPages;
-  nextButton.textContent = "Next";
   nextButton.addEventListener("click", () => {
     if (currentPage < totalPages) {
       currentPage++;
