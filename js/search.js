@@ -1644,7 +1644,7 @@ function createItemBlock(item, index, isHotDeal, fragment, distance) {
     ? item.exterior_images_list_image
         .map(
           (imageUrl) =>
-            `<div class="swiper-slide"><div class="dyslideItem"><img src="${imageUrl}" alt="Aircraft Exterior Image" /></div></div>`
+            `<div class="swiper-slide"><div class="dyslideItem"><img class="individulimages" src="${imageUrl}" alt="Aircraft Exterior Image" /></div></div>`
         )
         .join("")
     : "";
@@ -1653,7 +1653,7 @@ function createItemBlock(item, index, isHotDeal, fragment, distance) {
     ? item.interior_images_list_image
         .map(
           (imageUrl) =>
-            `<div class="swiper-slide"><div class="dyslideItem"><img src="${imageUrl}" alt="Aircraft Interior Image" /></div></div>`
+            `<div class="swiper-slide"><div class="dyslideItem"><img class="individulimages" src="${imageUrl}" alt="Aircraft Interior Image" /></div></div>`
         )
         .join("")
     : "";
@@ -2302,14 +2302,26 @@ function createModal() {
 function attachImageClickListeners() {
   document.querySelectorAll(".dyslideItem img").forEach((img) => {
     img.addEventListener("click", function () {
+      // Attempt to find the closest slider container
       const sliderContainer = img.closest(".slider-container");
-      const images = Array.from(
-        sliderContainer.querySelectorAll(".dyslideItem img")
-      ).map((i) => i.src);
-      const index = Array.from(
-        sliderContainer.querySelectorAll(".dyslideItem img")
-      ).indexOf(img);
-      window.openModal(images, index);
+
+      if (sliderContainer) {
+        // If a slider container exists, gather all images within it
+        const images = Array.from(
+          sliderContainer.querySelectorAll(".dyslideItem img")
+        ).map((i) => i.src);
+
+        // Determine the index of the clicked image within the slider
+        const index = Array.from(
+          sliderContainer.querySelectorAll(".dyslideItem img")
+        ).indexOf(img);
+
+        // Open the modal with the list of images and the current index
+        window.openModal(images, index);
+      } else {
+        // If no slider container, display only the clicked image in the modal
+        window.openModal([img.src], 0);
+      }
     });
   });
 }
