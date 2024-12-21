@@ -1,10 +1,10 @@
-body {
+/* body {
   background-color: aliceblue;
 }
 
 * {
   box-sizing: border-box;
-}
+} */
 .emform {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -80,7 +80,7 @@ body {
 
 .emsubmit span {
   display: block;
-  width: 240px;
+  width: auto;
   background-color: #ff5d47;
   text-align: center;
   font-size: 16px;
@@ -89,7 +89,7 @@ body {
   border-radius: 10px;
   color: #fff;
   font-weight: bold;
-  padding: 14px 0px;
+  padding: 14px 20px;
   cursor: pointer;
 }
 
@@ -169,15 +169,60 @@ p.uniqueid {
 }
 
 .remove {
-  display: block;
-  background-color: #ff5d47;
-  text-align: center;
-  font-size: 16px;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  border-radius: 10px;
-  color: #fff;
-  font-weight: bold;
-  padding: 14px 0px;
+  display: inline-block;
   cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.remove img {
+  display: inline-block;
+  width: 45px;
+}
+
+.remove:hover {
+  opacity: 0.7;
+}
+
+.multicity_data input {
+  pointer-events: none;
+  cursor: not-allowed;
+}
+
+.multicity_data .empax_minus,
+.multicity_data .empax_plus {
+  pointer-events: none;
+  cursor: not-allowed;
+}
+
+.multicity_data .eminput_field {
+  cursor: not-allowed;
+}
+
+.multicity_data .emform {
+  margin-bottom: 16px;
+}
+
+.mcity_none .eminputblock label {
+  display: none;
+}
+
+.search_pik .search-results {
+  top: 50px;
+}
+
+.noentry span {
+  background-color: #72706d;
+  cursor: not-allowed;
+}
+
+.generated {
+  position: relative;
+  padding-right: 80px;
+}
+
+.remove {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  z-index: 99;
 }

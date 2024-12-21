@@ -1,25 +1,14 @@
-const addWay = document.querySelector(".sa_way_name");
-const flightWay = document.querySelectorAll(".sa_way_name_list");
-const formIdInput = document.querySelector(".onewayform");
-const toIdInput = document.querySelector(".onewayto");
-const fromId = document.querySelector(".onewayformid");
-const toId = document.querySelector(".onewaytoid");
-const dateAsText = document.querySelector(".onewaydate");
-const timeAsText = document.querySelector(".oneWayTime");
-const pax = document.querySelector(".onewaypax");
-const searchBox = document.querySelectorAll(".sa_way_search");
-const jetInput = document.querySelectorAll(".jetinput");
-const sugg = document.querySelector(".searchsugg");
-const drpDownCollection = document.querySelectorAll(".from_cl_wrapper");
-
-//var for round trip
-const roundFrom = document.querySelector(".rfrom");
-const roundTo = document.querySelector(".rto");
-const roundDepDate = document.querySelector(".rdepdate");
-const roundRetDate = document.querySelector(".rretdate");
-const roundPax = document.querySelector(".rpax");
-const roundFromId = document.querySelector(".roundfromid");
-const roundToTd = document.querySelector(".roundtoid");
+// select dom element for One way trip
+const addWay = document.querySelector(".sa_way_name"); //!done
+const flightWay = document.querySelectorAll(".sa_way_name_list"); //!done
+const formIdInput = document.querySelector("input.onewayform"); //!done
+const toIdInput = document.querySelector(".onewayto"); //!done
+const fromId = document.querySelector(".onewayformid"); //!done
+const toId = document.querySelector(".onewaytoid"); //!done
+const dateAsText = document.querySelector(".onewaydate"); //!done
+const pax = document.querySelector(".onewaypax"); //!date
+const searchBox = document.querySelectorAll(".sa_way_search"); //!done
+const drpDownCollection = document.querySelectorAll(".from_cl_wrapper"); //!done
 
 // getting data form session storage
 const getsessionDate = sessionStorage.getItem("storeData");
@@ -70,7 +59,7 @@ flightWay.forEach((item) => {
   });
 });
 
-// active tab with session storage
+//active tab with session storage
 if (getstoredData.way === "one way") {
   searchBox.forEach((item) => {
     item.classList.remove("active_way");
@@ -81,7 +70,7 @@ if (getstoredData.way === "one way") {
     item.classList.remove("active_way");
     document.getElementById("twoway").classList.add("active_way");
   });
-} else if (getstoredData.way === "multi city") {
+} else if (getstoredData.way === "multi-city") {
   searchBox.forEach((item) => {
     item.classList.remove("active_way");
     document.getElementById("threeway").classList.add("active_way");
@@ -91,6 +80,7 @@ if (getstoredData.way === "one way") {
 }
 
 //fill input with session storage data for one way
+
 function fillInputOneWay() {
   if (getstoredData.formIdInput) {
     formIdInput.value = getstoredData.formIdInput;
@@ -116,6 +106,14 @@ function fillInputOneWay() {
 }
 
 //fill input with session storage data for roundTrip
+const roundFrom = document.querySelector(".rfrom");
+const roundTo = document.querySelector(".rto");
+const roundDepDate = document.querySelector(".rdepdate");
+const roundRetDate = document.querySelector(".rretdate");
+const roundPax = document.querySelector(".rpax");
+const roundFromId = document.querySelector(".roundfromid");
+const roundToTd = document.querySelector(".roundtoid");
+
 function fillInputRound() {
   if (getstoredData.formIdInput) {
     roundFrom.value = getstoredData.formIdInput;
@@ -142,22 +140,94 @@ function fillInputRound() {
   }
 }
 
+// fill input for multi-city;
+
+if (getstoredData.way === "multi-city") {
+  for (let i = 0; i < getstoredData.fromId.length; i++) {
+    document.querySelector(".multicity_data").innerHTML += `
+    <div class="emform">
+          <div class="eminputblock">
+            <div class="eminput_field">
+              <input
+                class="algolio_input multicityform"
+                type="text"
+                value="${getstoredData.formIdInput[i]}"
+              />
+              <p class="portid multicityformid">${getstoredData.fromId[i]}</p>
+              <img
+                src="https://cdn.prod.website-files.com/6713759f858863c516dbaa19/6730586b420dae5eaf21e2eb_gps.png"
+                alt="GPS Icon"
+                style="cursor: pointer;"
+              />
+            </div>
+          </div>
+          <div class="eminputblock">
+            <div class="eminput_field">
+              <input
+                class="algolio_input multicityto"
+                type="text"
+                value="${getstoredData.toIdInput[i]}"
+              />
+              <p class="portid multicitytoid">${getstoredData.toId[i]}</p>
+              <img
+                src="https://cdn.prod.website-files.com/6713759f858863c516dbaa19/6730586b420dae5eaf21e2eb_gps.png"
+                alt="GPS Icon"
+                style="cursor: pointer;"
+              />
+            </div>
+          </div>
+          <div class="eminputblock">
+            <div class="eminput_field">
+              <input class="multicitydate" type="date" value="${getstoredData.dateAsText[i]}" />
+            </div>
+          </div>
+          <div class="eminputblock">
+            <div class="eminput_field">
+              <div class="empax_wrapper">
+                <div class="empax_minus">-</div>
+                <input class="expaxinput multicitypax" type="text" value="${getstoredData.pax[i]}"  readonly />
+                <div class="empax_plus">+</div>
+              </div>
+            </div>
+          </div>
+        </div>
+    `;
+  }
+}
+
+// reset multi_city data which is generated form session storage
+const resetBtn = document.querySelector(".reset");
+const removeData = document.querySelector(".multicity_data");
+const multiCityFormElement = document.querySelector(".mcity_none");
+if (getstoredData.way === "multi-city") {
+  multiCityFormElement.style.display = "none";
+} else {
+  multiCityFormElement.style.display = "block";
+  resetBtn.style.display = "none";
+}
+
+resetBtn.addEventListener("click", function () {
+  removeData.remove();
+  resetBtn.style.display = "none";
+  multiCityFormElement.style.display = "block";
+});
+
 if (getstoredData.way === "one way") {
   fillInputOneWay();
-} else if (getstoredData.way === "round trip") {
+}
+
+if (getstoredData.way === "round trip") {
   fillInputRound();
-} else {
-  console.log("Something Error");
 }
 
 // send data to session storage
 const oneWaySubmit = document.querySelector(".onewaysubmit");
 const roundTripSubmit = document.querySelector(".roundtrip");
-const multiCitySubmit = document.querySelector(".multicity");
+const multiCitySubmit = document.querySelector(".multicity_submit");
 
 oneWaySubmit.addEventListener("click", function () {
-  const formIdInput = document.querySelector(".onewayform").value;
-  const toIdInput = document.querySelector(".onewayto").value;
+  const formIdInput = document.querySelector("input.onewayform").value;
+  const toIdInput = document.querySelector("input.onewayto").value;
   const fromId = document.querySelector(".onewayformid").textContent;
   const toId = document.querySelector(".onewaytoid").textContent;
   const dateAsText = document.querySelector(".onewaydate").value;
@@ -191,6 +261,7 @@ oneWaySubmit.addEventListener("click", function () {
   }
 });
 
+// code for round trip api submition
 roundTripSubmit.addEventListener("click", function () {
   const formIdInput = document.querySelector(".rfrom").value;
   const toIdInput = document.querySelector(".rto").value;
@@ -254,6 +325,146 @@ roundTripSubmit.addEventListener("click", function () {
   }
 });
 
-// inputUpDown("ivone", "minone", "maxone");
-// inputUpDown("Pex-2", "mintwo", "maxtwo");
-// inputUpDown("ivthree", "minthree", "maxthree");
+// code for multi city api submition
+let requestId;
+(async function fetchRequestId() {
+  try {
+    const response = await fetch(
+      "https://jettly.com/api/1.1/wf/webflow_multirequest_create",
+      {
+        method: "POST",
+      }
+    );
+    const data = await response.json();
+    requestId = data.response.flightrequestid;
+  } catch (error) {
+    console.error("Error fetching Request ID:", error);
+  }
+})();
+
+// Submission logic for multi-city
+multiCitySubmit.addEventListener("click", function () {
+  const multiFormPort = document.querySelectorAll(".multicityform");
+  const multiToPort = document.querySelectorAll(".multicityto");
+  const multiFormId = document.querySelectorAll(".multicityformid");
+  const multiToId = document.querySelectorAll(".multicitytoid");
+  const multiDateAsText = document.querySelectorAll(".multicitydate");
+  const multiPax = document.querySelectorAll(".multicitypax");
+  const timeAsText = "12:00 AM";
+  let multiUnixTime = [];
+
+  multiDateAsText.forEach((item) => {
+    if (item.value) {
+      const combinedDateTime = `${item.value} ${timeAsText}`;
+      const dateObject = new Date(combinedDateTime);
+      const timeStamp = Math.floor(dateObject.getTime() / 1000);
+      multiUnixTime.push(timeStamp);
+    }
+  });
+
+  let checkFormPort = true;
+  let storeFormPort = [];
+  multiFormPort.forEach((item) => {
+    if (item.value) {
+      storeFormPort.push(item.value);
+    } else {
+      checkFormPort = false;
+    }
+  });
+
+  let checkToPort = true;
+  let storeToPort = [];
+  multiToPort.forEach((item) => {
+    if (item.value) {
+      storeToPort.push(item.value);
+    } else {
+      checkToPort = false;
+    }
+  });
+
+  let checkFormId = true;
+  let storeFormId = [];
+  multiFormId.forEach((item) => {
+    if (item.textContent) {
+      storeFormId.push(item.textContent);
+    } else {
+      checkFormId = false;
+    }
+  });
+
+  let checkToId = true;
+  let storeToId = [];
+  multiToId.forEach((item) => {
+    if (item.textContent) {
+      storeToId.push(item.textContent);
+    } else {
+      checkToId = false;
+    }
+  });
+
+  let checkDate = true;
+  let storeDate = [];
+  let storeAppDate = [];
+  let storeTime = [];
+  multiDateAsText.forEach((item) => {
+    if (item.value) {
+      storeDate.push(item.value);
+      storeAppDate.push(item.value);
+      storeTime.push("12:00 AM");
+    } else {
+      checkDate = false;
+    }
+  });
+
+  let checkPax = true;
+  let storePax = [];
+  multiPax.forEach((item) => {
+    if (item.value) {
+      storePax.push(item.value);
+    } else {
+      checkPax = false;
+    }
+  });
+
+  console.log(
+    storeFormPort,
+    storeToPort,
+    storeFormId,
+    storeToId,
+    storeDate,
+    storeAppDate,
+    storePax,
+    storeTime,
+    multiUnixTime
+  );
+
+  if (
+    checkFormPort &&
+    checkToPort &&
+    checkFormId &&
+    checkToId &&
+    checkDate &&
+    checkPax &&
+    requestId
+  ) {
+    const storeData = {
+      requestId: requestId,
+      way: "multi-city",
+      fromId: storeFormId,
+      toId: storeToId,
+      dateAsText: storeDate,
+      timeAsText: storeTime,
+      pax: storePax,
+      appDate: storeAppDate,
+      timeStamp: multiUnixTime,
+      formIdInput: storeFormPort,
+      toIdInput: storeToPort,
+    };
+
+    sessionStorage.setItem("storeData", JSON.stringify(storeData));
+    console.log("Stored Data:", storeData);
+    window.location.href = `/search-result`;
+  } else {
+    alert("Please fill up the form properly or wait for the request ID.");
+  }
+});

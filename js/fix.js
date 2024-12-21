@@ -174,17 +174,22 @@ document.addEventListener("DOMContentLoaded", function () {
   algolioWrappers.forEach(attachListeners);
 
   // Handle adding new forms dynamically
+  let numForms;
   document
     .querySelector(".emsubmit.add-search-input")
     .addEventListener("click", function () {
       const algolioWrapper = document.querySelector(".algolio_wrapper");
-      const numForms =
-        algolioWrapper.querySelectorAll(".algolio_length").length;
-      const newFormNumber = numForms + 1;
-      const newForm = document.createElement("form");
-      newForm.className = "algolio_length";
-      newForm.setAttribute("autocomplete", "off");
-      newForm.innerHTML = `<div class="emform">
+      numForms = algolioWrapper.querySelectorAll(".algolio_length").length;
+
+      if (numForms > 9) {
+        this.classList.add("noentry");
+        this.querySelector("span").textContent = "You can not add more than 10";
+      } else {
+        const newFormNumber = numForms + 1;
+        const newForm = document.createElement("form");
+        newForm.className = "algolio_length";
+        newForm.setAttribute("autocomplete", "off");
+        newForm.innerHTML = `<div class="emform generated">
           <div class="eminputblock">
             <label>From</label>
             <div class="eminput_field">
@@ -197,7 +202,6 @@ document.addEventListener("DOMContentLoaded", function () {
               <img
                 src="https://cdn.prod.website-files.com/6713759f858863c516dbaa19/6730586b420dae5eaf21e2eb_gps.png"
                 alt="GPS Icon"
-                style="cursor: pointer;"
               />
             </div>
             <div class="search-results"></div>
@@ -214,7 +218,6 @@ document.addEventListener("DOMContentLoaded", function () {
               <img
                 src="https://cdn.prod.website-files.com/6713759f858863c516dbaa19/6730586b420dae5eaf21e2eb_gps.png"
                 alt="GPS Icon"
-                style="cursor: pointer;"
               />
             </div>
             <div class="search-results"></div>
@@ -235,11 +238,12 @@ document.addEventListener("DOMContentLoaded", function () {
               </div>
             </div>
           </div>
-          <div class="remove">Remove</div>
+          <div class="remove"><img src="https://cdn.prod.website-files.com/6713759f858863c516dbaa19/6766e051a4e47b7d94159c59_x-square.svg" alt="" /></div>
         </div>`;
-      algolioWrapper.appendChild(newForm);
-      console.log(`Added new form number ${newFormNumber}`);
-      attachListeners(newForm.closest(".algolio_wrapper"));
+        algolioWrapper.appendChild(newForm);
+        console.log(`Added new form number ${newFormNumber}`);
+        attachListeners(newForm.closest(".algolio_wrapper"));
+      }
     });
 
   // Hide search results when clicking outside any .algolio_wrapper
@@ -281,6 +285,13 @@ document.addEventListener("DOMContentLoaded", function () {
     .addEventListener("click", function (e) {
       const removeBtn = e.target.closest(".remove");
       if (removeBtn) {
+        if (numForms <= 10) {
+          document
+            .querySelector(".add-search-input")
+            .classList.remove("noentry");
+          document.querySelector(".add-search-input span").textContent =
+            "Another";
+        }
         const emform = removeBtn.closest(".algolio_length");
         if (emform) {
           emform.remove();

@@ -324,7 +324,7 @@ function renderPage(page, filteredSets) {
   attachDetailsButtonListeners();
   tabControl();
   submitMessage();
-  initializeSwipers();
+  // initializeSwipers();
   initializeSimpleSliders();
   attachImageClickListeners(); // Attach image click listeners after rendering
 }
