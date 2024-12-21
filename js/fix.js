@@ -9,13 +9,13 @@ document.addEventListener("DOMContentLoaded", function () {
     if (
       !input.value ||
       isNaN(parseInt(input.value, 10)) ||
-      parseInt(input.value, 10) < 1
+      parseInt(input.value, 10) < 0
     ) {
-      input.value = "1";
+      input.value = "0";
     }
 
     // Disable the minus button if the value is 1
-    if (parseInt(input.value, 10) <= 1) {
+    if (parseInt(input.value, 10) <= 0) {
       minusBtn.classList.add("disabled");
     } else {
       minusBtn.classList.remove("disabled");
@@ -23,27 +23,27 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Event listener for the plus button
     plusBtn.addEventListener("click", function () {
-      let currentValue = parseInt(input.value, 10) || 1;
+      let currentValue = parseInt(input.value, 10) || 0;
       currentValue += 1;
       input.value = currentValue;
 
       // Enable the minus button since value is now greater than 1
-      if (currentValue > 1) {
+      if (currentValue > 0) {
         minusBtn.classList.remove("disabled");
       }
     });
 
     // Event listener for the minus button
     minusBtn.addEventListener("click", function () {
-      let currentValue = parseInt(input.value, 10) || 1;
+      let currentValue = parseInt(input.value, 10) || 0;
 
       // Only decrement if currentValue is greater than 1
-      if (currentValue > 1) {
+      if (currentValue > 0) {
         currentValue -= 1;
         input.value = currentValue;
 
         // Disable the minus button if value reaches 1
-        if (currentValue <= 1) {
+        if (currentValue <= 0) {
           minusBtn.classList.add("disabled");
         }
       }
@@ -235,11 +235,11 @@ document.addEventListener("DOMContentLoaded", function () {
             <label>From</label>
             <div class="eminput_field">
               <input
-                class="algolio_input"
+                class="algolio_input multicityform"
                 type="text"
                 placeholder="Enter departure location"
               />
-              <p class="portid"></p>
+              <p class="portid multicityformid"></p>
               <img
                 src="https://cdn.prod.website-files.com/6713759f858863c516dbaa19/6730586b420dae5eaf21e2eb_gps.png"
                 alt="GPS Icon"
@@ -252,11 +252,11 @@ document.addEventListener("DOMContentLoaded", function () {
             <label>To</label>
             <div class="eminput_field">
               <input
-                class="algolio_input"
+                class="algolio_input multicityto"
                 type="text"
                 placeholder="Enter destination location"
               />
-              <p class="portid"></p>
+              <p class="portid multicitytoid"></p>
               <img
                 src="https://cdn.prod.website-files.com/6713759f858863c516dbaa19/6730586b420dae5eaf21e2eb_gps.png"
                 alt="GPS Icon"
@@ -268,7 +268,7 @@ document.addEventListener("DOMContentLoaded", function () {
           <div class="eminputblock">
             <label>Date</label>
             <div class="eminput_field">
-              <input type="date" />
+              <input class="multicitydate" type="date" />
             </div>
           </div>
           <div class="eminputblock">
@@ -276,7 +276,7 @@ document.addEventListener("DOMContentLoaded", function () {
             <div class="eminput_field">
               <div class="empax_wrapper">
                 <div class="empax_minus">-</div>
-                <input class="expaxinput" type="text" value="1" readonly />
+                <input class="expaxinput multicitypax" type="text" value="1" readonly />
                 <div class="empax_plus">+</div>
               </div>
             </div>

@@ -862,9 +862,10 @@ function getHotDealHtml(
                     </div>
                   </div>
                 </div>
-              </div><!-- Operators Tab End -->
-
-              <!-- Policies Tab -->
+              </div><!-- Operators Tab End -->              
+            </div>
+          </div>
+          <!-- Policies Tab -->
               <div data-cnt="tab${index}pl" class="item_tab_one">
                 <div class="poli_wrapper">
                   <h3>Available Fare Classes</h3>  
@@ -1046,8 +1047,6 @@ function getHotDealHtml(
                   </div>
                 </div>
               </div><!-- Ask Us a Question Tab End -->
-            </div>
-          </div>
         </div>
       </div>
       `;
@@ -1402,9 +1401,10 @@ function getRegularItemHtml(
                   </div>
                 </div>
               </div>
-            </div><!-- Operators Tab End -->
-
-            <!-- Policies Tab -->
+            </div><!-- Operators Tab End -->            
+          </div>
+        </div>
+        <!-- Policies Tab -->
             <div data-cnt="tab${index}pl" class="item_tab_one">
               <div class="poli_wrapper">
                 <h3>Available Fare Classes</h3>  
@@ -1586,8 +1586,6 @@ function getRegularItemHtml(
                 </div>
               </div>
             </div><!-- Ask Us a Question Tab End -->
-          </div>
-        </div>
       </div>
     </div>
     `;

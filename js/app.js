@@ -450,185 +450,185 @@ paragraphs.forEach((paragraph) => {
   }
 });
 
-//! input value increament and dicrement
+// //! input value increament and dicrement
 
-function inputUpDown(fninput, fnminusButton, fnplusButton) {
-  const input = document.getElementById(fninput);
-  const minusButton = document.getElementById(fnminusButton);
-  const plusButton = document.getElementById(fnplusButton);
+// function inputUpDown(fninput, fnminusButton, fnplusButton) {
+//   const input = document.getElementById(fninput);
+//   const minusButton = document.getElementById(fnminusButton);
+//   const plusButton = document.getElementById(fnplusButton);
 
-  plusButton.addEventListener("click", () => {
-    const currentValue = parseInt(input.value) || 0;
-    input.value = currentValue + 1;
-    checkMinusButton();
-  });
+//   plusButton.addEventListener("click", () => {
+//     const currentValue = parseInt(input.value) || 0;
+//     input.value = currentValue + 1;
+//     checkMinusButton();
+//   });
 
-  minusButton.addEventListener("click", () => {
-    const currentValue = parseInt(input.value) || 1;
-    if (currentValue > 0) {
-      input.value = currentValue - 1;
-    }
-    checkMinusButton();
-  });
+//   minusButton.addEventListener("click", () => {
+//     const currentValue = parseInt(input.value) || 1;
+//     if (currentValue > 0) {
+//       input.value = currentValue - 1;
+//     }
+//     checkMinusButton();
+//   });
 
-  function checkMinusButton() {
-    if (parseInt(input.value) <= 1) {
-      minusButton.classList.add("disabled");
-    } else {
-      minusButton.classList.remove("disabled");
-    }
-  }
+//   function checkMinusButton() {
+//     if (parseInt(input.value) <= 1) {
+//       minusButton.classList.add("disabled");
+//     } else {
+//       minusButton.classList.remove("disabled");
+//     }
+//   }
 
-  checkMinusButton();
-}
+//   checkMinusButton();
+// }
 
-inputUpDown("ivone", "minone", "maxone");
-inputUpDown("Pex-2", "mintwo", "maxtwo");
-inputUpDown("ivthree", "minthree", "maxthree");
+// inputUpDown("ivone", "minone", "maxone");
+// inputUpDown("Pex-2", "mintwo", "maxtwo");
+// inputUpDown("ivthree", "minthree", "maxthree");
 
-class TimePicker {
-  constructor(element) {
-    this.element = element;
-    this.timeInput = this.element.querySelector(".time-input");
-    this.hourDisplay = this.element.querySelector(".hour-display");
-    this.minuteDisplay = this.element.querySelector(".minute-display");
-    this.ampmDisplay = this.element.querySelector(".ampm-display");
-    this.timePickerFloat = this.element.querySelector(".time_picker_float");
+// class TimePicker {
+//   constructor(element) {
+//     this.element = element;
+//     this.timeInput = this.element.querySelector(".time-input");
+//     this.hourDisplay = this.element.querySelector(".hour-display");
+//     this.minuteDisplay = this.element.querySelector(".minute-display");
+//     this.ampmDisplay = this.element.querySelector(".ampm-display");
+//     this.timePickerFloat = this.element.querySelector(".time_picker_float");
 
-    this.hours = 12;
-    this.minutes = 0;
-    this.isAM = true; // Default to AM
+//     this.hours = 12;
+//     this.minutes = 0;
+//     this.isAM = true; // Default to AM
 
-    this.init();
-  }
+//     this.init();
+//   }
 
-  init() {
-    this.updateDisplay();
+//   init() {
+//     this.updateDisplay();
 
-    this.element
-      .querySelector(".increase-hour")
-      .addEventListener("click", () => {
-        this.hours = (this.hours + 1) % 24;
-        this.updateDisplay();
-      });
+//     this.element
+//       .querySelector(".increase-hour")
+//       .addEventListener("click", () => {
+//         this.hours = (this.hours + 1) % 24;
+//         this.updateDisplay();
+//       });
 
-    this.element
-      .querySelector(".decrease-hour")
-      .addEventListener("click", () => {
-        this.hours = (this.hours - 1 + 24) % 24;
-        this.updateDisplay();
-      });
+//     this.element
+//       .querySelector(".decrease-hour")
+//       .addEventListener("click", () => {
+//         this.hours = (this.hours - 1 + 24) % 24;
+//         this.updateDisplay();
+//       });
 
-    this.element
-      .querySelector(".increase-minute")
-      .addEventListener("click", () => {
-        this.minutes = (this.minutes + 15) % 60;
-        if (this.minutes === 0) {
-          this.hours = (this.hours + 1) % 24;
-        }
-        this.updateDisplay();
-      });
+//     this.element
+//       .querySelector(".increase-minute")
+//       .addEventListener("click", () => {
+//         this.minutes = (this.minutes + 15) % 60;
+//         if (this.minutes === 0) {
+//           this.hours = (this.hours + 1) % 24;
+//         }
+//         this.updateDisplay();
+//       });
 
-    this.element
-      .querySelector(".decrease-minute")
-      .addEventListener("click", () => {
-        this.minutes = (this.minutes - 15 + 60) % 60;
-        if (this.minutes === 45) {
-          this.hours = (this.hours - 1 + 24) % 24;
-        }
-        this.updateDisplay();
-      });
+//     this.element
+//       .querySelector(".decrease-minute")
+//       .addEventListener("click", () => {
+//         this.minutes = (this.minutes - 15 + 60) % 60;
+//         if (this.minutes === 45) {
+//           this.hours = (this.hours - 1 + 24) % 24;
+//         }
+//         this.updateDisplay();
+//       });
 
-    // Set AM
-    this.element
-      .querySelector(".decrease-ampm")
-      .addEventListener("click", () => {
-        if (!this.isAM) {
-          // Change to AM only if currently PM
-          this.isAM = true;
-          this.ampmDisplay.textContent = "AM";
-        }
-      });
+//     // Set AM
+//     this.element
+//       .querySelector(".decrease-ampm")
+//       .addEventListener("click", () => {
+//         if (!this.isAM) {
+//           // Change to AM only if currently PM
+//           this.isAM = true;
+//           this.ampmDisplay.textContent = "AM";
+//         }
+//       });
 
-    // Set PM
-    this.element
-      .querySelector(".increase-ampm")
-      .addEventListener("click", () => {
-        if (this.isAM) {
-          // Change to PM only if currently AM
-          this.isAM = false;
-          this.ampmDisplay.textContent = "PM";
-        }
-      });
+//     // Set PM
+//     this.element
+//       .querySelector(".increase-ampm")
+//       .addEventListener("click", () => {
+//         if (this.isAM) {
+//           // Change to PM only if currently AM
+//           this.isAM = false;
+//           this.ampmDisplay.textContent = "PM";
+//         }
+//       });
 
-    // Set time on button click
-    this.element.querySelector(".set-time").addEventListener("click", () => {
-      let displayHour;
+//     // Set time on button click
+//     this.element.querySelector(".set-time").addEventListener("click", () => {
+//       let displayHour;
 
-      if (!this.isAM && this.hours === 12) {
-        displayHour = 12; // Keep it as is for PM
-      } else if (!this.isAM && this.hours < 12) {
-        displayHour = this.hours + 12; // Convert PM hours to military time
-      } else if (this.isAM && this.hours === 12) {
-        displayHour = "00"; // Midnight case
-      } else {
-        displayHour = this.hours; // For AM hours
-      }
+//       if (!this.isAM && this.hours === 12) {
+//         displayHour = 12; // Keep it as is for PM
+//       } else if (!this.isAM && this.hours < 12) {
+//         displayHour = this.hours + 12; // Convert PM hours to military time
+//       } else if (this.isAM && this.hours === 12) {
+//         displayHour = "00"; // Midnight case
+//       } else {
+//         displayHour = this.hours; // For AM hours
+//       }
 
-      const formattedTime = `${(displayHour % 12 || 12)
-        .toString()
-        .padStart(2, "0")}:${this.minutes.toString().padStart(2, "0")} ${
-        this.isAM ? "AM" : "PM"
-      }`;
-      this.timeInput.value = formattedTime;
+//       const formattedTime = `${(displayHour % 12 || 12)
+//         .toString()
+//         .padStart(2, "0")}:${this.minutes.toString().padStart(2, "0")} ${
+//         this.isAM ? "AM" : "PM"
+//       }`;
+//       this.timeInput.value = formattedTime;
 
-      // Hide controls after setting time
-      this.hideControls();
-    });
+//       // Hide controls after setting time
+//       this.hideControls();
+//     });
 
-    // Show controls when input is clicked directly
-    this.timeInput.addEventListener("click", () => {
-      if (this.timePickerFloat.style.display === "block") {
-        this.hideControls(); // Hide if already visible
-      } else {
-        this.showControls(); // Show if hidden
-      }
-    });
+//     // Show controls when input is clicked directly
+//     this.timeInput.addEventListener("click", () => {
+//       if (this.timePickerFloat.style.display === "block") {
+//         this.hideControls(); // Hide if already visible
+//       } else {
+//         this.showControls(); // Show if hidden
+//       }
+//     });
 
-    // Hide controls when clicking outside of the picker area
-    document.addEventListener("click", (event) => {
-      const isClickInsidePicker =
-        this.timeInput.contains(event.target) ||
-        this.timePickerFloat.contains(event.target);
+//     // Hide controls when clicking outside of the picker area
+//     document.addEventListener("click", (event) => {
+//       const isClickInsidePicker =
+//         this.timeInput.contains(event.target) ||
+//         this.timePickerFloat.contains(event.target);
 
-      if (!isClickInsidePicker) {
-        this.hideControls();
-      }
-    });
-  }
+//       if (!isClickInsidePicker) {
+//         this.hideControls();
+//       }
+//     });
+//   }
 
-  updateDisplay() {
-    // Update hour and minute displays
-    const displayHour = this.hours % 12 || 12; // Wrap around for display
-    this.hourDisplay.textContent = displayHour.toString().padStart(2, "0");
-    this.minuteDisplay.textContent = this.minutes.toString().padStart(2, "0");
-  }
+//   updateDisplay() {
+//     // Update hour and minute displays
+//     const displayHour = this.hours % 12 || 12; // Wrap around for display
+//     this.hourDisplay.textContent = displayHour.toString().padStart(2, "0");
+//     this.minuteDisplay.textContent = this.minutes.toString().padStart(2, "0");
+//   }
 
-  showControls() {
-    // Show the control panel
-    this.timePickerFloat.style.display = "grid";
-  }
+//   showControls() {
+//     // Show the control panel
+//     this.timePickerFloat.style.display = "grid";
+//   }
 
-  hideControls() {
-    // Hide the control panel
-    this.timePickerFloat.style.display = "none";
-  }
-}
+//   hideControls() {
+//     // Hide the control panel
+//     this.timePickerFloat.style.display = "none";
+//   }
+// }
 
-// Initialize all time pickers on the page
-document
-  .querySelectorAll(".time-picker")
-  .forEach((picker) => new TimePicker(picker));
+// // Initialize all time pickers on the page
+// document
+//   .querySelectorAll(".time-picker")
+//   .forEach((picker) => new TimePicker(picker));
 
 // !=====================================================
 //!           Home page api submission
@@ -636,11 +636,11 @@ document
 
 const oneWaySubmit = document.querySelector(".onewaysubmit");
 const roundTripSubmit = document.querySelector(".roundtrip");
-const multiCitySubmit = document.querySelector(".multicity");
+const multiCitySubmit = document.querySelector(".multicity_submit");
 
 oneWaySubmit.addEventListener("click", function () {
-  const formIdInput = document.querySelector(".onewayform").value;
-  const toIdInput = document.querySelector(".onewayto").value;
+  const formIdInput = document.querySelector("input.onewayform").value;
+  const toIdInput = document.querySelector("input.onewayto").value;
   const fromId = document.querySelector(".onewayformid").textContent;
   const toId = document.querySelector(".onewaytoid").textContent;
   const dateAsText = document.querySelector(".onewaydate").value;
@@ -738,93 +738,13 @@ roundTripSubmit.addEventListener("click", function () {
   }
 });
 
-// create multi city search dom
-const addCity = document.querySelector(".city_add");
-const multicityWrapper = document.querySelector(".multi_city_wrapper");
-
-addCity.addEventListener("click", function () {
-  multicityWrapper.innerHTML += `<div id="w-node-c20f4cc4-828c-71d7-364e-89ea8ff77ac7-16dbaa26" class="city_one">
-    <div id="w-node-_7c14a8a7-1562-03d8-af01-9a38cc848119-16dbaa26" class="hmf_left">
-        <div id="w-node-_7c14a8a7-1562-03d8-af01-9a38cc84811a-16dbaa26" class="hmtbcnt_form_input_box">
-            <label for="field" class="hmtbcnt_form_label">From</label>
-            <div class="input_with_icon">
-                <input class="hmtbcnt_form_input jetboost-list-search-input-r43d fmthinput w-input" maxlength="256" name="From-3" data-name="From 3" placeholder="" type="text" id="From-3" required="" />
-                <img loading="lazy" src="https://cdn.prod.website-files.com/6713759f858863c516dbaa19/6730586b420dae5eaf21e2eb_gps.png" alt="" class="input_icon" />
-            </div>
-        </div>
-        <div id="w-node-_7c14a8a7-1562-03d8-af01-9a38cc848120-16dbaa26" class="hmtbcnt_form_input_box">
-            <label for="field" class="hmtbcnt_form_label">TO</label>
-            <div class="input_with_icon">
-                <input class="hmtbcnt_form_input jetboost-list-search-input-r9zz tothinput w-input" maxlength="256" name="To-3" data-name="To 3" placeholder="" type="text" id="To-3" required="" />
-                <img loading="lazy" src="https://cdn.prod.website-files.com/6713759f858863c516dbaa19/6730586b420dae5eaf21e2eb_gps.png" alt="" class="input_icon" />
-            </div>
-        </div>
-    </div>
-    <div id="w-node-_7c14a8a7-1562-03d8-af01-9a38cc848126-16dbaa26" class="hmf_right">
-        <div id="w-node-_7c14a8a7-1562-03d8-af01-9a38cc848127-16dbaa26" class="hmtbcnt_form_input_box">
-            <label for="field" class="hmtbcnt_form_label">DATE</label>
-            <div class="input_with_icon"><input type="date" class="hmtbcnt_form_input date_input" /></div>
-        </div>
-        <div id="w-node-_7c14a8a7-1562-03d8-af01-9a38cc84812c-16dbaa26" class="hmtbcnt_form_input_box time">
-            <label for="field" class="hmtbcnt_form_label">Time</label>
-            <div class="input_with_icon">
-                <div class="w-embed">
-                    <div class="time-picker">
-                        <input type="text" class="time-input" placeholder="Time" readonly="" />
-                        <div class="time_picker_float">
-                            <div class="controls">
-                                <div class="control">
-                                    <span class="increase-hour"></span>
-                                    <span class="hour-display">12</span>
-                                    <span class="decrease-hour"></span>
-                                </div>
-                                <div class="control">
-                                    <span class="increase-minute"></span>
-                                    <span class="minute-display">00</span>
-                                    <span class="decrease-minute"></span>
-                                </div>
-                            </div>
-                            <div class="ampm-controls">
-                                <span class="decrease-ampm"></span>
-                                <span class="ampm-display">AM</span>
-                                <span class="increase-ampm"></span>
-                            </div>
-                            <span class="set-time">Set Time</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div id="w-node-_7c14a8a7-1562-03d8-af01-9a38cc848131-16dbaa26" class="hmtbcnt_form_input_box">
-            <label for="field" class="hmtbcnt_form_label">PAx</label>
-            <div class="input_with_icon pex">
-                <div id="minthree" class="inde_icon"><img loading="lazy" src="https://cdn.prod.website-files.com/6713759f858863c516dbaa19/67305c2e11a05b71fc8a4a50_minus.png" alt="" class="iconin" /></div>
-                <input class="hmtbcnt_form_input pex_input inputvalue w-input" maxlength="256" name="Pex-3" data-name="Pex 3" placeholder="" valu="1" type="text" id="ivthree" required="" />
-                <div id="maxthree" class="inde_icon"><img loading="lazy" src="https://cdn.prod.website-files.com/6713759f858863c516dbaa19/67305c54ac02ab42b82e2fca_plus.png" alt="" class="iconin" /></div>
-            </div>
-        </div>
-        <div id="w-node-_4bdcc838-839a-8364-abc2-6e852de5852a-16dbaa26" class="remove"><a href="#" class="sch_submit padding remove_city w-button">Remove</a></div>
-    </div>
-</div>
-`;
-});
-
-// remove city
-multicityWrapper.addEventListener("click", function (e) {
-  if (e.target.classList.contains("remove_city")) {
-    const cityBlock = e.target.closest(".city_one");
-    if (cityBlock) {
-      cityBlock.remove();
-    }
-  }
-});
 // code for multi city api submition
-let requestId;
-const multiCityFlightRequest = document.querySelector(".multicity");
-const secondButton = document.querySelector(".second-button");
 const preloader = document.querySelector(".loading_animation");
 
-multiCityFlightRequest.addEventListener("click", async function () {
+// Define requestId globally
+let requestId;
+
+async function fetchRequestId() {
   preloader.style.display = "flex";
 
   try {
@@ -836,35 +756,167 @@ multiCityFlightRequest.addEventListener("click", async function () {
     );
     const data = await response.json();
     requestId = data.response.flightrequestid;
+    handleRequestId(requestId);
   } catch (error) {
     console.error("Error:", error);
   } finally {
     preloader.style.display = "none";
   }
-});
+}
 
-// secondButton.addEventListener("click", async function () {
-//   if (!requestId) {
-//     console.error(
-//       "Request ID is not available. Please complete the first request."
-//     );
-//     return;
-//   }
+// Function to handle the requestId
+function handleRequestId(id) {
+  if (id) {
+    //api submission for multicity
+    multiCitySubmit.addEventListener("click", function () {
+      const multiFormPort = document.querySelectorAll(".multicityform");
+      const multiToPort = document.querySelectorAll(".multicityto");
+      const multiFormId = document.querySelectorAll(".multicityformid");
+      const multiToId = document.querySelectorAll(".multicitytoid");
+      const multiDateAsText = document.querySelectorAll(".multicitydate");
+      const multiPax = document.querySelectorAll(".multicitypax");
+      const timeAsText = "12:00 AM";
 
-//   preloader.style.display = "block"; // Show preloader
+      let multiUnixTime = [];
 
-//   try {
-//     const response = await fetch(
-//       `https://example.com/api/another_endpoint?requestId=${requestId}`,
-//       {
-//         method: "GET",
-//       }
-//     );
-//     const data = await response.json();
-//     console.log("Second API response:", data);
-//   } catch (error) {
-//     console.error("Error:", error);
-//   } finally {
-//     preloader.style.display = "none"; // Hide preloader
-//   }
-// });
+      multiDateAsText.forEach((item) => {
+        if (item.value) {
+          const combinedDateTime = `${item.value} ${timeAsText}`;
+          const dateObject = new Date(combinedDateTime);
+          const timeStamp = Math.floor(dateObject.getTime() / 1000);
+
+          multiUnixTime.push(timeStamp);
+        }
+      });
+
+      //others
+      // const formIdInput = document.querySelectorAll(".multicityform").value;
+      // const toIdInput = document.querySelectorAll("multicityto").value;
+      // const fromId = document.querySelectorAll(".multicityformid").textContent;
+      // const toId = document.querySelectorAll(".multicitytoid").textContent;
+      // const dateAsText = document.querySelectorAll(".multicitydate").value;
+      // const pax = document.querySelectorAll(".multicitypax").value;
+      // const appDate = dateAsText;
+      // console.log(document.querySelectorAll(".multicitydate"));
+
+      // const combinedDateTime = `${dateAsText} ${timeAsText}`;
+      // const dateObject = new Date(combinedDateTime);
+
+      // const timeStamp = Math.floor(dateObject.getTime() / 1000);
+
+      // console.log(timeStamp);
+
+      let checkFormPort;
+      let storeFormPort = [];
+      multiFormPort.forEach((item) => {
+        if (item.value) {
+          checkFormPort = true;
+          storeFormPort.push(item.value);
+        } else {
+          checkFormPort = false;
+        }
+      });
+
+      let checkToPort;
+      let storeToPort = [];
+      multiToPort.forEach((item) => {
+        if (item.value) {
+          checkToPort = true;
+          storeToPort.push(item.value);
+        } else {
+          checkToPort = false;
+        }
+      });
+
+      let checkFormId;
+      let storeFormId = [];
+      multiFormId.forEach((item) => {
+        if (item.textContent) {
+          checkFormId = true;
+          storeFormId.push(item.textContent);
+        } else {
+          checkFormId = false;
+        }
+      });
+
+      let checkToId;
+      let storeToId = [];
+      multiToId.forEach((item) => {
+        if (item.textContent) {
+          checkToId = true;
+          storeToId.push(item.textContent);
+        } else {
+          checkToId = false;
+        }
+      });
+
+      let checkDate;
+      let storeDate = [];
+      let storeTime = [];
+      let storeAppDate = [];
+      multiDateAsText.forEach((item) => {
+        if (item.value) {
+          checkDate = true;
+          storeDate.push(item.value);
+          storeAppDate.push(item.value);
+          storeTime.push("12:00 AM");
+        } else {
+          checkDate = false;
+        }
+      });
+
+      let checkPax;
+      let storePax = [];
+      multiPax.forEach((item) => {
+        if (item.value) {
+          checkPax = true;
+          storePax.push(item.value);
+        } else {
+          checkPax = false;
+        }
+      });
+
+      // console.log(
+      //   storeFormPort,
+      //   storeToPort,
+      //   storeFormId,
+      //   storeToId,
+      //   storeDate,
+      //   storeAppDate,
+      //   storePax,
+      //   storeTime,
+      //   multiUnixTime
+      // );
+
+      if (
+        checkFormPort &&
+        checkToPort &&
+        checkFormId &&
+        checkToId &&
+        checkDate &&
+        checkPax
+      ) {
+        const storeData = {
+          way: "multi-city",
+          fromId: storeFormId,
+          toId: storeToId,
+          dateAsText: storeDate,
+          timeAsText: storeTime,
+          pax: storePax,
+          appDate: storeAppDate,
+          timeStamp: multiUnixTime,
+          formIdInput: storeFormPort,
+          toIdInput: storeToPort,
+          requestId: id,
+        };
+
+        sessionStorage.setItem("storeData", JSON.stringify(storeData));
+        // window.location.href = `/search-result`;
+      } else {
+        alert("Please fill up the form properly");
+      }
+    });
+  } else {
+    console.log("request id missing");
+  }
+}
