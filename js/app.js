@@ -249,155 +249,155 @@ var swiper = new Swiper(".lg_swipper", {
 //    tab one start
 // ===================================
 
-const itemList = document.querySelector(".fmsugg");
-const fromInput = document.querySelector(".fm_input");
-const itemListTo = document.querySelector(".toolist");
-const toInput = document.querySelector(".tooinput");
-const oneFormId = document.querySelector(".oneformhidden");
-const oneToId = document.querySelector(".onetohidden");
+// const itemList = document.querySelector(".fmsugg");
+// const fromInput = document.querySelector(".fm_input");
+// const itemListTo = document.querySelector(".toolist");
+// const toInput = document.querySelector(".tooinput");
+// const oneFormId = document.querySelector(".oneformhidden");
+// const oneToId = document.querySelector(".onetohidden");
 
-//! display item in from input (tab one)
-itemList.addEventListener("click", function (e) {
-  fromInput.value = "";
-  oneFormId.textContent = "";
-  if (e.target.classList.contains("form_item_para")) {
-    fromInput.value = e.target.textContent;
-    oneFormId.textContent = e.target.nextElementSibling.textContent;
-    itemList.style.display = "none";
-  }
-});
+// //! display item in from input (tab one)
+// itemList.addEventListener("click", function (e) {
+//   fromInput.value = "";
+//   oneFormId.textContent = "";
+//   if (e.target.classList.contains("form_item_para")) {
+//     fromInput.value = e.target.textContent;
+//     oneFormId.textContent = e.target.nextElementSibling.textContent;
+//     itemList.style.display = "none";
+//   }
+// });
 
-//! display item on foucs in from input (tab one)
-fromInput.addEventListener("focus", function () {
-  itemList.style.display = "block";
-  itemListTo.style.display = "none";
-});
+// //! display item on foucs in from input (tab one)
+// fromInput.addEventListener("focus", function () {
+//   itemList.style.display = "block";
+//   itemListTo.style.display = "none";
+// });
 
-// ================================================
+// // ================================================
 
-//! display item in to input (tab one)
-itemListTo.addEventListener("click", function (e) {
-  toInput.value = "";
-  oneToId.textContent = "";
-  if (e.target.classList.contains("form_item_para")) {
-    toInput.value = e.target.textContent;
-    oneToId.textContent = e.target.nextElementSibling.textContent;
-    itemListTo.style.display = "none";
-  }
-});
+// //! display item in to input (tab one)
+// itemListTo.addEventListener("click", function (e) {
+//   toInput.value = "";
+//   oneToId.textContent = "";
+//   if (e.target.classList.contains("form_item_para")) {
+//     toInput.value = e.target.textContent;
+//     oneToId.textContent = e.target.nextElementSibling.textContent;
+//     itemListTo.style.display = "none";
+//   }
+// });
 
-//! display item on to in from input (tab one)
-toInput.addEventListener("focus", function () {
-  itemListTo.style.display = "block";
-  itemList.style.display = "none";
-});
+// //! display item on to in from input (tab one)
+// toInput.addEventListener("focus", function () {
+//   itemListTo.style.display = "block";
+//   itemList.style.display = "none";
+// });
 
-// ===================================
-//    tab two start
-// ===================================
-const fmtwlist = document.querySelector(".fmtwlist");
-const fmtwinput = document.querySelector(".fmtwinput");
-const totwlist = document.querySelector(".totwlist");
-const totwinput = document.querySelector(".totwinput");
-const roundFromId = document.querySelector(".roundfromid");
-const roundToId = document.querySelector(".roundtoid");
+// // ===================================
+// //    tab two start
+// // ===================================
+// const fmtwlist = document.querySelector(".fmtwlist");
+// const fmtwinput = document.querySelector(".fmtwinput");
+// const totwlist = document.querySelector(".totwlist");
+// const totwinput = document.querySelector(".totwinput");
+// const roundFromId = document.querySelector(".roundfromid");
+// const roundToId = document.querySelector(".roundtoid");
 
-//! display item in from input (tab two)
-fmtwlist.addEventListener("click", function (e) {
-  roundFromId.textContent = "";
-  fmtwinput.value = "";
-  if (e.target.classList.contains("form_item_para")) {
-    fmtwinput.value = e.target.textContent;
-    roundFromId.textContent = e.target.nextElementSibling.textContent;
-    fmtwlist.style.display = "none";
-  }
-});
+// //! display item in from input (tab two)
+// fmtwlist.addEventListener("click", function (e) {
+//   roundFromId.textContent = "";
+//   fmtwinput.value = "";
+//   if (e.target.classList.contains("form_item_para")) {
+//     fmtwinput.value = e.target.textContent;
+//     roundFromId.textContent = e.target.nextElementSibling.textContent;
+//     fmtwlist.style.display = "none";
+//   }
+// });
 
-//! display item on foucs in from input (tab two)
-fmtwinput.addEventListener("focus", function () {
-  fmtwlist.style.display = "block";
-  totwlist.style.display = "none";
-});
+// //! display item on foucs in from input (tab two)
+// fmtwinput.addEventListener("focus", function () {
+//   fmtwlist.style.display = "block";
+//   totwlist.style.display = "none";
+// });
 
-//! display item in to input (tab two)
-totwlist.addEventListener("click", function (e) {
-  roundToId.textContent = "";
-  totwinput.value = "";
-  if (e.target.classList.contains("form_item_para")) {
-    totwinput.value = e.target.textContent;
-    roundToId.textContent = e.target.nextElementSibling.textContent;
-    totwlist.style.display = "none";
-  }
-});
+// //! display item in to input (tab two)
+// totwlist.addEventListener("click", function (e) {
+//   roundToId.textContent = "";
+//   totwinput.value = "";
+//   if (e.target.classList.contains("form_item_para")) {
+//     totwinput.value = e.target.textContent;
+//     roundToId.textContent = e.target.nextElementSibling.textContent;
+//     totwlist.style.display = "none";
+//   }
+// });
 
-//! display item on foucs in to input (tab two)
-totwinput.addEventListener("focus", function () {
-  totwlist.style.display = "block";
-  fmtwlist.style.display = "none";
-});
+// //! display item on foucs in to input (tab two)
+// totwinput.addEventListener("focus", function () {
+//   totwlist.style.display = "block";
+//   fmtwlist.style.display = "none";
+// });
 
-// ===================================
-//    tab three start
-// ===================================
-const fmthlist = document.querySelector(".fmthlist");
-const fmthinput = document.querySelector(".fmthinput");
-const tothlist = document.querySelector(".tothlist");
-const tothinput = document.querySelector(".tothinput");
+// // ===================================
+// //    tab three start
+// // ===================================
+// const fmthlist = document.querySelector(".fmthlist");
+// const fmthinput = document.querySelector(".fmthinput");
+// const tothlist = document.querySelector(".tothlist");
+// const tothinput = document.querySelector(".tothinput");
 
-//! display item in from input (tab three)
-fmthlist.addEventListener("click", function (e) {
-  fmthinput.value = "";
-  if (e.target.classList.contains("form_item_para")) {
-    fmthinput.value = e.target.textContent;
-    fmthlist.style.display = "none";
-  }
-});
+// //! display item in from input (tab three)
+// fmthlist.addEventListener("click", function (e) {
+//   fmthinput.value = "";
+//   if (e.target.classList.contains("form_item_para")) {
+//     fmthinput.value = e.target.textContent;
+//     fmthlist.style.display = "none";
+//   }
+// });
 
-//! display item on foucs in from input (tab three)
-fmthinput.addEventListener("focus", function () {
-  fmthlist.style.display = "block";
-  tothlist.style.display = "none";
-});
+// //! display item on foucs in from input (tab three)
+// fmthinput.addEventListener("focus", function () {
+//   fmthlist.style.display = "block";
+//   tothlist.style.display = "none";
+// });
 
-//! display item in to input (tab three)
-tothlist.addEventListener("click", function (e) {
-  tothinput.value = "";
-  if (e.target.classList.contains("form_item_para")) {
-    tothinput.value = e.target.textContent;
-    tothlist.style.display = "none";
-  }
-});
+// //! display item in to input (tab three)
+// tothlist.addEventListener("click", function (e) {
+//   tothinput.value = "";
+//   if (e.target.classList.contains("form_item_para")) {
+//     tothinput.value = e.target.textContent;
+//     tothlist.style.display = "none";
+//   }
+// });
 
-//! display item on foucs in to input (tab three)
-tothinput.addEventListener("focus", function () {
-  tothlist.style.display = "block";
-  fmthlist.style.display = "none";
-});
+// //! display item on foucs in to input (tab three)
+// tothinput.addEventListener("focus", function () {
+//   tothlist.style.display = "block";
+//   fmthlist.style.display = "none";
+// });
 
-// =================================
-//    apply for all
-// ================================
+// // =================================
+// //    apply for all
+// // ================================
 
-//! reset the input field in page reload
-const allInput = document.querySelectorAll('.hmtrip form input[type="text"]');
-window.addEventListener("load", function () {
-  allInput.forEach((item) => {
-    item.value = "";
-  });
-});
+// //! reset the input field in page reload
+// const allInput = document.querySelectorAll('.hmtrip form input[type="text"]');
+// window.addEventListener("load", function () {
+//   allInput.forEach((item) => {
+//     item.value = "";
+//   });
+// });
 
-//! hide the list box when click in tab link
-const tabLink = document.querySelectorAll(".tab_link_box");
-tabLink.forEach((item) => {
-  item.addEventListener("click", function () {
-    itemList.style.display = "none";
-    itemListTo.style.display = "none";
-    fmtwlist.style.display = "none";
-    totwlist.style.display = "none";
-    tothlist.style.display = "none";
-    fmthlist.style.display = "none";
-  });
-});
+// //! hide the list box when click in tab link
+// const tabLink = document.querySelectorAll(".tab_link_box");
+// tabLink.forEach((item) => {
+//   item.addEventListener("click", function () {
+//     itemList.style.display = "none";
+//     itemListTo.style.display = "none";
+//     fmtwlist.style.display = "none";
+//     totwlist.style.display = "none";
+//     tothlist.style.display = "none";
+//     fmthlist.style.display = "none";
+//   });
+// });
 
 //! star rating
 document.addEventListener("DOMContentLoaded", () => {
@@ -737,3 +737,134 @@ roundTripSubmit.addEventListener("click", function () {
     alert("Please fill up the form properly");
   }
 });
+
+// create multi city search dom
+const addCity = document.querySelector(".city_add");
+const multicityWrapper = document.querySelector(".multi_city_wrapper");
+
+addCity.addEventListener("click", function () {
+  multicityWrapper.innerHTML += `<div id="w-node-c20f4cc4-828c-71d7-364e-89ea8ff77ac7-16dbaa26" class="city_one">
+    <div id="w-node-_7c14a8a7-1562-03d8-af01-9a38cc848119-16dbaa26" class="hmf_left">
+        <div id="w-node-_7c14a8a7-1562-03d8-af01-9a38cc84811a-16dbaa26" class="hmtbcnt_form_input_box">
+            <label for="field" class="hmtbcnt_form_label">From</label>
+            <div class="input_with_icon">
+                <input class="hmtbcnt_form_input jetboost-list-search-input-r43d fmthinput w-input" maxlength="256" name="From-3" data-name="From 3" placeholder="" type="text" id="From-3" required="" />
+                <img loading="lazy" src="https://cdn.prod.website-files.com/6713759f858863c516dbaa19/6730586b420dae5eaf21e2eb_gps.png" alt="" class="input_icon" />
+            </div>
+        </div>
+        <div id="w-node-_7c14a8a7-1562-03d8-af01-9a38cc848120-16dbaa26" class="hmtbcnt_form_input_box">
+            <label for="field" class="hmtbcnt_form_label">TO</label>
+            <div class="input_with_icon">
+                <input class="hmtbcnt_form_input jetboost-list-search-input-r9zz tothinput w-input" maxlength="256" name="To-3" data-name="To 3" placeholder="" type="text" id="To-3" required="" />
+                <img loading="lazy" src="https://cdn.prod.website-files.com/6713759f858863c516dbaa19/6730586b420dae5eaf21e2eb_gps.png" alt="" class="input_icon" />
+            </div>
+        </div>
+    </div>
+    <div id="w-node-_7c14a8a7-1562-03d8-af01-9a38cc848126-16dbaa26" class="hmf_right">
+        <div id="w-node-_7c14a8a7-1562-03d8-af01-9a38cc848127-16dbaa26" class="hmtbcnt_form_input_box">
+            <label for="field" class="hmtbcnt_form_label">DATE</label>
+            <div class="input_with_icon"><input type="date" class="hmtbcnt_form_input date_input" /></div>
+        </div>
+        <div id="w-node-_7c14a8a7-1562-03d8-af01-9a38cc84812c-16dbaa26" class="hmtbcnt_form_input_box time">
+            <label for="field" class="hmtbcnt_form_label">Time</label>
+            <div class="input_with_icon">
+                <div class="w-embed">
+                    <div class="time-picker">
+                        <input type="text" class="time-input" placeholder="Time" readonly="" />
+                        <div class="time_picker_float">
+                            <div class="controls">
+                                <div class="control">
+                                    <span class="increase-hour"></span>
+                                    <span class="hour-display">12</span>
+                                    <span class="decrease-hour"></span>
+                                </div>
+                                <div class="control">
+                                    <span class="increase-minute"></span>
+                                    <span class="minute-display">00</span>
+                                    <span class="decrease-minute"></span>
+                                </div>
+                            </div>
+                            <div class="ampm-controls">
+                                <span class="decrease-ampm"></span>
+                                <span class="ampm-display">AM</span>
+                                <span class="increase-ampm"></span>
+                            </div>
+                            <span class="set-time">Set Time</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="w-node-_7c14a8a7-1562-03d8-af01-9a38cc848131-16dbaa26" class="hmtbcnt_form_input_box">
+            <label for="field" class="hmtbcnt_form_label">PAx</label>
+            <div class="input_with_icon pex">
+                <div id="minthree" class="inde_icon"><img loading="lazy" src="https://cdn.prod.website-files.com/6713759f858863c516dbaa19/67305c2e11a05b71fc8a4a50_minus.png" alt="" class="iconin" /></div>
+                <input class="hmtbcnt_form_input pex_input inputvalue w-input" maxlength="256" name="Pex-3" data-name="Pex 3" placeholder="" valu="1" type="text" id="ivthree" required="" />
+                <div id="maxthree" class="inde_icon"><img loading="lazy" src="https://cdn.prod.website-files.com/6713759f858863c516dbaa19/67305c54ac02ab42b82e2fca_plus.png" alt="" class="iconin" /></div>
+            </div>
+        </div>
+        <div id="w-node-_4bdcc838-839a-8364-abc2-6e852de5852a-16dbaa26" class="remove"><a href="#" class="sch_submit padding remove_city w-button">Remove</a></div>
+    </div>
+</div>
+`;
+});
+
+// remove city
+multicityWrapper.addEventListener("click", function (e) {
+  if (e.target.classList.contains("remove_city")) {
+    const cityBlock = e.target.closest(".city_one");
+    if (cityBlock) {
+      cityBlock.remove();
+    }
+  }
+});
+// code for multi city api submition
+let requestId;
+const multiCityFlightRequest = document.querySelector(".multicity");
+const secondButton = document.querySelector(".second-button");
+const preloader = document.querySelector(".loading_animation");
+
+multiCityFlightRequest.addEventListener("click", async function () {
+  preloader.style.display = "flex";
+
+  try {
+    const response = await fetch(
+      "https://jettly.com/api/1.1/wf/webflow_multirequest_create",
+      {
+        method: "POST",
+      }
+    );
+    const data = await response.json();
+    requestId = data.response.flightrequestid;
+  } catch (error) {
+    console.error("Error:", error);
+  } finally {
+    preloader.style.display = "none";
+  }
+});
+
+// secondButton.addEventListener("click", async function () {
+//   if (!requestId) {
+//     console.error(
+//       "Request ID is not available. Please complete the first request."
+//     );
+//     return;
+//   }
+
+//   preloader.style.display = "block"; // Show preloader
+
+//   try {
+//     const response = await fetch(
+//       `https://example.com/api/another_endpoint?requestId=${requestId}`,
+//       {
+//         method: "GET",
+//       }
+//     );
+//     const data = await response.json();
+//     console.log("Second API response:", data);
+//   } catch (error) {
+//     console.error("Error:", error);
+//   } finally {
+//     preloader.style.display = "none"; // Hide preloader
+//   }
+// });

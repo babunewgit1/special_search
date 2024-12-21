@@ -32,7 +32,12 @@ if (!getstoredData) {
 // show which way had selected by user
 function dropdownList() {
   document.querySelector(".sa_way").addEventListener("click", () => {
-    document.querySelector(".sa_way_dropdown").style.display = "block";
+    const dropdown = document.querySelector(".sa_way_dropdown");
+    if (dropdown.style.display === "block") {
+      dropdown.style.display = "none";
+    } else {
+      dropdown.style.display = "block";
+    }
   });
   addWay.textContent = getstoredData.way;
   flightWay.forEach((flightList) => {

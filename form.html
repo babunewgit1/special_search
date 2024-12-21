@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link rel="stylesheet" href="css/form.css" />
+    <script src="https://cdn.jsdelivr.net/npm/algoliasearch@4.14.3/dist/algoliasearch.umd.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/instantsearch.js@4"></script>
+  </head>
+  <body>
+    <div class="algolio_wrapper">
+      <form class="algolio_length" autocomplete="off">
+        <div class="emform">
+          <div class="eminputblock">
+            <label>From</label>
+            <div class="eminput_field">
+              <input
+                class="algolio_input"
+                type="text"
+                placeholder="Enter departure location"
+              />
+              <p class="portid"></p>
+              <img
+                src="https://cdn.prod.website-files.com/6713759f858863c516dbaa19/6730586b420dae5eaf21e2eb_gps.png"
+                alt="GPS Icon"
+              />
+            </div>
+            <div class="search-results"></div>
+          </div>
+          <div class="eminputblock">
+            <label>To</label>
+            <div class="eminput_field">
+              <input
+                class="algolio_input"
+                type="text"
+                placeholder="Enter destination location"
+              />
+              <p class="portid"></p>
+              <img
+                src="https://cdn.prod.website-files.com/6713759f858863c516dbaa19/6730586b420dae5eaf21e2eb_gps.png"
+                alt="GPS Icon"
+              />
+            </div>
+            <div class="search-results"></div>
+          </div>
+          <div class="eminputblock">
+            <label>Date</label>
+            <div class="eminput_field">
+              <input type="date" />
+            </div>
+          </div>
+          <div class="eminputblock">
+            <label>PAX</label>
+            <div class="eminput_field">
+              <div class="empax_wrapper">
+                <div class="empax_minus">-</div>
+                <input class="expaxinput" type="text" value="1" readonly />
+                <div class="empax_plus">+</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+    <p>
+      Lorem ipsum dolor sit, amet consectetur adipisicing elit. Deleniti eaque,
+      itaque, suscipit quos saepe quas numquam, soluta laborum debitis fuga
+      dolore odio. Quae quaerat perferendis eum nemo vitae, reprehenderit
+      recusandae?
+    </p>
+    <div class="algolio_wrappernext">
+      <form class="algolio_length" autocomplete="off">
+        <div class="emform">
+          <div class="eminputblock">
+            <label>From</label>
+            <div class="eminput_field">
+              <input
+                class="algolio_input"
+                type="text"
+                placeholder="Enter departure location"
+              />
+              <p class="portid"></p>
+              <img
+                src="https://cdn.prod.website-files.com/6713759f858863c516dbaa19/6730586b420dae5eaf21e2eb_gps.png"
+                alt="GPS Icon"
+              />
+            </div>
+            <div class="search-results"></div>
+          </div>
+          <div class="eminputblock">
+            <label>To</label>
+            <div class="eminput_field">
+              <input
+                class="algolio_input"
+                type="text"
+                placeholder="Enter destination location"
+              />
+              <p class="portid"></p>
+              <img
+                src="https://cdn.prod.website-files.com/6713759f858863c516dbaa19/6730586b420dae5eaf21e2eb_gps.png"
+                alt="GPS Icon"
+              />
+            </div>
+            <div class="search-results"></div>
+          </div>
+          <div class="eminputblock">
+            <label>Date</label>
+            <div class="eminput_field">
+              <input type="date" />
+            </div>
+          </div>
+          <div class="eminputblock">
+            <label>PAX</label>
+            <div class="eminput_field">
+              <div class="empax_wrapper">
+                <div class="empax_minus">-</div>
+                <input class="expaxinput" type="text" value="1" readonly />
+                <div class="empax_plus">+</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+    <div class="algolio_submit">
+      <div class="emsubmit add-search-input">
+        <span>Another</span>
+      </div>
+      <div class="emsubmit">
+        <span>Search</span>
+      </div>
+    </div>
+
+    <script src="js/fix.js"></script>
+  </body>
+</html>
