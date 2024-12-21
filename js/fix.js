@@ -1,11 +1,8 @@
 document.addEventListener("DOMContentLoaded", function () {
-  // Function to initialize each PAX input block
   function initializePaxBlock(empaxWrapper) {
     const minusBtn = empaxWrapper.querySelector(".empax_minus");
     const plusBtn = empaxWrapper.querySelector(".empax_plus");
     const input = empaxWrapper.querySelector(".expaxinput");
-
-    // Ensure the input has a default value of 1 if empty or invalid
     if (
       !input.value ||
       isNaN(parseInt(input.value, 10)) ||
@@ -13,36 +10,24 @@ document.addEventListener("DOMContentLoaded", function () {
     ) {
       input.value = "0";
     }
-
-    // Disable the minus button if the value is 1
     if (parseInt(input.value, 10) <= 0) {
       minusBtn.classList.add("disabled");
     } else {
       minusBtn.classList.remove("disabled");
     }
-
-    // Event listener for the plus button
     plusBtn.addEventListener("click", function () {
       let currentValue = parseInt(input.value, 10) || 0;
       currentValue += 1;
       input.value = currentValue;
-
-      // Enable the minus button since value is now greater than 1
       if (currentValue > 0) {
         minusBtn.classList.remove("disabled");
       }
     });
-
-    // Event listener for the minus button
     minusBtn.addEventListener("click", function () {
       let currentValue = parseInt(input.value, 10) || 0;
-
-      // Only decrement if currentValue is greater than 1
       if (currentValue > 0) {
         currentValue -= 1;
         input.value = currentValue;
-
-        // Disable the minus button if value reaches 1
         if (currentValue <= 0) {
           minusBtn.classList.add("disabled");
         }
@@ -50,28 +35,19 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 
-  // Select all existing empax_wrapper elements on the page
   const empaxWrappers = document.querySelectorAll(".empax_wrapper");
-
-  // Initialize each PAX input block
   empaxWrappers.forEach(function (wrapper) {
     initializePaxBlock(wrapper);
   });
-
-  // Optional: If you plan to add empax_wrapper elements dynamically in the future,
-  // you can use MutationObserver to automatically initialize them.
   const observer = new MutationObserver(function (mutationsList) {
     for (let mutation of mutationsList) {
       if (mutation.type === "childList") {
         mutation.addedNodes.forEach(function (node) {
           if (node.nodeType === 1) {
-            // Ensure it's an Element node
             const newWrappers = node.querySelectorAll(".empax_wrapper");
             newWrappers.forEach(function (newWrapper) {
               initializePaxBlock(newWrapper);
             });
-
-            // If the added node itself is an empax_wrapper
             if (node.classList.contains("empax_wrapper")) {
               initializePaxBlock(node);
             }
@@ -80,20 +56,15 @@ document.addEventListener("DOMContentLoaded", function () {
       }
     }
   });
-
-  // Start observing the document body for added nodes
   observer.observe(document.body, { childList: true, subtree: true });
 });
 
 document.addEventListener("DOMContentLoaded", function () {
-  // Initialize Algolia search client
   const searchClient = algoliasearch(
     "ZSPO7HB4MN",
     "2a3621a18dca4f1fb757e9ddaea72440"
   );
   const index = searchClient.initIndex("Airports");
-
-  // Debounce function to limit the rate at which a function can fire
   function debounce(func, delay) {
     let timeout;
     return function (...args) {
@@ -103,31 +74,25 @@ document.addEventListener("DOMContentLoaded", function () {
     };
   }
 
-  // Function to sanitize HTML to prevent XSS attacks
   function escapeHTML(str) {
     const div = document.createElement("div");
     div.appendChild(document.createTextNode(str));
     return div.innerHTML;
   }
 
-  // Handle input events for Algolia search
   const handleInput = debounce(function (event) {
     const input = event.target;
-
-    // Ensure the event is triggered by an input with the .algolio_input class
     if (!input.classList.contains("algolio_input")) return;
-
     const query = input.value.trim();
     const eminputBlock = input.closest(".eminputblock");
     const resultsContainer = eminputBlock.querySelector(".search-results");
-
     if (!resultsContainer) {
       console.warn("No .search-results container found for the input.");
       return;
     }
 
     if (query.length === 0) {
-      resultsContainer.innerHTML = ""; // Clear results if query is empty
+      resultsContainer.innerHTML = "";
       resultsContainer.style.display = "none";
       return;
     }
@@ -176,17 +141,8 @@ document.addEventListener("DOMContentLoaded", function () {
       const eminputBlock = portElement.closest(".eminputblock");
       const input = eminputBlock.querySelector(".algolio_input");
       const portidElement = eminputBlock.querySelector(".portid");
-
-      // Populate the input with the selected value
       input.value = emfieldname;
-
-      // Set the uniqueid in .portid paragraph
       portidElement.textContent = uniqueid;
-
-      // Optionally, store the unique ID if needed
-      // input.dataset.uniqueId = uniqueid;
-
-      // Clear the search results
       const resultsContainer = eminputBlock.querySelector(".search-results");
       resultsContainer.innerHTML = "";
       resultsContainer.style.display = "none";
@@ -224,9 +180,7 @@ document.addEventListener("DOMContentLoaded", function () {
       const algolioWrapper = document.querySelector(".algolio_wrapper");
       const numForms =
         algolioWrapper.querySelectorAll(".algolio_length").length;
-      const newFormNumber = numForms + 1; // Determine the new form number
-
-      // Create the new form element
+      const newFormNumber = numForms + 1;
       const newForm = document.createElement("form");
       newForm.className = "algolio_length";
       newForm.setAttribute("autocomplete", "off");
@@ -284,10 +238,7 @@ document.addEventListener("DOMContentLoaded", function () {
           <div class="remove">Remove</div>
         </div>`;
       algolioWrapper.appendChild(newForm);
-
       console.log(`Added new form number ${newFormNumber}`);
-
-      // Attach listeners to the new form's wrapper
       attachListeners(newForm.closest(".algolio_wrapper"));
     });
 

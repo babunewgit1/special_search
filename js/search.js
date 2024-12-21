@@ -2370,19 +2370,13 @@ function initializeSwipers() {
   });
 }
 
-// Function to initialize Swiper sliders (already defined above)
-
-// Function to initialize Swiper sliders
-// (Same as above; ensure no duplication)
-
-// Function to render pagination controls
-// (Already defined above)
-
-// Function to handle fetching and initializing data
 function initialize() {
   const apiUrlOneWay = "https://jettly.com/api/1.1/wf/webflow_one_way_flight";
   const apiUrlRoundTrip =
     "https://jettly.com/api/1.1/wf/webflow_round_trip_flight";
+
+  const apiUrlMultiCity =
+    "https://jettly.com/api/1.1/wf/webflow_submitmultileg";
   const storedData = sessionStorage.getItem("storeData");
   let way;
 
@@ -2427,6 +2421,20 @@ function initialize() {
       App_Ret_Date_As_Text: sessionData.appDateReturn,
     };
     apiUrl = apiUrlRoundTrip;
+  } else if (way === "multi-city") {
+    const sessionData = JSON.parse(storedData);
+    data = {
+      "from airport id": sessionData.fromId,
+      "to airport id": sessionData.toId,
+      "to airport id": sessionData.toId,
+      date: sessionData.timeStamp,
+      pax: sessionData.pax,
+      date_as_text: sessionData.dateAsText,
+      time_as_text: sessionData.timeAsText,
+      App_Out_Date_As_Text: sessionData.appDate,
+      flightrequest: sessionData.requestId,
+    };
+    apiUrl = apiUrlMultiCity;
   } else {
     console.error("Invalid 'way' value in sessionStorage.");
     hideLoader();
