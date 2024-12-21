@@ -325,5 +325,17 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   });
 
+  document
+    .querySelector(".removeadded")
+    .addEventListener("click", function (e) {
+      const removeBtn = e.target.closest(".remove");
+      if (removeBtn) {
+        const emform = removeBtn.closest(".algolio_length");
+        if (emform) {
+          emform.remove();
+        }
+      }
+    });
+
   observer.observe(document.body, { childList: true, subtree: true });
 });
