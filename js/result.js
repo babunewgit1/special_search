@@ -1,14 +1,14 @@
 // select dom element for One way trip
-const addWay = document.querySelector(".sa_way_name"); //!done
-const flightWay = document.querySelectorAll(".sa_way_name_list"); //!done
-const formIdInput = document.querySelector("input.onewayform"); //!done
-const toIdInput = document.querySelector(".onewayto"); //!done
-const fromId = document.querySelector(".onewayformid"); //!done
-const toId = document.querySelector(".onewaytoid"); //!done
-const dateAsText = document.querySelector(".onewaydate"); //!done
-const pax = document.querySelector(".onewaypax"); //!date
-const searchBox = document.querySelectorAll(".sa_way_search"); //!done
-const drpDownCollection = document.querySelectorAll(".from_cl_wrapper"); //!done
+const addWay = document.querySelector(".sa_way_name");
+const flightWay = document.querySelectorAll(".sa_way_name_list");
+const formIdInput = document.querySelector("input.onewayform");
+const toIdInput = document.querySelector(".onewayto");
+const fromId = document.querySelector(".onewayformid");
+const toId = document.querySelector(".onewaytoid");
+const dateAsText = document.querySelector(".onewaydate");
+const pax = document.querySelector(".onewaypax");
+const searchBox = document.querySelectorAll(".sa_way_search");
+const drpDownCollection = document.querySelectorAll(".from_cl_wrapper");
 
 // getting data form session storage
 const getsessionDate = sessionStorage.getItem("storeData");
@@ -467,4 +467,28 @@ multiCitySubmit.addEventListener("click", function () {
   } else {
     alert("Please fill up the form properly or wait for the request ID.");
   }
+});
+
+// grid view and list view functionality
+const gridView = document.querySelector(".grid_view");
+const listView = document.querySelector(".list_view");
+const contentWrapper = document.querySelector(".sr_main_right");
+const gridAndListView = document.querySelectorAll(".sr_exp_icon_box ");
+
+gridView.addEventListener("click", function () {
+  contentWrapper.classList.add("changeview");
+  contentWrapper.classList.remove("listview");
+});
+listView.addEventListener("click", function () {
+  contentWrapper.classList.remove("changeview");
+  contentWrapper.classList.add("listview");
+});
+
+gridAndListView.forEach((view) => {
+  view.addEventListener("click", function () {
+    gridAndListView.forEach((item) => {
+      item.classList.remove("activeview");
+    });
+    view.classList.add("activeview");
+  });
 });

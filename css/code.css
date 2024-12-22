@@ -282,10 +282,12 @@ img.seat_logo {
 }
 
 .hot_headls_logo {
-  width: 88px;
+  width: 75px;
   position: absolute;
   top: 0;
   right: 0;
+  z-index: 9;
+  text-align: center;
 }
 
 .hot_headls_logo img {
@@ -326,7 +328,7 @@ img.seat_logo {
 }
 
 .entire p {
-  font-size: 22px;
+  font-size: 21px;
   font-weight: 700;
   text-align: center;
 }
@@ -349,7 +351,7 @@ img.seat_logo {
   gap: 10px;
 }
 
-.item_tab_heading_block ul li {
+.item_tab_heading_block ul li.tiggitem {
   display: inline-block;
   text-transform: uppercase;
   color: #03141b;
@@ -1220,11 +1222,11 @@ img.seat_logo {
 }
 
 .prev-btn {
-  left: 0;
+  left: 10px;
 }
 
 .next-btn {
-  right: 0;
+  right: 10px;
 }
 
 .prev-btn:hover,
@@ -1238,4 +1240,195 @@ img.seat_logo {
 
 .individulimages {
   cursor: pointer;
+}
+
+.sr_exp_icon_box {
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.sr_exp_icon_box:hover {
+  opacity: 0.7;
+}
+
+.slide .dyslideItem img {
+  height: 270px;
+}
+
+.activeview {
+  background-color: #a2a2a2;
+}
+
+.activeview img {
+  filter: brightness(0) saturate(100%) invert(100%) sepia(100%) saturate(0%)
+    hue-rotate(288deg) brightness(102%) contrast(102%);
+}
+
+.changeview .search_right {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 30px;
+}
+
+.changeview .item_wrapper {
+  grid-template-columns: 1fr;
+}
+
+.changeview .slide .dyslideItem img {
+  height: 175px;
+}
+
+.changeview .item_wrapper {
+  padding-right: 0;
+}
+
+.changeview .item_cnt {
+  padding-top: 20px;
+}
+
+.changeview .hot_feature {
+  margin-top: 18px;
+}
+
+.changeview .hot_book {
+  margin-top: 5px;
+}
+
+.changeview .item_cnt p {
+  height: 30px;
+  font-size: 18px;
+  margin-top: 4px;
+}
+
+.changeview .bookingbutton a,
+.bookingbutton button {
+  letter-spacing: 1px;
+}
+
+.changeview .item_cnt img {
+  margin-top: 15px;
+  margin-bottom: 15px;
+}
+
+.changeview .item_tab_heading_block ul {
+  flex-wrap: wrap;
+}
+
+.sr_main {
+  position: relative;
+}
+
+.changeview .tab_item_cnt_wrapper {
+  display: none;
+}
+
+.listview .tabxholder .item_tab_one {
+  display: none !important;
+}
+
+.changeview .activeTabPanel .overflow_wrapper {
+  display: block;
+}
+
+.changeview .overflow_wrapper {
+  position: fixed;
+  width: 100%;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.8);
+  right: -100%;
+  top: 0;
+  z-index: 99;
+}
+
+.changeview .activeTabPanel .overflow_wrapper {
+  right: 0;
+}
+
+.changeview .item_tab_heading_block {
+  position: absolute;
+  width: 50%;
+  top: 90px;
+  right: 0;
+  background-color: #f3f3f3;
+  z-index: 99;
+  padding: 26px;
+  border-radius: 12px 0px 0px 12px;
+  padding-right: 60px;
+  height: calc(100vh - 90px);
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+.changeview .hotwrapper .item_tab_heading_block {
+  background-color: #eeffed;
+}
+
+.cross_itemx span {
+  display: inline-block;
+  cursor: pointer;
+  position: absolute;
+  top: -10px;
+  right: -46px;
+}
+
+.cross_itemx span img {
+  display: inline-block;
+  width: 24px;
+}
+
+.changeview .item_tab_heading_block ul {
+  display: block;
+}
+
+.changeview .item_tab_heading_block ul .tabxholder li.tiggitem {
+  display: block;
+  background-color: transparent !important;
+  border: 1px solid #111 !important;
+  background-image: url("https://cdn.prod.website-files.com/6713759f858863c516dbaa19/67459d1f63b186d24efc3bbe_Jettly-Search-Results-Page-(List-View-Details-Tab).png");
+  background-repeat: no-repeat;
+  background-size: 10px;
+  background-position: top 15px right 10px;
+  color: #000 !important;
+  margin-bottom: 20px;
+  margin-top: 20px;
+  transition: all 0.2s ease;
+}
+
+.changeview .item_tab_heading_block ul .tabxholder li.tiggitem:hover {
+  background-color: #fff !important;
+  border-color: #fff !important;
+  color: #fe5c46 !important;
+}
+
+.changeview .item_tab_heading_block ul .tabxholder li.tiggitem.activetabitem {
+  background-color: #fff !important;
+  border-color: #fff !important;
+  color: #fe5c46 !important;
+}
+
+.listview .item_tab_heading_block > span {
+  display: none;
+}
+
+.cross_itemx {
+  position: sticky;
+  right: 0;
+  top: 0;
+}
+
+.changeview .tiggitem.activetabitem {
+  background-image: url("https://cdn.prod.website-files.com/6713759f858863c516dbaa19/6767d9c5e55be10dc16c59e6_67459d1f63b186d24efc3bbe_Jettly-Search-Results-Page-(List-View-Details-Tab)%201.png") !important;
+}
+
+.changeview .opadet_top_middle p {
+  grid-template-columns: 1fr;
+  gap: 5px;
+}
+
+.changeview .opadet_bottom_review {
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.changeview .payment_wrapper {
+  grid-template-columns: 0.55fr 0.45fr;
 }

@@ -327,6 +327,7 @@ function renderPage(page, filteredSets) {
   // initializeSwipers();
   initializeSimpleSliders();
   attachImageClickListeners(); // Attach image click listeners after rendering
+  closeSideBar();
 }
 
 // Function to initialize Swiper sliders
@@ -443,7 +444,7 @@ function attachDetailsButtonListeners() {
 function tabControl() {
   document.querySelectorAll(".item_block_wrapper").forEach((itemWrapper) => {
     const tabItems = itemWrapper.querySelectorAll(
-      ".item_tab_heading_block ul li"
+      ".item_tab_heading_block ul .tabxholder li.tiggitem"
     );
     const tabContents = itemWrapper.querySelectorAll(".item_tab_one");
     tabItems.forEach((tabItem) => {
@@ -461,6 +462,20 @@ function tabControl() {
             tabCnt.style.display = "none";
           }
         });
+      });
+    });
+  });
+}
+
+// close sidebar
+function closeSideBar() {
+  document.querySelectorAll(".cross_itemx span").forEach((span) => {
+    span.addEventListener("click", function () {
+      document.querySelectorAll(".item_tab_block").forEach((activetabpanel) => {
+        activetabpanel.classList.remove("activeTabPanel");
+      });
+      document.querySelectorAll(".item_block_wrapper").forEach((cross) => {
+        cross.classList.remove("activeBtn");
       });
     });
   });
@@ -533,7 +548,7 @@ function getHotDealHtml(
   return `
     <div class="item_wrapper">
       <div class="hot_headls_logo">
-        <img src="https://cdn.prod.website-files.com/6713759f858863c516dbaa19/6752921836657f93c6cd2590_hotlogo.png" alt="Hot Deal Logo" />
+        <img src="https://cdn.prod.website-files.com/6713759f858863c516dbaa19/67679deeedb869e511e6778f_6752921836657f93c6cd2590_hotlogo.png" alt="Hot Deal Logo" />
         <span>Hot <br /> Deal </span>
       </div>
       <div class="item_img slider-container" id="slider-${index}">
@@ -588,7 +603,7 @@ function getHotDealHtml(
           <p>Taxes calculated at checkout</p>
         </div>
         <div class="bookingbutton">
-          <a class="button fill_button" href="#">Request A Book</a>
+          <a class="button fill_button" href="#">Instant Book</a>
           <button class="details-button button fill_button grey_button" data-index="${index}">View Details <img src="https://cdn.prod.website-files.com/6713759f858863c516dbaa19/67459d1f63b186d24efc3bbe_Jettly-Search-Results-Page-(List-View-Details-Tab).png" alt="View Details Icon" />
           </button>
         </div>
@@ -597,14 +612,462 @@ function getHotDealHtml(
     <div class="item_tab_block" data-index="${index}">
       <div class="overflow_wrapper">
         <div class="item_tab_heading_block">
+          <div class="cross_itemx">
+            <span><img src="https://cdn.prod.website-files.com/6713759f858863c516dbaa19/6767c563264061ca37171a7c_x-square.svg" alt="" /></span>
+          </div>
           <ul>
-            <li class="activetabitem" data-item="tab${index}img">Images</li>
-            <li data-item="tab${index}det">Details</li>
-            <li data-item="tab${index}it">Itinerary</li>
-            <li data-item="tab${index}op">Operators</li>
-            <li data-item="tab${index}pl">Policies</li>
-            <li data-item="tab${index}py">Payments</li>
-            <li data-item="tab${index}ask">Ask Us a Question</li>
+            <div class="tabxholder"><li class="activetabitem tiggitem" data-item="tab${index}img">Images</li>
+              <!-- Images Tab -->
+              <div data-cnt="tab${index}img" class="item_tab_one tabitem_inline" style="display: block">
+                <div class="tab_one_heading">
+                  <h3>${item.class_text} Exteriors</h3>
+                  <p>Note: The images depicted are examples of ${
+                    item.class_text
+                  } and may not represent the specific aircraft you will be flying on.</p>
+                </div>
+                <div class="tab_one_slider ${
+                  checkExtLength <= 3 ? "sliderOn" : ""
+                }">
+                  <div class="swiper slide${index}block">
+                    <div class="swiper-wrapper"> ${allImageExt} </div>
+                  </div>
+                  <div class="swipper_ctrl">
+                    <span class="nav${index}prev">
+                      <img src="https://cdn.prod.website-files.com/6713759f858863c516dbaa19/6731c63ca921fbf5867f7906_blackleft.avif" alt="Previous Slide" />
+                    </span>
+                    <span class="nav${index}next">
+                      <img src="https://cdn.prod.website-files.com/6713759f858863c516dbaa19/6731c6505bf5a2a3eb0d037b_blackright.avif" alt="Next Slide" />
+                    </span>
+                  </div>
+                </div>
+                <div class="tab_one_heading tab_one_next_heading">
+                  <h3>${item.class_text} Interiors</h3>
+                  <p>Note: The images depicted are examples of ${
+                    item.class_text
+                  } and may not represent the specific aircraft you will be flying on.</p>
+                </div>
+                <div class="tab_one_slider ${
+                  checkIntLength <= 3 ? "sliderOn" : ""
+                }">
+                  <div class="swiper slide${index}int">
+                    <div class="swiper-wrapper"> ${allImageInt} </div>
+                  </div>
+                  <div class="swipper_ctrl">
+                    <span class="int${index}prev">
+                      <img src="https://cdn.prod.website-files.com/6713759f858863c516dbaa19/6731c63ca921fbf5867f7906_blackleft.avif" alt="Previous Slide" />
+                    </span>
+                    <span class="int${index}next">
+                      <img src="https://cdn.prod.website-files.com/6713759f858863c516dbaa19/6731c6505bf5a2a3eb0d037b_blackright.avif" alt="Next Slide" />
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>            
+            <div class="tabxholder"><li class="tiggitem" data-item="tab${index}det">Details</li>
+              <!-- Details Tab -->
+              <div data-cnt="tab${index}det" class="item_tab_one">
+                <div class="detailstb_wrapper">
+                  <div class="detailstb_left">
+                    <h3>Details</h3>
+                    <div class="detailstb_left_det">
+                      <div class="detailstb_left_det_item">
+                        <p>Class:</p>
+                        <p>${item.class_text}</p>
+                      </div>
+                      <div class="detailstb_left_det_item">
+                        <p>Max Passengers:</p>
+                        <p>${item.pax_number}</p>
+                      </div>
+                      <div class="detailstb_left_det_item">
+                        <p>Year of Make:</p>
+                        <p>${item.year_of_manufacture_number}</p>
+                      </div>
+                      <div class="detailstb_left_det_item">
+                        <p>Wyvern Safety Rated:</p>
+                        <p>${item.wyvern_rating_text}</p>
+                      </div>
+                      <div class="detailstb_left_det_item">
+                        <p>ARG/US Safety Rating:</p>
+                        <p>${item.argus_us_rating_text}</p>
+                      </div>
+                      ${
+                        item.insured_amount_number > 0
+                          ? `
+                            <div class="detailstb_left_det_item">
+                              <p>Liability Insurance:</p>
+                              <p>$${item.insured_amount_number.toLocaleString()}</p>
+                            </div>
+                          `
+                          : ""
+                      }
+                    </div>
+                  </div>
+                  <div class="detailstb_left detailstb_right">
+                    <h3>Amenities</h3>
+                    <div class="detailstb_left_det">
+                      ${words}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>            
+            <div class="tabxholder"><li class="tiggitem" data-item="tab${index}it">Itinerary</li>
+              <!-- Itinerary Tab -->
+              <div data-cnt="tab${index}it" class="item_tab_one">
+                <div class="inttabDet">
+                  <h3>Flight Legs</h3>
+                  <div class="intdet_wrapper">
+                    <div class="intdet_left">
+                      <img class="operatorlogo" src="${
+                        item.operator_logo_image
+                      }" alt="Operator Logo" />
+                    </div>
+                    <div class="intdet_middle">
+                      <div class="intdet_middle_date">
+                        <p class="takeoffdate">${formattedDateStart}</p>
+                        <p class="landdate"> - Lands ${formattedDateEnd}</p>
+                      </div>
+                      <div class="inted_middle_time">
+                        <p>${formattedTimeStart} - ${formattedTimeEnd}</p>
+                      </div>
+                      <div class="airportformatname">
+                        <p>${
+                          apiData.response.flight_legs[0]
+                            .mobile_app_from_airport_name_short_text
+                        } (${
+    apiData.response.flight_legs[0].mobile_app_from_airport_iata_code_text
+      ? apiData.response.flight_legs[0].mobile_app_from_airport_iata_code_text
+      : apiData.response.flight_legs[0].mobile_app_from_airport_icao_code_text
+      ? apiData.response.flight_legs[0].mobile_app_from_airport_icao_code_text
+      : apiData.response.flight_legs[0].mobile_app_from_airport_faa_code_text
+  }) - ${
+    apiData.response.flight_legs[0].mobile_app_to_airport_name_short_text
+  } (${
+    apiData.response.flight_legs[0].mobile_app_to_airport_iata_code_text
+      ? apiData.response.flight_legs[0].mobile_app_to_airport_iata_code_text
+      : apiData.response.flight_legs[0].mobile_app_to_airport_icao_code_text
+      ? apiData.response.flight_legs[0].mobile_app_to_airport_icao_code_text
+      : apiData.response.flight_legs[0].mobile_app_to_airport_faa_code_text
+  })</p>
+                      </div>
+                      <div class="operator_textlist">
+                        <p>${item.operator_txt_text} • ${item.class_text} • ${
+    item.description_text
+  }</p>
+                      </div>   
+                      ${
+                        item.range_number >= longestFlight
+                          ? `<div class="fuelstop"><p> <img src="https://cdn.prod.website-files.com/6713759f858863c516dbaa19/6753e62479df68bd6de939cd_Jettly-Search-Results-Page-(List-View-Itinerary-Tab).png" alt="Fuel Stop Icon" /> Possible fuel stop enroute -  <span>+20 mins</span></p></div>`
+                          : ""
+                      }
+                    </div>
+                    <div class="indetright_wrapper">
+                      <div class="indet_right">
+                        <img src="https://cdn.prod.website-files.com/6713759f858863c516dbaa19/6753e928907492da22caf7fe_flighticon.png" alt="Flight Time Icon" />
+                        <span>Flight Time</span>
+                        <p>${totalHours} H ${totalMinutes} M</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>     
+            </div>            
+            <div class="tabxholder"><li class="tiggitem" data-item="tab${index}op">Operators</li>
+              <!-- Operators Tab -->
+              <div data-cnt="tab${index}op" class="item_tab_one">
+                <div class="opadetails">
+                  <h3>Operator</h3>
+                  <div class="opadet_wrapper">
+                    <div class="opadet_top">
+                      <div class="opadet_top_left">
+                        <p>${item.operator_txt_text}</p>
+                        <img src="${
+                          item.operator_logo_image
+                        }" alt="Operator Logo" />
+                      </div>
+                      <div class="opadet_top_middle">
+                        <p><span>Response Rate:</span> 100%</p>
+                        <p><span>Avg. Response Time:</span> &lt;1 Hrs.</p>
+                        <p><span>Aircraft:</span> 2</p>
+                        <p><span>Address:</span> ${operatorAddress}</p>
+                        <p><span>Hours:</span> 24 Hours</p>
+                        <p><span>Certificate ID:</span> Ask us</p>
+                      </div>
+                      <div class="opadet_top_right">
+                        <iframe src="https://www.google.com/maps?q=${encodeURIComponent(
+                          operatorAddress
+                        )}&output=embed" frameborder="0"></iframe>
+                      </div>
+                    </div>
+                    <div class="opadet_bottom">
+                      <div class="opadet_bottom_heading">
+                        <ul>
+                          <li><img src="https://cdn.prod.website-files.com/6713759f858863c516dbaa19/6754085d1d9a01ce66e3a259_Jettly-Search-Results-Page-(List-View-Operators-Tab)-Recovered.png" alt="Rating Icon" /></li>
+                          <li>0.00 | 0</li>
+                          <li><span>Reviews</span></li>
+                        </ul>
+                      </div>
+                      <div class="opadet_bottom_review">
+                        <div class="opadet_bottom_review_left">
+                          <div class="reviewitem_block">
+                            <div class="obarleft">
+                              <p>5 Stars</p>
+                            </div>
+                            <div class="obarmiddle">
+                              <span></span>
+                            </div>
+                            <div class="obaright">
+                              <p>(0)</p>
+                            </div>
+                          </div>
+                          <div class="reviewitem_block">
+                            <div class="obarleft">
+                              <p>4 Stars</p>
+                            </div>
+                            <div class="obarmiddle">
+                              <span></span>
+                            </div>
+                            <div class="obaright">
+                              <p>(0)</p>
+                            </div>
+                          </div>
+                          <div class="reviewitem_block">
+                            <div class="obarleft">
+                              <p>3 Stars</p>
+                            </div>
+                            <div class="obarmiddle">
+                              <span></span>
+                            </div>
+                            <div class="obaright">
+                              <p>(0)</p>
+                            </div>
+                          </div>
+                          <div class="reviewitem_block">
+                            <div class="obarleft">
+                              <p>2 Stars</p>
+                            </div>
+                            <div class="obarmiddle">
+                              <span></span>
+                            </div>
+                            <div class="obaright">
+                              <p>(0)</p>
+                            </div>
+                          </div>
+                          <div class="reviewitem_block">
+                            <div class="obarleft">
+                              <p>1 Star</p>
+                            </div>
+                            <div class="obarmiddle">
+                              <span></span>
+                            </div>
+                            <div class="obaright">
+                              <p>(0)</p>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="opadet_bottom_review_right">
+                          <h3>Rating Breakdown</h3>
+                          <div class="opadet_bottom_review_right_item">
+                            <p>Seller communication level <span>0.0 <img src="https://cdn.prod.website-files.com/6713759f858863c516dbaa19/67540aa6fb2976ffafcecdf2_Jettly-Search-Results-Page-(List-View-Operators-Tab)-Recovered.png" alt="Rating Breakdown Icon" /></span></p>
+                            <p>Recommended to other passengers <span>0.0 <img src="https://cdn.prod.website-files.com/6713759f858863c516dbaa19/67540aa6fb2976ffafcecdf2_Jettly-Search-Results-Page-(List-View-Operators-Tab)-Recovered.png" alt="Rating Breakdown Icon" /></span></p>
+                            <p>Service as described <span>0.0 <img src="https://cdn.prod.website-files.com/6713759f858863c516dbaa19/67540aa6fb2976ffafcecdf2_Jettly-Search-Results-Page-(List-View-Operators-Tab)-Recovered.png" alt="Rating Breakdown Icon" /></span></p>
+                            <p>Flight cancellation rate <span>0% <img src="https://cdn.prod.website-files.com/6713759f858863c516dbaa19/67540aa6fb2976ffafcecdf2_Jettly-Search-Results-Page-(List-View-Operators-Tab)-Recovered.png" alt="Rating Breakdown Icon" /></span></p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>              
+                </div>
+              </div>
+              <!-- Operators Tab End -->
+            </div>            
+            <div class="tabxholder"><li class="tiggitem" data-item="tab${index}pl">Policies</li>
+              <!-- Policies Tab -->
+              <div data-cnt="tab${index}pl" class="item_tab_one">
+                <div class="poli_wrapper">
+                  <h3>Available Fare Classes</h3>  
+                  <div class="poli_box_wrapper">
+                    <!-- Value Fare Class -->
+                    <div class="polibox">
+                      <div class="polibox_heading">
+                        <h3>Value <span>+ $0</span></h3>                              
+                      </div>
+                      <div class="polibox_cnt">
+                        <div class="polibox_cnt_item">
+                          <div class="checkicon">
+                            <img src="https://cdn.prod.website-files.com/6713759f858863c516dbaa19/6754150613f571f3ecee0471_check.png" alt="Check Icon" />
+                          </div>
+                          <p><span>$95 Change Fee:</span> Applies to all flight modifications.</p>
+                        </div>
+                        <div class="polibox_cnt_item">
+                          <div class="checkicon">
+                            <img src="https://cdn.prod.website-files.com/6713759f858863c516dbaa19/6754150613f571f3ecee0471_check.png" alt="Check Icon" />
+                          </div>
+                          <p><span>Non-Refundable:</span> Flight fare is non-refundable for client-initiated cancellations.</p>
+                        </div>
+                      </div>
+                    </div>
+                    <!-- Flex Fare Class -->
+                    <div class="polibox polibox_two">
+                      <div class="polibox_heading">
+                        <h3>Flex <span>+ 5%</span></h3>
+                        <span class="recom">Recommended</span>                              
+                      </div>
+                      <div class="polibox_cnt">
+                        <div class="polibox_cnt_item">
+                          <div class="checkicon">
+                            <img src="https://cdn.prod.website-files.com/6713759f858863c516dbaa19/6754150613f571f3ecee0471_check.png" alt="Check Icon" />
+                          </div>
+                          <p class="capitalize"><span>No Change Fee</span></p>
+                        </div>
+                        <div class="polibox_cnt_item">
+                          <div class="checkicon">
+                            <img src="https://cdn.prod.website-files.com/6713759f858863c516dbaa19/6754150613f571f3ecee0471_check.png" alt="Check Icon" />
+                          </div>
+                          <p><span>No Fee:</span> Cancel more than 336 hours (14 days) before departure.</p>
+                        </div>
+                        <div class="polibox_cnt_item">
+                          <div class="checkicon">
+                            <img src="https://cdn.prod.website-files.com/6713759f858863c516dbaa19/6754150613f571f3ecee0471_check.png" alt="Check Icon" />
+                          </div>
+                          <p><span>100% Fee:</span> Cancel within 24 hours of departure (no refund).</p>
+                        </div>
+                        <div class="polibox_cnt_item">
+                          <div class="checkicon">
+                            <img src="https://cdn.prod.website-files.com/6713759f858863c516dbaa19/6754150613f571f3ecee0471_check.png" alt="Check Icon" />
+                          </div>
+                          <p><span>75% Fee:</span> Cancel 24 – 96 hours before departure.</p>
+                        </div>
+                        <div class="polibox_cnt_item">
+                          <div class="checkicon">
+                            <img src="https://cdn.prod.website-files.com/6713759f858863c516dbaa19/6754150613f571f3ecee0471_check.png" alt="Check Icon" />
+                          </div>
+                          <p><span>50% Fee:</span> Cancel 96 – 336 hours before departure.</p>
+                        </div>
+                        <div class="polibox_cnt_item">
+                          <div class="checkicon">
+                            <img src="https://cdn.prod.website-files.com/6713759f858863c516dbaa19/6754150613f571f3ecee0471_check.png" alt="Check Icon" />
+                          </div>
+                          <p class="capitalize"><span>Cancellations refunded in Jettly flight credits only</span></p>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="polibox">
+                      <div class="polibox_heading">
+                        <h3>Premium <span>+ 10%</span></h3>
+                      </div>
+                      <div class="polibox_cnt">
+                        <div class="polibox_cnt_item">
+                          <div class="checkicon">
+                            <img src="https://cdn.prod.website-files.com/6713759f858863c516dbaa19/6754150613f571f3ecee0471_check.png" alt="Check Icon" />
+                          </div>
+                          <p class="capitalize"><span>No Change Fee</span></p>
+                        </div>
+                        <div class="polibox_cnt_item">
+                          <div class="checkicon">
+                            <img src="https://cdn.prod.website-files.com/6713759f858863c516dbaa19/6754150613f571f3ecee0471_check.png" alt="Check Icon" />
+                          </div>
+                          <p><span>No Fee:</span> Cancel more than 168 hours (7 days) before departure.</p>
+                        </div>
+                        <div class="polibox_cnt_item">
+                          <div class="checkicon">
+                            <img src="https://cdn.prod.website-files.com/6713759f858863c516dbaa19/6754150613f571f3ecee0471_check.png" alt="Check Icon" />
+                          </div>
+                          <p><span>100% Fee:</span> Cancel within 24 hours of departure (no refund).</p>
+                        </div>
+                        <div class="polibox_cnt_item">
+                          <div class="checkicon">
+                            <img src="https://cdn.prod.website-files.com/6713759f858863c516dbaa19/6754150613f571f3ecee0471_check.png" alt="Check Icon" />
+                          </div>
+                          <p><span>75% Fee:</span> Cancel 24 – 96 hours before departure.</p>
+                        </div>
+                        <div class="polibox_cnt_item">
+                          <div class="checkicon">
+                            <img src="https://cdn.prod.website-files.com/6713759f858863c516dbaa19/6754150613f571f3ecee0471_check.png" alt="Check Icon" />
+                          </div>
+                          <p><span>50% Fee:</span> Cancel 96 – 168 hours before departure.</p>
+                        </div>
+                        <div class="polibox_cnt_item">
+                          <div class="checkicon">
+                            <img src="https://cdn.prod.website-files.com/6713759f858863c516dbaa19/6754150613f571f3ecee0471_check.png" alt="Check Icon" />
+                          </div>
+                          <p class="capitalize"><span>Cancellations refunded to original payment method or in Jettly flight credits</span></p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>  
+                </div>
+              </div>
+              <!-- Policies Tab End -->
+            </div>            
+            <div class="tabxholder"><li class="tiggitem" data-item="tab${index}py">Payments</li>
+              <!-- Payments Tab -->
+              <div data-cnt="tab${index}py" class="item_tab_one">
+                <div class="payment_tab">
+                  <h3>Payments</h3>
+                  <div class="payment_wrapper">
+                    <div class="paymenttab_left">
+                      <div class="paymenttab_left_item">
+                        <div class="paymenttab_item_img">
+                          <img src="https://cdn.prod.website-files.com/6713759f858863c516dbaa19/6754150613f571f3ecee0471_check.png" alt="Check Icon" />
+                        </div>
+                        <p>Pay in full upon aircraft availability confirmation by ${
+                          item.operator_txt_text
+                        }</p>
+                      </div>
+                      <div class="paymenttab_left_item">
+                        <div class="paymenttab_item_img">
+                          <img src="https://cdn.prod.website-files.com/6713759f858863c516dbaa19/6754150613f571f3ecee0471_check.png" alt="Check Icon" />
+                        </div>
+                        <p>Acceptable payment methods: Visa, MasterCard, American Express, Wire, ACH, Cryptocurrency</p>
+                      </div>
+                      <div class="paymenttab_left_item">
+                        <div class="paymenttab_item_img">
+                          <img src="https://cdn.prod.website-files.com/6713759f858863c516dbaa19/6754150613f571f3ecee0471_check.png" alt="Check Icon" />
+                        </div>
+                        <p>You will receive an invoice for the trip once the aircraft is confirmed</p>
+                      </div>
+                    </div>
+                    <div class="paymenttab_right">
+                      <p>Upon Confirmation</p>
+                      <div class="paymenttab_right_percent">
+                        <div class="paybar"></div>
+                        <div class="paybar_text">
+                          <img src="https://cdn.prod.website-files.com/6713759f858863c516dbaa19/6754150613f571f3ecee0471_check.png" alt="Check Icon" />
+                          <span>100%</span>
+                        </div>
+                      </div>
+                      <p>Pay in full once the aircraft is confirmed available by ${
+                        item.operator_txt_text
+                      }.</p>
+                      <div class="payment">
+                        <img src="https://cdn.prod.website-files.com/6713759f858863c516dbaa19/6755a86f952bce124bed0a9d_payment.png" alt="Payment Methods" />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div><!-- Payments Tab End -->
+            </div>            
+            <div class="tabxholder"><li class="tiggitem" data-item="tab${index}ask">Ask Us a Question</li>
+              <!-- Ask Us a Question Tab -->
+              <div data-cnt="tab${index}ask" class="item_tab_one">
+                <div class="payment_tab">
+                  <h3>Message ${item.operator_txt_text}</h3>
+                  <div class="payment_wrapper askform">
+                    <form>
+                      <textarea required placeholder="Type your message here"></textarea>
+                      <input type="hidden" value="${
+                        item.managed_a_c_operator_custom_managed_air_operator
+                      }" />
+                      <div class="submitbtn">
+                        <button type="submit"><img src="https://cdn.prod.website-files.com/6713759f858863c516dbaa19/6755b3a876accbd14f83880f_plan.png" alt="Send Message Icon" /></button>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+              </div>
+              <!-- Ask Us a Question Tab End -->
+            </div>            
           </ul>
         </div>
         <div class="tab_item_cnt_wrapper">
@@ -707,7 +1170,9 @@ function getHotDealHtml(
               <h3>Flight Legs</h3>
               <div class="intdet_wrapper">
                 <div class="intdet_left">
-                  <img src="${item.operator_logo_image}" alt="Operator Logo" />
+                  <img class="operatorlogo" src="${
+                    item.operator_logo_image
+                  }" alt="Operator Logo" />
                 </div>
                 <div class="intdet_middle">
                   <div class="intdet_middle_date">
@@ -862,9 +1327,10 @@ function getHotDealHtml(
                     </div>
                   </div>
                 </div>
-              </div><!-- Operators Tab End -->              
+              </div>              
             </div>
           </div>
+          <!-- Operators Tab End -->
           <!-- Policies Tab -->
               <div data-cnt="tab${index}pl" class="item_tab_one">
                 <div class="poli_wrapper">
@@ -935,7 +1401,6 @@ function getHotDealHtml(
                         </div>
                       </div>
                     </div>
-                    <!-- Premium Fare Class -->
                     <div class="polibox">
                       <div class="polibox_heading">
                         <h3>Premium <span>+ 10%</span></h3>
@@ -981,8 +1446,8 @@ function getHotDealHtml(
                     </div>
                   </div>  
                 </div>
-              </div><!-- Policies Tab End -->
-
+              </div>
+              <!-- Policies Tab End -->
               <!-- Payments Tab -->
               <div data-cnt="tab${index}py" class="item_tab_one">
                 <div class="payment_tab">
@@ -1029,7 +1494,6 @@ function getHotDealHtml(
                   </div>
                 </div>
               </div><!-- Payments Tab End -->
-
               <!-- Ask Us a Question Tab -->
               <div data-cnt="tab${index}ask" class="item_tab_one">
                 <div class="payment_tab">
@@ -1046,7 +1510,8 @@ function getHotDealHtml(
                     </form>
                   </div>
                 </div>
-              </div><!-- Ask Us a Question Tab End -->
+              </div>
+              <!-- Ask Us a Question Tab End -->
         </div>
       </div>
       `;
@@ -1104,7 +1569,9 @@ function getRegularItemHtml(
           } <img class="seat_logo" src="https://cdn.prod.website-files.com/6713759f858863c516dbaa19/674f4ca8521e970e24495468_seat.png" alt="Seat Icon" />
             <span>${item.pax_number}</span> seats
           </p>
-          <img src="${item.operator_logo_image}" alt="Operator Logo" />
+          <img class="operatorlogo" src="${
+            item.operator_logo_image
+          }" alt="Operator Logo" />
         </div>
         <div class="item_book">
           <div class="destination_flight">
@@ -1133,7 +1600,7 @@ function getRegularItemHtml(
             <p>Taxes calculated at checkout</p>
           </div>
           <div class="bookingbutton">
-            <a class="button fill_button" href="#">Request A Book</a>
+            <a class="button fill_button" href="#">Instant Book</a>
             <button class="details-button button fill_button grey_button" data-index="${index}">View Details <img src="https://cdn.prod.website-files.com/6713759f858863c516dbaa19/67459d1f63b186d24efc3bbe_Jettly-Search-Results-Page-(List-View-Details-Tab).png" alt="View Details Icon" />
             </button>
           </div>
@@ -1142,14 +1609,464 @@ function getRegularItemHtml(
       <div class="item_tab_block" data-index="${index}">
         <div class="overflow_wrapper">
           <div class="item_tab_heading_block">
+          <div class="cross_itemx">
+            <span><img src="https://cdn.prod.website-files.com/6713759f858863c516dbaa19/6767c563264061ca37171a7c_x-square.svg" alt="" /></span>
+          </div>
         <ul>
-          <li class="activetabitem" data-item="tab${index}img">Images</li>
-          <li data-item="tab${index}det">Details</li>
-          <li data-item="tab${index}it">Itinerary</li>
-          <li data-item="tab${index}op">Operators</li>
-          <li data-item="tab${index}pl">Policies</li>
-          <li data-item="tab${index}py">Payments</li>
-          <li data-item="tab${index}ask">Ask Us a Question</li>
+          <div class="tabxholder"><li class="activetabitem tiggitem" data-item="tab${index}img">Images</li>
+            <!-- Images Tab -->
+            <div data-cnt="tab${index}img" class="item_tab_one tabitem_inline" style="display:block;">
+              <div class="tab_one_heading">
+                <h3>${item.class_text} Exteriors</h3>
+                <p>Note: The images depicted are examples of ${
+                  item.class_text
+                } and may not represent the specific aircraft you will be flying on.</p>
+              </div>
+              <div class="tab_one_slider ${
+                checkExtLength <= 3 ? "sliderOn" : ""
+              }">
+                <div class="swiper slide${index}block">
+                  <div class="swiper-wrapper"> ${allImageExt} </div>
+                </div>
+                <div class="swipper_ctrl">
+                  <span class="nav${index}prev">
+                    <img src="https://cdn.prod.website-files.com/6713759f858863c516dbaa19/6731c63ca921fbf5867f7906_blackleft.avif" alt="Previous Slide" />
+                  </span>
+                  <span class="nav${index}next">
+                    <img src="https://cdn.prod.website-files.com/6713759f858863c516dbaa19/6731c6505bf5a2a3eb0d037b_blackright.avif" alt="Next Slide" />
+                  </span>
+                </div>
+              </div>
+              <div class="tab_one_heading tab_one_next_heading">
+                <h3>${item.class_text} Interiors</h3>
+                <p>Note: The images depicted are examples of ${
+                  item.class_text
+                } and may not represent the specific aircraft you will be flying on.</p>
+              </div>
+              <div class="tab_one_slider ${
+                checkIntLength <= 3 ? "sliderOn" : ""
+              }">
+                <div class="swiper slide${index}int">
+                  <div class="swiper-wrapper"> ${allImageInt} </div>
+                </div>
+                <div class="swipper_ctrl">
+                  <span class="int${index}prev">
+                    <img src="https://cdn.prod.website-files.com/6713759f858863c516dbaa19/6731c63ca921fbf5867f7906_blackleft.avif" alt="Previous Slide" />
+                  </span>
+                  <span class="int${index}next">
+                    <img src="https://cdn.prod.website-files.com/6713759f858863c516dbaa19/6731c6505bf5a2a3eb0d037b_blackright.avif" alt="Next Slide" />
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="tabxholder"><li class="tiggitem" data-item="tab${index}det">Details</li>
+            <!-- Details Tab -->
+            <div data-cnt="tab${index}det" class="item_tab_one">
+              <div class="detailstb_wrapper">
+                <div class="detailstb_left">
+                  <h3>Details</h3>
+                  <div class="detailstb_left_det">
+                    <div class="detailstb_left_det_item">
+                      <p>Class:</p>
+                      <p>${item.class_text}</p>
+                    </div>
+                    <div class="detailstb_left_det_item">
+                      <p>Max Passengers:</p>
+                      <p>${item.pax_number}</p>
+                    </div>
+                    <div class="detailstb_left_det_item">
+                      <p>Year of Make:</p>
+                      <p>${item.year_of_manufacture_number}</p>
+                    </div>
+                    <div class="detailstb_left_det_item">
+                      <p>Wyvern Safety Rated:</p>
+                      <p>${item.wyvern_rating_text}</p>
+                    </div>
+                    <div class="detailstb_left_det_item">
+                      <p>ARG/US Safety Rating:</p>
+                      <p>${item.argus_us_rating_text}</p>
+                    </div>
+                    ${
+                      item.insured_amount_number > 0
+                        ? `
+                          <div class="detailstb_left_det_item">
+                            <p>Liability Insurance:</p>
+                            <p>$${item.insured_amount_number.toLocaleString()}</p>
+                          </div>
+                        `
+                        : ""
+                    }
+                  </div>
+                </div>
+                <div class="detailstb_left detailstb_right">
+                  <h3>Amenities</h3>
+                  <div class="detailstb_left_det">
+                    ${words}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="tabxholder"><li class="tiggitem" data-item="tab${index}it">Itinerary</li>
+            <!-- Itinerary Tab -->
+              <div data-cnt="tab${index}it" class="item_tab_one">
+                <div class="inttabDet">
+                  <h3>Flight Legs</h3>
+                  <div class="intdet_wrapper">
+                    <div class="intdet_left">
+                      <img class="operatorlogo" src="${
+                        item.operator_logo_image
+                      }" alt="Operator Logo" />
+                    </div>
+                    <div class="intdet_middle">
+                      <div class="intdet_middle_date">
+                        <p class="takeoffdate">${formattedDateStart}</p>
+                        <p class="landdate"> - Lands ${formattedDateEnd}</p>
+                      </div>
+                      <div class="inted_middle_time">
+                        <p>${formattedTimeStart} - ${formattedTimeEnd}</p>
+                      </div>
+                      <div class="airportformatname">
+                        <p>${
+                          apiData.response.flight_legs[0]
+                            .mobile_app_from_airport_name_short_text
+                        } (${
+    apiData.response.flight_legs[0].mobile_app_from_airport_iata_code_text
+      ? apiData.response.flight_legs[0].mobile_app_from_airport_iata_code_text
+      : apiData.response.flight_legs[0].mobile_app_from_airport_icao_code_text
+      ? apiData.response.flight_legs[0].mobile_app_from_airport_icao_code_text
+      : apiData.response.flight_legs[0].mobile_app_from_airport_faa_code_text
+  }) - ${
+    apiData.response.flight_legs[0].mobile_app_to_airport_name_short_text
+  } (${
+    apiData.response.flight_legs[0].mobile_app_to_airport_iata_code_text
+      ? apiData.response.flight_legs[0].mobile_app_to_airport_iata_code_text
+      : apiData.response.flight_legs[0].mobile_app_to_airport_icao_code_text
+      ? apiData.response.flight_legs[0].mobile_app_to_airport_icao_code_text
+      : apiData.response.flight_legs[0].mobile_app_to_airport_faa_code_text
+  })</p>
+                      </div>
+                      <div class="operator_textlist">
+                        <p>${item.operator_txt_text} • ${item.class_text} • ${
+    item.description_text
+  }</p>
+                      </div>   
+                      ${
+                        item.range_number >= longestFlight
+                          ? `<div class="fuelstop"><p> <img src="https://cdn.prod.website-files.com/6713759f858863c516dbaa19/6753e62479df68bd6de939cd_Jettly-Search-Results-Page-(List-View-Itinerary-Tab).png" alt="Fuel Stop Icon" /> Possible fuel stop enroute -  <span>+20 mins</span></p></div>`
+                          : ""
+                      }
+                    </div>
+                    <div class="indetright_wrapper">
+                      <div class="indet_right">
+                        <img src="https://cdn.prod.website-files.com/6713759f858863c516dbaa19/6753e928907492da22caf7fe_flighticon.png" alt="Flight Time Icon" />
+                        <span>Flight Time</span>
+                        <p>${totalHours} H ${totalMinutes} M</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div> 
+          </div>
+          <div class="tabxholder"><li class="tiggitem" data-item="tab${index}op">Operators</li>
+              <!-- Operators Tab -->
+              <div data-cnt="tab${index}op" class="item_tab_one">
+                <div class="opadetails">
+                  <h3>Operator</h3>
+                  <div class="opadet_wrapper">
+                    <div class="opadet_top">
+                      <div class="opadet_top_left">
+                        <p>${item.operator_txt_text}</p>
+                        <img src="${
+                          item.operator_logo_image
+                        }" alt="Operator Logo" />
+                      </div>
+                      <div class="opadet_top_middle">
+                        <p><span>Response Rate:</span> 100%</p>
+                        <p><span>Avg. Response Time:</span> &lt;1 Hrs.</p>
+                        <p><span>Aircraft:</span> 2</p>
+                        <p><span>Address:</span> ${operatorAddress}</p>
+                        <p><span>Hours:</span> 24 Hours</p>
+                        <p><span>Certificate ID:</span> Ask us</p>
+                      </div>
+                      <div class="opadet_top_right">
+                        <iframe src="https://www.google.com/maps?q=${encodeURIComponent(
+                          operatorAddress
+                        )}&output=embed" frameborder="0"></iframe>
+                      </div>
+                    </div>
+                    <div class="opadet_bottom">
+                      <div class="opadet_bottom_heading">
+                        <ul>
+                          <li><img src="https://cdn.prod.website-files.com/6713759f858863c516dbaa19/6754085d1d9a01ce66e3a259_Jettly-Search-Results-Page-(List-View-Operators-Tab)-Recovered.png" alt="Rating Icon" /></li>
+                          <li>0.00 | 0</li>
+                          <li><span>Reviews</span></li>
+                        </ul>
+                      </div>
+                      <div class="opadet_bottom_review">
+                        <div class="opadet_bottom_review_left">
+                          <div class="reviewitem_block">
+                            <div class="obarleft">
+                              <p>5 Stars</p>
+                            </div>
+                            <div class="obarmiddle">
+                              <span></span>
+                            </div>
+                            <div class="obaright">
+                              <p>(0)</p>
+                            </div>
+                          </div>
+                          <div class="reviewitem_block">
+                            <div class="obarleft">
+                              <p>4 Stars</p>
+                            </div>
+                            <div class="obarmiddle">
+                              <span></span>
+                            </div>
+                            <div class="obaright">
+                              <p>(0)</p>
+                            </div>
+                          </div>
+                          <div class="reviewitem_block">
+                            <div class="obarleft">
+                              <p>3 Stars</p>
+                            </div>
+                            <div class="obarmiddle">
+                              <span></span>
+                            </div>
+                            <div class="obaright">
+                              <p>(0)</p>
+                            </div>
+                          </div>
+                          <div class="reviewitem_block">
+                            <div class="obarleft">
+                              <p>2 Stars</p>
+                            </div>
+                            <div class="obarmiddle">
+                              <span></span>
+                            </div>
+                            <div class="obaright">
+                              <p>(0)</p>
+                            </div>
+                          </div>
+                          <div class="reviewitem_block">
+                            <div class="obarleft">
+                              <p>1 Star</p>
+                            </div>
+                            <div class="obarmiddle">
+                              <span></span>
+                            </div>
+                            <div class="obaright">
+                              <p>(0)</p>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="opadet_bottom_review_right">
+                          <h3>Rating Breakdown</h3>
+                          <div class="opadet_bottom_review_right_item">
+                            <p>Seller communication level <span>0.0 <img src="https://cdn.prod.website-files.com/6713759f858863c516dbaa19/67540aa6fb2976ffafcecdf2_Jettly-Search-Results-Page-(List-View-Operators-Tab)-Recovered.png" alt="Rating Breakdown Icon" /></span></p>
+                            <p>Recommended to other passengers <span>0.0 <img src="https://cdn.prod.website-files.com/6713759f858863c516dbaa19/67540aa6fb2976ffafcecdf2_Jettly-Search-Results-Page-(List-View-Operators-Tab)-Recovered.png" alt="Rating Breakdown Icon" /></span></p>
+                            <p>Service as described <span>0.0 <img src="https://cdn.prod.website-files.com/6713759f858863c516dbaa19/67540aa6fb2976ffafcecdf2_Jettly-Search-Results-Page-(List-View-Operators-Tab)-Recovered.png" alt="Rating Breakdown Icon" /></span></p>
+                            <p>Flight cancellation rate <span>0% <img src="https://cdn.prod.website-files.com/6713759f858863c516dbaa19/67540aa6fb2976ffafcecdf2_Jettly-Search-Results-Page-(List-View-Operators-Tab)-Recovered.png" alt="Rating Breakdown Icon" /></span></p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>              
+                </div>
+              </div>
+              <!-- Operators Tab End -->
+            </div>            
+          <div class="tabxholder"><li class="tiggitem" data-item="tab${index}pl">Policies</li>
+            <!-- Policies Tab -->
+            <div data-cnt="tab${index}pl" class="item_tab_one">
+              <div class="poli_wrapper">
+                <h3>Available Fare Classes</h3>  
+                <div class="poli_box_wrapper">
+                  <!-- Value Fare Class -->
+                  <div class="polibox">
+                    <div class="polibox_heading">
+                      <h3>Value <span>+ $0</span></h3>                              
+                    </div>
+                    <div class="polibox_cnt">
+                      <div class="polibox_cnt_item">
+                        <div class="checkicon">
+                          <img src="https://cdn.prod.website-files.com/6713759f858863c516dbaa19/6754150613f571f3ecee0471_check.png" alt="Check Icon" />
+                        </div>
+                        <p><span>$95 Change Fee:</span> Applies to all flight modifications.</p>
+                      </div>
+                      <div class="polibox_cnt_item">
+                        <div class="checkicon">
+                          <img src="https://cdn.prod.website-files.com/6713759f858863c516dbaa19/6754150613f571f3ecee0471_check.png" alt="Check Icon" />
+                        </div>
+                        <p><span>Non-Refundable:</span> Flight fare is non-refundable for client-initiated cancellations.</p>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- Flex Fare Class -->
+                  <div class="polibox polibox_two">
+                    <div class="polibox_heading">
+                      <h3>Flex <span>+ 5%</span></h3>
+                      <span class="recom">Recommended</span>                              
+                    </div>
+                    <div class="polibox_cnt">
+                      <div class="polibox_cnt_item">
+                        <div class="checkicon">
+                          <img src="https://cdn.prod.website-files.com/6713759f858863c516dbaa19/6754150613f571f3ecee0471_check.png" alt="Check Icon" />
+                        </div>
+                        <p class="capitalize"><span>No Change Fee</span></p>
+                      </div>
+                      <div class="polibox_cnt_item">
+                        <div class="checkicon">
+                          <img src="https://cdn.prod.website-files.com/6713759f858863c516dbaa19/6754150613f571f3ecee0471_check.png" alt="Check Icon" />
+                        </div>
+                        <p><span>No Fee:</span> Cancel more than 336 hours (14 days) before departure.</p>
+                      </div>
+                      <div class="polibox_cnt_item">
+                        <div class="checkicon">
+                          <img src="https://cdn.prod.website-files.com/6713759f858863c516dbaa19/6754150613f571f3ecee0471_check.png" alt="Check Icon" />
+                        </div>
+                        <p><span>100% Fee:</span> Cancel within 24 hours of departure (no refund).</p>
+                      </div>
+                      <div class="polibox_cnt_item">
+                        <div class="checkicon">
+                          <img src="https://cdn.prod.website-files.com/6713759f858863c516dbaa19/6754150613f571f3ecee0471_check.png" alt="Check Icon" />
+                        </div>
+                        <p><span>75% Fee:</span> Cancel 24 – 96 hours before departure.</p>
+                      </div>
+                      <div class="polibox_cnt_item">
+                        <div class="checkicon">
+                          <img src="https://cdn.prod.website-files.com/6713759f858863c516dbaa19/6754150613f571f3ecee0471_check.png" alt="Check Icon" />
+                        </div>
+                        <p><span>50% Fee:</span> Cancel 96 – 336 hours before departure.</p>
+                      </div>
+                      <div class="polibox_cnt_item">
+                        <div class="checkicon">
+                          <img src="https://cdn.prod.website-files.com/6713759f858863c516dbaa19/6754150613f571f3ecee0471_check.png" alt="Check Icon" />
+                        </div>
+                        <p class="capitalize"><span>Cancellations refunded in Jettly flight credits only</span></p>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- Premium Fare Class -->
+                  <div class="polibox">
+                    <div class="polibox_heading">
+                      <h3>Premium <span>+ 10%</span></h3>
+                    </div>
+                    <div class="polibox_cnt">
+                      <div class="polibox_cnt_item">
+                        <div class="checkicon">
+                          <img src="https://cdn.prod.website-files.com/6713759f858863c516dbaa19/6754150613f571f3ecee0471_check.png" alt="Check Icon" />
+                        </div>
+                        <p class="capitalize"><span>No Change Fee</span></p>
+                      </div>
+                      <div class="polibox_cnt_item">
+                        <div class="checkicon">
+                          <img src="https://cdn.prod.website-files.com/6713759f858863c516dbaa19/6754150613f571f3ecee0471_check.png" alt="Check Icon" />
+                        </div>
+                        <p><span>No Fee:</span> Cancel more than 168 hours (7 days) before departure.</p>
+                      </div>
+                      <div class="polibox_cnt_item">
+                        <div class="checkicon">
+                          <img src="https://cdn.prod.website-files.com/6713759f858863c516dbaa19/6754150613f571f3ecee0471_check.png" alt="Check Icon" />
+                        </div>
+                        <p><span>100% Fee:</span> Cancel within 24 hours of departure (no refund).</p>
+                      </div>
+                      <div class="polibox_cnt_item">
+                        <div class="checkicon">
+                          <img src="https://cdn.prod.website-files.com/6713759f858863c516dbaa19/6754150613f571f3ecee0471_check.png" alt="Check Icon" />
+                        </div>
+                        <p><span>75% Fee:</span> Cancel 24 – 96 hours before departure.</p>
+                      </div>
+                      <div class="polibox_cnt_item">
+                        <div class="checkicon">
+                          <img src="https://cdn.prod.website-files.com/6713759f858863c516dbaa19/6754150613f571f3ecee0471_check.png" alt="Check Icon" />
+                        </div>
+                        <p><span>50% Fee:</span> Cancel 96 – 168 hours before departure.</p>
+                      </div>
+                      <div class="polibox_cnt_item">
+                        <div class="checkicon">
+                          <img src="https://cdn.prod.website-files.com/6713759f858863c516dbaa19/6754150613f571f3ecee0471_check.png" alt="Check Icon" />
+                        </div>
+                        <p class="capitalize"><span>Cancellations refunded to original payment method or in Jettly flight credits</span></p>
+                      </div>
+                    </div>
+                  </div>
+                </div>  
+              </div>
+            </div>
+            <!-- Policies Tab End -->            
+          </div>
+          <div class="tabxholder"><li class="tiggitem" data-item="tab${index}py">Payments</li>
+            <!-- Payments Tab -->
+            <div data-cnt="tab${index}py" class="item_tab_one">
+              <div class="payment_tab">
+                <h3>Payments</h3>
+                <div class="payment_wrapper">
+                  <div class="paymenttab_left">
+                    <div class="paymenttab_left_item">
+                      <div class="paymenttab_item_img">
+                        <img src="https://cdn.prod.website-files.com/6713759f858863c516dbaa19/6754150613f571f3ecee0471_check.png" alt="Check Icon" />
+                      </div>
+                      <p>Pay in full upon aircraft availability confirmation by ${
+                        item.operator_txt_text
+                      }</p>
+                    </div>
+                    <div class="paymenttab_left_item">
+                      <div class="paymenttab_item_img">
+                        <img src="https://cdn.prod.website-files.com/6713759f858863c516dbaa19/6754150613f571f3ecee0471_check.png" alt="Check Icon" />
+                      </div>
+                      <p>Acceptable payment methods: Visa, MasterCard, American Express, Wire, ACH, Cryptocurrency</p>
+                    </div>
+                    <div class="paymenttab_left_item">
+                      <div class="paymenttab_item_img">
+                        <img src="https://cdn.prod.website-files.com/6713759f858863c516dbaa19/6754150613f571f3ecee0471_check.png" alt="Check Icon" />
+                      </div>
+                      <p>You will receive an invoice for the trip once the aircraft is confirmed</p>
+                    </div>
+                  </div>
+                  <div class="paymenttab_right">
+                    <p>Upon Confirmation</p>
+                    <div class="paymenttab_right_percent">
+                      <div class="paybar"></div>
+                      <div class="paybar_text">
+                        <img src="https://cdn.prod.website-files.com/6713759f858863c516dbaa19/6754150613f571f3ecee0471_check.png" alt="Check Icon" />
+                        <span>100%</span>
+                      </div>
+                    </div>
+                    <p>Pay in full once the aircraft is confirmed available by ${
+                      item.operator_txt_text
+                    }.</p>
+                    <div class="payment">
+                      <img src="https://cdn.prod.website-files.com/6713759f858863c516dbaa19/6755a86f952bce124bed0a9d_payment.png" alt="Payment Methods" />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- Payments Tab End -->
+          </div>
+          <div class="tabxholder"><li class="tiggitem" data-item="tab${index}ask">Ask Us a Question</li>
+            <!-- Ask Us a Question Tab -->
+            <div data-cnt="tab${index}ask" class="item_tab_one">
+              <div class="payment_tab">
+                <h3>Message ${item.operator_txt_text}</h3>
+                <div class="payment_wrapper askform">
+                  <form>
+                    <textarea required placeholder="Type your message here"></textarea>
+                    <input type="hidden" value="${
+                      item.managed_a_c_operator_custom_managed_air_operator
+                    }" />
+                    <div class="submitbtn">
+                      <button type="submit"><img src="https://cdn.prod.website-files.com/6713759f858863c516dbaa19/6755b3a876accbd14f83880f_plan.png" alt="Send Message Icon" /></button>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+            <!-- Ask Us a Question Tab End -->
+          </div>
         </ul>
       </div>
       <div class="tab_item_cnt_wrapper">
@@ -1401,9 +2318,10 @@ function getRegularItemHtml(
                   </div>
                 </div>
               </div>
-            </div><!-- Operators Tab End -->            
+            </div>       
           </div>
         </div>
+        <!-- Operators Tab End -->     
         <!-- Policies Tab -->
             <div data-cnt="tab${index}pl" class="item_tab_one">
               <div class="poli_wrapper">
@@ -1520,8 +2438,8 @@ function getRegularItemHtml(
                   </div>
                 </div>  
               </div>
-            </div><!-- Policies Tab End -->
-
+            </div>
+            <!-- Policies Tab End -->
             <!-- Payments Tab -->
             <div data-cnt="tab${index}py" class="item_tab_one">
               <div class="payment_tab">
@@ -1567,8 +2485,8 @@ function getRegularItemHtml(
                   </div>
                 </div>
               </div>
-            </div><!-- Payments Tab End -->
-
+            </div>
+            <!-- Payments Tab End -->
             <!-- Ask Us a Question Tab -->
             <div data-cnt="tab${index}ask" class="item_tab_one">
               <div class="payment_tab">
@@ -1585,7 +2503,8 @@ function getRegularItemHtml(
                   </form>
                 </div>
               </div>
-            </div><!-- Ask Us a Question Tab End -->
+            </div>
+            <!-- Ask Us a Question Tab End -->
       </div>
     </div>
     `;
@@ -1624,11 +2543,24 @@ function createItemBlock(item, index, isHotDeal, fragment, distance) {
     hour12: true,
   });
 
-  const calculateTotal = Math.round(
-    (distance / item.cruise_speed_avg_fixedrate_number) *
-      item.price_per_hour_fixedrate_number *
-      (isHotDeal ? 0.8 : 1)
-  ).toLocaleString();
+  const multiplier = isHotDeal
+    ? 0.8
+    : apiData.response.is_international
+    ? 1.5
+    : 1;
+  let calculatedValue;
+
+  if (distance / item.cruise_speed_avg_fixedrate_number < 1) {
+    calculatedValue = Math.round(item.price_per_hour_fixedrate_number);
+  } else {
+    calculatedValue = Math.round(
+      (distance / item.cruise_speed_avg_fixedrate_number) *
+        item.price_per_hour_fixedrate_number *
+        multiplier
+    );
+  }
+
+  const calculateTotal = calculatedValue.toLocaleString();
 
   const checkExtLength = Array.isArray(item.exterior_images_list_image)
     ? item.exterior_images_list_image.length
@@ -1810,8 +2742,10 @@ function filterData() {
 // Function to handle search input
 const handleSearchInput = () => {
   const searchTerm = searchInputBox.value.toLowerCase().trim();
-  filteredByRangeSlider = aircraftSets.filter((item) =>
-    item.description_text.toLowerCase().includes(searchTerm)
+  filteredByRangeSlider = aircraftSets.filter(
+    (item) =>
+      item.description_text &&
+      item.description_text.toLowerCase().includes(searchTerm)
   );
   debouncedFilterData();
 };
