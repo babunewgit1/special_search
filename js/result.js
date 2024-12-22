@@ -325,23 +325,6 @@ roundTripSubmit.addEventListener("click", function () {
   }
 });
 
-// code for multi city api submition
-let requestId;
-(async function fetchRequestId() {
-  try {
-    const response = await fetch(
-      "https://jettly.com/api/1.1/wf/webflow_multirequest_create",
-      {
-        method: "POST",
-      }
-    );
-    const data = await response.json();
-    requestId = data.response.flightrequestid;
-  } catch (error) {
-    console.error("Error fetching Request ID:", error);
-  }
-})();
-
 // Submission logic for multi-city
 multiCitySubmit.addEventListener("click", function () {
   const multiFormPort = document.querySelectorAll(".multicityform");
@@ -426,29 +409,15 @@ multiCitySubmit.addEventListener("click", function () {
     }
   });
 
-  console.log(
-    storeFormPort,
-    storeToPort,
-    storeFormId,
-    storeToId,
-    storeDate,
-    storeAppDate,
-    storePax,
-    storeTime,
-    multiUnixTime
-  );
-
   if (
     checkFormPort &&
     checkToPort &&
     checkFormId &&
     checkToId &&
     checkDate &&
-    checkPax &&
-    requestId
+    checkPax
   ) {
     const storeData = {
-      requestId: requestId,
       way: "multi-city",
       fromId: storeFormId,
       toId: storeToId,
@@ -465,7 +434,7 @@ multiCitySubmit.addEventListener("click", function () {
     console.log("Stored Data:", storeData);
     window.location.href = `/search-result`;
   } else {
-    alert("Please fill up the form properly or wait for the request ID.");
+    alert("Please fill up the form properly.");
   }
 });
 

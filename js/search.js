@@ -15,6 +15,9 @@ let longestFlight;
 let flightRequestId;
 let minYear, maxYear, minYearExt, minYearInt, minYearIns, maxYearIns;
 
+let currentMinPrice;
+let currentMaxPrice;
+
 // Filter state arrays
 let selectedClasses = [];
 let selectedDescriptions = [];
@@ -2670,6 +2673,11 @@ const debouncedFilterData = debounce(() => {
 function filterData() {
   let filteredSets = [...filteredByRangeSlider];
 
+  filteredSets = filteredSets.filter((item) => {
+    const price = item.price_per_hour_fixedrate_number;
+    return price >= currentMinPrice && price <= currentMaxPrice;
+  });
+
   if (selectedClasses.length > 0) {
     filteredSets = filteredSets.filter((item) =>
       selectedClasses.includes(item.class_text)
@@ -3366,7 +3374,6 @@ function initialize() {
       date_as_text: sessionData.dateAsText,
       time_as_text: sessionData.timeAsText,
       App_Out_Date_As_Text: sessionData.appDate,
-      flightrequest: sessionData.requestId,
     };
     apiUrl = apiUrlMultiCity;
   } else {
@@ -3399,6 +3406,135 @@ function initialize() {
       finalResultParagraph.textContent = ` ${aircraftSets.length} `;
       updateCheckboxCounts(aircraftSets);
       hideLoader();
+
+      // hourly rage filter range slider
+      const minPriceHourRate = Math.min(
+        ...aircraftSets.map((item) => item.price_per_hour_fixedrate_number)
+      );
+      const maxPriceHourRate = Math.max(
+        ...aircraftSets.map((item) => item.price_per_hour_fixedrate_number)
+      );
+      currentMinPrice = minPriceHourRate;
+      currentMaxPrice = maxPriceHourRate;
+
+      // Grab the needed DOM elements (IDs must match the HTML you created above)
+      const priceSlider = document.getElementById("priceSlider");
+      const priceTrack = priceSlider.querySelector(".slider-track");
+      const priceRange = priceSlider.querySelector(".slider-range");
+      const priceThumbLeft = document.getElementById("priceThumbLeft");
+      const priceThumbRight = document.getElementById("priceThumbRight");
+      const priceMinValueInput = document.querySelector("span#min");
+      const priceMaxValueInput = document.querySelector("span#max");
+
+      // Initialize numeric inputs to the initial min/max
+      priceMinValueInput.textContent = Math.round(currentMinPrice);
+      priceMaxValueInput.textContent = Math.round(currentMaxPrice);
+
+      // Utility: convert "price" to % along the slider track
+      function priceToPercent(price) {
+        return (
+          ((price - minPriceHourRate) / (maxPriceHourRate - minPriceHourRate)) *
+          100
+        );
+      }
+
+      // Utility: convert % back to a "price" (rounded)
+      function percentToPrice(percent) {
+        return Math.round(
+          (percent / 100) * (maxPriceHourRate - minPriceHourRate) +
+            minPriceHourRate
+        );
+      }
+
+      // Update the thumb positions + the fill
+      function updatePriceSliderPositions() {
+        const leftPercent = priceToPercent(currentMinPrice);
+        const rightPercent = priceToPercent(currentMaxPrice);
+
+        // Move the thumbs
+        priceThumbLeft.style.left = `${leftPercent}%`;
+        priceThumbRight.style.left = `${rightPercent}%`;
+
+        // Fill between them
+        priceRange.style.left = `${leftPercent}%`;
+        priceRange.style.width = `${rightPercent - leftPercent}%`;
+      }
+
+      // Make sure left doesn’t cross right, etc.
+      function clampPrice(value, isLeftThumb) {
+        if (isLeftThumb) {
+          // If moving left thumb, don't let it exceed currentMaxPrice
+          return Math.min(value, currentMaxPrice);
+        } else {
+          // If moving right thumb, don't let it go below currentMinPrice
+          return Math.max(value, currentMinPrice);
+        }
+      }
+
+      // Initialize positions once
+      updatePriceSliderPositions();
+
+      // Variables to track if we’re dragging
+      let draggingPriceLeft = false;
+      let draggingPriceRight = false;
+
+      // Mouse/touch handlers
+      function onPointerDownLeft() {
+        draggingPriceLeft = true;
+      }
+      function onPointerDownRight() {
+        draggingPriceRight = true;
+      }
+      function onPointerUp() {
+        draggingPriceLeft = false;
+        draggingPriceRight = false;
+      }
+      function onPointerMove(e) {
+        if (!draggingPriceLeft && !draggingPriceRight) return;
+
+        const rect = priceSlider.getBoundingClientRect();
+        const sliderX = rect.left;
+        const sliderWidth = rect.width;
+
+        // pointer X (mouse or touch)
+        let px = e.clientX || (e.touches && e.touches[0].clientX);
+        let relativeX = px - sliderX;
+        let percent = (relativeX / sliderWidth) * 100;
+
+        // Bound in [0..100]
+        if (percent < 0) percent = 0;
+        if (percent > 100) percent = 100;
+
+        const newPrice = percentToPrice(percent);
+
+        if (draggingPriceLeft) {
+          currentMinPrice = clampPrice(newPrice, true);
+          priceMinValueInput.textContent = currentMinPrice;
+        }
+        if (draggingPriceRight) {
+          currentMaxPrice = clampPrice(newPrice, false);
+          priceMaxValueInput.textContent = currentMaxPrice;
+        }
+
+        updatePriceSliderPositions();
+        debouncedFilterData(); // We'll call your existing debounced filter
+      }
+
+      // Attach events
+      priceThumbLeft.addEventListener("mousedown", onPointerDownLeft);
+      priceThumbRight.addEventListener("mousedown", onPointerDownRight);
+
+      priceThumbLeft.addEventListener("touchstart", onPointerDownLeft, {
+        passive: true,
+      });
+      priceThumbRight.addEventListener("touchstart", onPointerDownRight, {
+        passive: true,
+      });
+
+      window.addEventListener("mousemove", onPointerMove);
+      window.addEventListener("touchmove", onPointerMove, { passive: false });
+      window.addEventListener("mouseup", onPointerUp);
+      window.addEventListener("touchend", onPointerUp);
 
       filteredByRangeSlider = [...aircraftSets];
 
