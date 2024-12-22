@@ -1494,3 +1494,13 @@ img.seat_logo {
   padding-left: 10px;
   padding-right: 10px;
 }
+
+.emform input[type="number"]::-webkit-inner-spin-button,
+.emform input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.emform input[type="number"] {
+  -moz-appearance: textfield;
+}
