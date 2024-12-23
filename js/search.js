@@ -331,6 +331,7 @@ function renderPage(page, filteredSets) {
   initializeSimpleSliders();
   attachImageClickListeners(); // Attach image click listeners after rendering
   closeSideBar();
+  closeDownbar();
 }
 
 // Function to initialize Swiper sliders
@@ -484,6 +485,20 @@ function closeSideBar() {
   });
 }
 
+// close downbar
+function closeDownbar() {
+  document.querySelectorAll(".mbcross").forEach((span) => {
+    span.addEventListener("click", function () {
+      document.querySelectorAll(".item_tab_block").forEach((activetabpanel) => {
+        activetabpanel.classList.remove("activeTabPanel");
+      });
+      document.querySelectorAll(".item_block_wrapper").forEach((cross) => {
+        cross.classList.remove("activeBtn");
+      });
+    });
+  });
+}
+
 // Function to handle message form submissions
 function submitMessage() {
   const messageForms = document.querySelectorAll(".askform form");
@@ -614,6 +629,7 @@ function getHotDealHtml(
     </div>
     <div class="item_tab_block" data-index="${index}">
       <div class="overflow_wrapper">
+      <div class="cross_mb_icon">
         <div class="item_tab_heading_block">
           <div class="cross_itemx">
             <span><img src="https://cdn.prod.website-files.com/6713759f858863c516dbaa19/6767c563264061ca37171a7c_x-square.svg" alt="" /></span>
@@ -1071,7 +1087,9 @@ function getHotDealHtml(
               </div>
               <!-- Ask Us a Question Tab End -->
             </div>            
-          </ul>
+          </ul> 
+          <img class="mbcross" src="https://cdn.prod.website-files.com/6713759f858863c516dbaa19/6769a03a6c10d465500c1cff_cross.png" alt="" />         
+        </div>        
         </div>
         <div class="tab_item_cnt_wrapper">
           <!-- Images Tab -->
@@ -1611,6 +1629,8 @@ function getRegularItemHtml(
       </div>
       <div class="item_tab_block" data-index="${index}">
         <div class="overflow_wrapper">
+        <div class="cross_mb_icon">
+        
           <div class="item_tab_heading_block">
           <div class="cross_itemx">
             <span><img src="https://cdn.prod.website-files.com/6713759f858863c516dbaa19/6767c563264061ca37171a7c_x-square.svg" alt="" /></span>
@@ -2070,7 +2090,10 @@ function getRegularItemHtml(
             </div>
             <!-- Ask Us a Question Tab End -->
           </div>
-        </ul>
+        </ul>  
+        <img class="mbcross" src="https://cdn.prod.website-files.com/6713759f858863c516dbaa19/6769a03a6c10d465500c1cff_cross.png" alt="" />      
+      </div>
+      
       </div>
       <div class="tab_item_cnt_wrapper">
         <!-- Images Tab -->

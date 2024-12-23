@@ -747,12 +747,6 @@ img.seat_logo {
   width: 100px;
 }
 
-.opadet_bottom_heading ul li {
-  font-size: 24px;
-  color: #03141b;
-  font-weight: 700;
-}
-
 .opadet_bottom_heading ul li span {
   display: inline-block;
   font-size: 18px;
@@ -1493,14 +1487,4 @@ img.seat_logo {
 .hourrate {
   padding-left: 10px;
   padding-right: 10px;
-}
-
-.emform input[type="number"]::-webkit-inner-spin-button,
-.emform input[type="number"]::-webkit-outer-spin-button {
-  -webkit-appearance: none;
-  margin: 0;
-}
-
-.emform input[type="number"] {
-  -moz-appearance: textfield;
 }

@@ -1,149 +1,474 @@
-/*
-====================================
-Medium Screen - Others
-====================================
-*/
+.onwaygrid {
+  grid-template-columns: repeat(4, 1fr) !important;
+}
+
+.opadet_bottom_heading ul li {
+  color: #03141b !important;
+}
+
+img.mbcross {
+  display: none;
+}
+
 @media screen and (min-width: 992px) and (max-width: 1200px) {
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 }
 
-/*
-====================================
-Small Screen - Tablate
-====================================
-*/
 @media screen and (min-width: 768px) and (max-width: 991px) {
+  .onwaygrid,
+  .twowaygrid,
+  .threewaygrid {
+    grid-template-columns: repeat(3, 1fr) !important;
+  }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+  .algolio_submit {
+    display: grid !important;
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 30px;
+  }
 }
 
-/*
-====================================
-Small Screen - Mobile
-====================================
-*/
-@media screen and (min-width: 576px) and (max-width: 767px) {	
+@media screen and (min-width: 576px) and (max-width: 767px) {
+  .tab_heading {
+    flex-direction: row-reverse !important;
+    flex-flow: unset;
+  }
 
+  .tab_oval {
+    width: 8px;
+    height: 8px;
+  }
 
+  .tab_text {
+    font-size: 14px !important;
+  }
 
+  .tab_heading {
+    grid-column-gap: 2px !important;
+    justify-content: space-between;
+  }
 
+  .hmtrip_wrapper {
+    padding: 6.25rem 10px 2rem !important;
+  }
 
+  .tab_link_box {
+    grid-column-gap: 2px;
+  }
 
+  .onwaygrid,
+  .twowaygrid,
+  .threewaygrid {
+    grid-template-columns: 1fr !important;
+  }
 
+  .emsubmit span {
+    width: 100%;
+    font-size: 14px;
+    padding: 8px 20px;
+  }
 
+  .algolio_submit {
+    flex-direction: column;
+  }
 
+  .search-results {
+    width: 100%;
+  }
 
+  .add-search-input {
+    margin-right: 0;
+    margin-bottom: 10px;
+  }
 
+  .review_text_cross {
+    inset: -3rem 0.5rem auto auto;
+  }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+  .review_text_para {
+    height: 410px;
+    overflow-x: hidden;
+    overflow-y: scroll;
+  }
 }
 
-/*
-====================================
-Xtra Small Screen - Small Mobile
-====================================
-*/
 @media screen and (max-width: 576px) {
+  .tab_heading {
+    flex-direction: row-reverse !important;
+    flex-flow: unset;
+  }
 
+  .tab_oval {
+    width: 8px;
+    height: 8px;
+  }
 
+  .tab_text {
+    font-size: 14px !important;
+  }
 
+  .tab_heading {
+    grid-column-gap: 2px !important;
+    justify-content: space-between;
+  }
 
+  .hmtrip_wrapper {
+    padding: 6.25rem 10px 2rem !important;
+  }
 
+  .tab_link_box {
+    grid-column-gap: 2px;
+  }
 
+  .onwaygrid,
+  .twowaygrid,
+  .threewaygrid {
+    grid-template-columns: 1fr !important;
+  }
 
+  .emsubmit span {
+    width: 100%;
+    font-size: 14px;
+    padding: 8px 20px;
+  }
 
+  .algolio_submit {
+    flex-direction: column;
+  }
 
+  .search-results {
+    width: 100%;
+  }
 
+  .add-search-input {
+    margin-right: 0;
+    margin-bottom: 10px;
+  }
 
+  .review_text_cross {
+    inset: -3rem 0.5rem auto auto;
+  }
 
+  .review_text_para {
+    height: 410px;
+    overflow-x: hidden;
+    overflow-y: scroll;
+  }
 
+  /* ===============================
+      search result page start
+   =============================== */
 
+  .sa_way_dropdown {
+    z-index: 99;
+  }
 
+  .sa_filter_left {
+    display: none;
+  }
 
+  .search_again_wrapper {
+    background-color: #fff;
+    padding: 15px;
+    border-radius: 12px;
+  }
 
+  .search_again {
+    padding-top: 16px;
+    padding-bottom: 40px;
+  }
 
+  .change_grid .emform,
+  .multicity-set,
+  .generated {
+    grid-template-columns: 1fr;
+  }
 
+  .eminputblock input {
+    border: 1px solid #999;
+  }
 
+  .broker_mode_radio {
+    background-color: #d5dbdd;
+  }
 
+  .generated {
+    border-top: 1px solid #999;
+    padding-right: 35px;
+    padding-top: 15px;
+  }
 
+  .search_pik .eminputblock input {
+    padding: 6px 36px 6px 14px;
+  }
 
+  .remove img {
+    width: 25px;
+  }
 
+  .remove {
+    bottom: 4px;
+  }
 
+  .sr_exp_left h2 {
+    font-size: 28px;
+  }
 
+  .sr_filter_block {
+    position: fixed;
+    width: 100%;
+    height: 100vh;
+    left: -100%;
+    top: 0px;
+    padding-left: 15px;
+    padding-right: 15px;
+    background: rgba(0, 0, 0, 0.85);
+    padding-top: 85px;
+    z-index: 999;
+  }
 
+  .changeview .search_right {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
 
+  .sr_main_wrapper {
+    display: block;
+  }
 
+  .changeview .slide .dyslideItem img {
+    height: 235px;
+  }
 
+  .item_cnt h4 {
+    font-size: 22px;
+  }
+
+  .changeview .item_cnt p {
+    font-size: 16px;
+    margin-top: -4px;
+    height: 26px;
+    font-weight: 400;
+  }
+
+  .changeview .hot_feature {
+    margin-top: 25px;
+  }
+
+  .bookingbutton {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .changeview .bookingbutton a,
+  .bookingbutton button {
+    display: block;
+    width: 100%;
+    text-align: center;
+  }
+
+  .item_wrapper {
+    margin-bottom: 0;
+  }
+
+  .bookingbutton .button {
+    font-size: 15px;
+    line-height: 2.1rem;
+  }
+
+  .active_mobile_filter {
+    left: 0%;
+  }
+
+  .sr_filter_block {
+    transition: all 0.3s ease;
+  }
+
+  .overflowfilter {
+    overflow: hidden;
+  }
+
+  .sr_main_left_filter {
+    height: 100%;
+    overflow-x: hidden;
+    overflow-y: auto;
+  }
+
+  .changeview .item_tab_heading_block {
+    width: 100%;
+  }
+
+  .changeview .item_tab_heading_block {
+    padding: 20px;
+  }
+
+  .item_tab_heading_block ul .tabxholder:first-child li {
+    margin-top: 0px !important;
+    margin-bottom: 10px !important;
+  }
+
+  .tab_one_heading p {
+    display: none;
+  }
+
+  .sliderOn .swiper-wrapper {
+    grid-template-columns: 1fr;
+  }
+
+  .tab_one_heading h3 {
+    font-size: 18px;
+  }
+
+  .tab_one_slider {
+    margin-top: 8px;
+  }
+
+  .item_tab_heading_block ul .tabxholder {
+    margin-bottom: 0;
+  }
+
+  .detailstb_left h3,
+  .inttabDet h3,
+  .opadetails h3,
+  .opadet_bottom_review_right h3,
+  .poli_wrapper h3,
+  .payment_tab h3 {
+    font-size: 18px;
+    margin-top: 10px;
+  }
+
+  .detailstb_wrapper {
+    grid-template-columns: 1fr;
+  }
+
+  .detailstb_left_det,
+  .intdet_wrapper,
+  .opadet_wrapper,
+  .payment_wrapper {
+    padding: 15px;
+    margin-top: 10px;
+  }
+
+  .detailstb_left_det {
+    grid-template-columns: 1fr !important;
+    gap: 0 !important;
+  }
+
+  .detailstb_left_det_item p:first-child {
+    font-size: 15px;
+  }
+
+  .detailstb_left_det_item p:last-child {
+    font-size: 15px;
+  }
+
+  .detailstb_right .detailstb_left_det p.Notfoundarray {
+    position: static;
+    transform: none;
+    background-color: #fff;
+    padding: 12px;
+    border-radius: 8px;
+    width: 100%;
+  }
+
+  .intdet_wrapper {
+    display: block;
+  }
+
+  .intdet_left {
+    padding: 0 !important;
+    border: 0 !important;
+  }
+
+  .intdet_middle {
+    padding-left: 0;
+    margin-top: 30px;
+  }
+
+  .intdet_middle_date {
+    flex-direction: column;
+  }
+
+  .inted_middle_time p,
+  .airportformatname p,
+  .operator_textlist p {
+    font-size: 16px;
+  }
+
+  .opadet_top_left p {
+    font-size: 18px;
+  }
+
+  .opadet_top {
+    grid-template-columns: 1fr;
+  }
+
+  .changeview .opadet_top_middle p {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .opadet_bottom_heading ul li img {
+    width: 85px;
+  }
+
+  .opadet_bottom_heading ul li {
+    font-size: 20px;
+  }
+
+  .changeview .opadet_bottom_review {
+    grid-template-columns: 1fr;
+  }
+
+  .poli_box_wrapper {
+    grid-template-columns: 1fr;
+  }
+
+  .changeview .payment_wrapper {
+    grid-template-columns: 1fr;
+    gap: 30px;
+  }
+
+  .paybar_text {
+    width: 96px;
+  }
+
+  .cross_itemx {
+    display: none;
+  }
+
+  .changeview .item_tab_heading_block {
+    overflow: hidden !important;
+    padding: 20px 0px 60px 0px;
+  }
+
+  .item_tab_heading_block ul {
+    height: 100%;
+    overflow-x: hidden;
+    overflow-y: scroll;
+    padding: 20px;
+  }
+
+  .mbcross {
+    display: block !important;
+    width: 40px;
+    margin: auto;
+    cursor: pointer;
+    position: relative;
+    top: 14px;
+  }
+
+  .changeview .overflow_wrapper {
+    right: auto;
+    left: 0;
+    top: 100vh;
+  }
+
+  .changeview .activeTabPanel .overflow_wrapper {
+    right: auto;
+    left: 0;
+    top: 0;
+  }
+
+  .changeview .item_tab_heading_block {
+    border-radius: 12px 12px 0px 0px;
+  }
 }
