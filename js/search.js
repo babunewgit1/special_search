@@ -301,6 +301,10 @@ function applyFuelFilters(sets, filters) {
 // Function to render a page of items
 function renderPage(page, filteredSets) {
   const distance = apiData.response.total_distance;
+
+  const TimeDown =
+    apiData.response.flight_legs[0].total_distance__statute_m__number;
+
   const hotDeals = apiData.response.hot_deal_aircraft;
   mainWrapper.innerHTML = "";
 
@@ -308,7 +312,7 @@ function renderPage(page, filteredSets) {
 
   if (hotDeals && page === 1) {
     hotDeals.forEach((item) => {
-      createItemBlock(item, globalIndex, true, fragment, distance);
+      createItemBlock(item, globalIndex, true, fragment, distance, TimeDown);
       globalIndex++;
     });
   }
@@ -318,7 +322,7 @@ function renderPage(page, filteredSets) {
   const itemsToRender = filteredSets.slice(start, end);
 
   itemsToRender.forEach((item) => {
-    createItemBlock(item, globalIndex, false, fragment, distance);
+    createItemBlock(item, globalIndex, false, fragment, distance, TimeDown);
     globalIndex++;
   });
 
@@ -541,18 +545,12 @@ function getHotDealHtml(
   item,
   index,
   calculateTotal,
-  totalHours,
-  totalMinutes,
-  formattedDateStart,
-  formattedDateEnd,
-  formattedTimeStart,
-  formattedTimeEnd,
   allImageExt,
   allImageInt,
   checkExtLength,
   checkIntLength,
   words,
-  apiData
+  intabWrapper
 ) {
   const operatorAddress =
     item.base_airport_fixed_address_geographic_address?.address ||
@@ -735,59 +733,7 @@ function getHotDealHtml(
               <div data-cnt="tab${index}it" class="item_tab_one">
                 <div class="inttabDet">
                   <h3>Flight Legs</h3>
-                  <div class="intdet_wrapper">
-                    <div class="intdet_left">
-                      <img class="operatorlogo" src="${
-                        item.operator_logo_image
-                      }" alt="Operator Logo" />
-                    </div>
-                    <div class="intdet_middle">
-                      <div class="intdet_middle_date">
-                        <p class="takeoffdate">${formattedDateStart}</p>
-                        <p class="landdate"> - Lands ${formattedDateEnd}</p>
-                      </div>
-                      <div class="inted_middle_time">
-                        <p>${formattedTimeStart} - ${formattedTimeEnd}</p>
-                      </div>
-                      <div class="airportformatname">
-                        <p>${
-                          apiData.response.flight_legs[0]
-                            .mobile_app_from_airport_name_short_text
-                        } (${
-    apiData.response.flight_legs[0].mobile_app_from_airport_iata_code_text
-      ? apiData.response.flight_legs[0].mobile_app_from_airport_iata_code_text
-      : apiData.response.flight_legs[0].mobile_app_from_airport_icao_code_text
-      ? apiData.response.flight_legs[0].mobile_app_from_airport_icao_code_text
-      : apiData.response.flight_legs[0].mobile_app_from_airport_faa_code_text
-  }) - ${
-    apiData.response.flight_legs[0].mobile_app_to_airport_name_short_text
-  } (${
-    apiData.response.flight_legs[0].mobile_app_to_airport_iata_code_text
-      ? apiData.response.flight_legs[0].mobile_app_to_airport_iata_code_text
-      : apiData.response.flight_legs[0].mobile_app_to_airport_icao_code_text
-      ? apiData.response.flight_legs[0].mobile_app_to_airport_icao_code_text
-      : apiData.response.flight_legs[0].mobile_app_to_airport_faa_code_text
-  })</p>
-                      </div>
-                      <div class="operator_textlist">
-                        <p>${item.operator_txt_text} • ${item.class_text} • ${
-    item.description_text
-  }</p>
-                      </div>   
-                      ${
-                        item.range_number >= longestFlight
-                          ? `<div class="fuelstop"><p> <img src="https://cdn.prod.website-files.com/6713759f858863c516dbaa19/6753e62479df68bd6de939cd_Jettly-Search-Results-Page-(List-View-Itinerary-Tab).png" alt="Fuel Stop Icon" /> Possible fuel stop enroute -  <span>+20 mins</span></p></div>`
-                          : ""
-                      }
-                    </div>
-                    <div class="indetright_wrapper">
-                      <div class="indet_right">
-                        <img src="https://cdn.prod.website-files.com/6713759f858863c516dbaa19/6753e928907492da22caf7fe_flighticon.png" alt="Flight Time Icon" />
-                        <span>Flight Time</span>
-                        <p>${totalHours} H ${totalMinutes} M</p>
-                      </div>
-                    </div>
-                  </div>
+                  ${intabWrapper}
                 </div>
               </div>     
             </div>            
@@ -1189,59 +1135,7 @@ function getHotDealHtml(
           <div data-cnt="tab${index}it" class="item_tab_one">
             <div class="inttabDet">
               <h3>Flight Legs</h3>
-              <div class="intdet_wrapper">
-                <div class="intdet_left">
-                  <img class="operatorlogo" src="${
-                    item.operator_logo_image
-                  }" alt="Operator Logo" />
-                </div>
-                <div class="intdet_middle">
-                  <div class="intdet_middle_date">
-                    <p class="takeoffdate">${formattedDateStart}</p>
-                    <p class="landdate"> - Lands ${formattedDateEnd}</p>
-                  </div>
-                  <div class="inted_middle_time">
-                    <p>${formattedTimeStart} - ${formattedTimeEnd}</p>
-                  </div>
-                  <div class="airportformatname">
-                    <p>${
-                      apiData.response.flight_legs[0]
-                        .mobile_app_from_airport_name_short_text
-                    } (${
-    apiData.response.flight_legs[0].mobile_app_from_airport_iata_code_text
-      ? apiData.response.flight_legs[0].mobile_app_from_airport_iata_code_text
-      : apiData.response.flight_legs[0].mobile_app_from_airport_icao_code_text
-      ? apiData.response.flight_legs[0].mobile_app_from_airport_icao_code_text
-      : apiData.response.flight_legs[0].mobile_app_from_airport_faa_code_text
-  }) - ${
-    apiData.response.flight_legs[0].mobile_app_to_airport_name_short_text
-  } (${
-    apiData.response.flight_legs[0].mobile_app_to_airport_iata_code_text
-      ? apiData.response.flight_legs[0].mobile_app_to_airport_iata_code_text
-      : apiData.response.flight_legs[0].mobile_app_to_airport_icao_code_text
-      ? apiData.response.flight_legs[0].mobile_app_to_airport_icao_code_text
-      : apiData.response.flight_legs[0].mobile_app_to_airport_faa_code_text
-  })</p>
-                  </div>
-                  <div class="operator_textlist">
-                    <p>${item.operator_txt_text} • ${item.class_text} • ${
-    item.description_text
-  }</p>
-                  </div>   
-                  ${
-                    item.range_number >= longestFlight
-                      ? `<div class="fuelstop"><p> <img src="https://cdn.prod.website-files.com/6713759f858863c516dbaa19/6753e62479df68bd6de939cd_Jettly-Search-Results-Page-(List-View-Itinerary-Tab).png" alt="Fuel Stop Icon" /> Possible fuel stop enroute -  <span>+20 mins</span></p></div>`
-                      : ""
-                  }
-                </div>
-                <div class="indetright_wrapper">
-                  <div class="indet_right">
-                    <img src="https://cdn.prod.website-files.com/6713759f858863c516dbaa19/6753e928907492da22caf7fe_flighticon.png" alt="Flight Time Icon" />
-                    <span>Flight Time</span>
-                    <p>${totalHours} H ${totalMinutes} M</p>
-                  </div>
-                </div>
-              </div>
+              ${intabWrapper}
             </div>
           </div>
 
@@ -1546,16 +1440,13 @@ function getRegularItemHtml(
   totalHours,
   totalMinutes,
   stopInfo,
-  formattedDateStart,
-  formattedDateEnd,
-  formattedTimeStart,
-  formattedTimeEnd,
   allImageExt,
   allImageInt,
   checkExtLength,
   checkIntLength,
   words,
-  apiData
+  apiData,
+  intabWrapper
 ) {
   const operatorAddress =
     item.base_airport_fixed_address_geographic_address?.address ||
@@ -1736,59 +1627,7 @@ function getRegularItemHtml(
               <div data-cnt="tab${index}it" class="item_tab_one">
                 <div class="inttabDet">
                   <h3>Flight Legs</h3>
-                  <div class="intdet_wrapper">
-                    <div class="intdet_left">
-                      <img class="operatorlogo" src="${
-                        item.operator_logo_image
-                      }" alt="Operator Logo" />
-                    </div>
-                    <div class="intdet_middle">
-                      <div class="intdet_middle_date">
-                        <p class="takeoffdate">${formattedDateStart}</p>
-                        <p class="landdate"> - Lands ${formattedDateEnd}</p>
-                      </div>
-                      <div class="inted_middle_time">
-                        <p>${formattedTimeStart} - ${formattedTimeEnd}</p>
-                      </div>
-                      <div class="airportformatname">
-                        <p>${
-                          apiData.response.flight_legs[0]
-                            .mobile_app_from_airport_name_short_text
-                        } (${
-    apiData.response.flight_legs[0].mobile_app_from_airport_iata_code_text
-      ? apiData.response.flight_legs[0].mobile_app_from_airport_iata_code_text
-      : apiData.response.flight_legs[0].mobile_app_from_airport_icao_code_text
-      ? apiData.response.flight_legs[0].mobile_app_from_airport_icao_code_text
-      : apiData.response.flight_legs[0].mobile_app_from_airport_faa_code_text
-  }) - ${
-    apiData.response.flight_legs[0].mobile_app_to_airport_name_short_text
-  } (${
-    apiData.response.flight_legs[0].mobile_app_to_airport_iata_code_text
-      ? apiData.response.flight_legs[0].mobile_app_to_airport_iata_code_text
-      : apiData.response.flight_legs[0].mobile_app_to_airport_icao_code_text
-      ? apiData.response.flight_legs[0].mobile_app_to_airport_icao_code_text
-      : apiData.response.flight_legs[0].mobile_app_to_airport_faa_code_text
-  })</p>
-                      </div>
-                      <div class="operator_textlist">
-                        <p>${item.operator_txt_text} • ${item.class_text} • ${
-    item.description_text
-  }</p>
-                      </div>   
-                      ${
-                        item.range_number >= longestFlight
-                          ? `<div class="fuelstop"><p> <img src="https://cdn.prod.website-files.com/6713759f858863c516dbaa19/6753e62479df68bd6de939cd_Jettly-Search-Results-Page-(List-View-Itinerary-Tab).png" alt="Fuel Stop Icon" /> Possible fuel stop enroute -  <span>+20 mins</span></p></div>`
-                          : ""
-                      }
-                    </div>
-                    <div class="indetright_wrapper">
-                      <div class="indet_right">
-                        <img src="https://cdn.prod.website-files.com/6713759f858863c516dbaa19/6753e928907492da22caf7fe_flighticon.png" alt="Flight Time Icon" />
-                        <span>Flight Time</span>
-                        <p>${totalHours} H ${totalMinutes} M</p>
-                      </div>
-                    </div>
-                  </div>
+                  ${intabWrapper}
                 </div>
               </div> 
           </div>
@@ -2189,57 +2028,7 @@ function getRegularItemHtml(
         <div data-cnt="tab${index}it" class="item_tab_one">
           <div class="inttabDet">
             <h3>Flight Legs</h3>
-            <div class="intdet_wrapper">
-              <div class="intdet_left">
-                <img src="${item.operator_logo_image}" alt="Operator Logo" />
-              </div>
-              <div class="intdet_middle">
-                <div class="intdet_middle_date">
-                  <p class="takeoffdate">${formattedDateStart}</p>
-                  <p class="landdate"> - Lands ${formattedDateEnd}</p>
-                </div>
-                <div class="inted_middle_time">
-                  <p>${formattedTimeStart} - ${formattedTimeEnd}</p>
-                </div>
-                <div class="airportformatname">
-                  <p>${
-                    apiData.response.flight_legs[0]
-                      .mobile_app_from_airport_name_short_text
-                  } (${
-    apiData.response.flight_legs[0].mobile_app_from_airport_iata_code_text
-      ? apiData.response.flight_legs[0].mobile_app_from_airport_iata_code_text
-      : apiData.response.flight_legs[0].mobile_app_from_airport_icao_code_text
-      ? apiData.response.flight_legs[0].mobile_app_from_airport_icao_code_text
-      : apiData.response.flight_legs[0].mobile_app_from_airport_faa_code_text
-  }) - ${
-    apiData.response.flight_legs[0].mobile_app_to_airport_name_short_text
-  } (${
-    apiData.response.flight_legs[0].mobile_app_to_airport_iata_code_text
-      ? apiData.response.flight_legs[0].mobile_app_to_airport_iata_code_text
-      : apiData.response.flight_legs[0].mobile_app_to_airport_icao_code_text
-      ? apiData.response.flight_legs[0].mobile_app_to_airport_icao_code_text
-      : apiData.response.flight_legs[0].mobile_app_to_airport_faa_code_text
-  })</p>
-                </div>
-                <div class="operator_textlist">
-                  <p>${item.operator_txt_text} • ${item.class_text} • ${
-    item.description_text
-  }</p>
-                </div>   
-                ${
-                  item.range_number >= longestFlight
-                    ? `<div class="fuelstop"><p> <img src="https://cdn.prod.website-files.com/6713759f858863c516dbaa19/6753e62479df68bd6de939cd_Jettly-Search-Results-Page-(List-View-Itinerary-Tab).png" alt="Fuel Stop Icon" /> Possible fuel stop enroute -  <span>+20 mins</span></p></div>`
-                    : ""
-                }
-              </div>
-              <div class="indetright_wrapper">
-                <div class="indet_right">
-                  <img src="https://cdn.prod.website-files.com/6713759f858863c516dbaa19/6753e928907492da22caf7fe_flighticon.png" alt="Flight Time Icon" />
-                  <span>Flight Time</span>
-                  <p>${totalHours} H ${totalMinutes} M</p>
-                </div>
-              </div>
-            </div>
+            ${intabWrapper}
           </div>
         </div>
 
@@ -2537,45 +2326,20 @@ function getRegularItemHtml(
 }
 
 // Function to create and append an item block
-function createItemBlock(item, index, isHotDeal, fragment, distance) {
-  const totalDistance = distance / item.cruise_speed_avg_fixedrate_number;
-  const totalHours = Math.floor(totalDistance);
-  const totalMinutes = Math.round((totalDistance - totalHours) * 60);
-  const arrivedTime = apiData.response.flight_legs[0].date_date;
-  const hours = Math.floor(totalDistance);
-  const minutes = Math.round((totalDistance - hours) * 60);
-  const totalSeconds = hours * 3600 + minutes * 60;
-  const finalTime = arrivedTime + totalSeconds;
-  const dateObject = new Date(arrivedTime * 1000);
-  const formattedDateStart = dateObject.toLocaleDateString("en-US", {
-    year: "numeric",
-    month: "short",
-    day: "numeric",
-  });
-  const formattedTimeStart = dateObject.toLocaleTimeString("en-US", {
-    hour: "numeric",
-    minute: "2-digit",
-    hour12: true,
-  });
-  const dateObjectAfter = new Date(finalTime * 1000);
-  const formattedDateEnd = dateObjectAfter.toLocaleDateString("en-US", {
-    year: "numeric",
-    month: "short",
-    day: "numeric",
-  });
-  const formattedTimeEnd = dateObjectAfter.toLocaleTimeString("en-US", {
-    hour: "numeric",
-    minute: "2-digit",
-    hour12: true,
-  });
+function createItemBlock(item, index, isHotDeal, fragment, distance, TimeDown) {
+  // 1) Calculate total flight time for this entire item (used in summary)
+  const getTotalTime = TimeDown / item.cruise_speed_avg_fixedrate_number;
+  const totalHours = Math.floor(getTotalTime);
+  const totalMinutes = Math.round((getTotalTime - totalHours) * 60);
 
+  // 2) Calculate final price with possible multipliers
   const multiplier = isHotDeal
     ? 0.8
     : apiData.response.is_international
     ? 1.5
     : 1;
-  let calculatedValue;
 
+  let calculatedValue;
   if (distance / item.cruise_speed_avg_fixedrate_number < 1) {
     calculatedValue = Math.round(item.price_per_hour_fixedrate_number);
   } else {
@@ -2585,9 +2349,9 @@ function createItemBlock(item, index, isHotDeal, fragment, distance) {
         multiplier
     );
   }
-
   const calculateTotal = calculatedValue.toLocaleString();
 
+  // 3) Count exterior/interior images
   const checkExtLength = Array.isArray(item.exterior_images_list_image)
     ? item.exterior_images_list_image.length
     : 0;
@@ -2595,11 +2359,17 @@ function createItemBlock(item, index, isHotDeal, fragment, distance) {
     ? item.interior_images_list_image.length
     : 0;
 
+  // Generate the HTML for exterior/interior images
   const allImageExt = Array.isArray(item.exterior_images_list_image)
     ? item.exterior_images_list_image
         .map(
-          (imageUrl) =>
-            `<div class="swiper-slide"><div class="dyslideItem"><img class="individulimages" src="${imageUrl}" alt="Aircraft Exterior Image" /></div></div>`
+          (imageUrl) => `
+            <div class="swiper-slide">
+              <div class="dyslideItem">
+                <img class="individulimages" src="${imageUrl}" alt="Aircraft Exterior Image" />
+              </div>
+            </div>
+          `
         )
         .join("")
     : "";
@@ -2607,12 +2377,18 @@ function createItemBlock(item, index, isHotDeal, fragment, distance) {
   const allImageInt = Array.isArray(item.interior_images_list_image)
     ? item.interior_images_list_image
         .map(
-          (imageUrl) =>
-            `<div class="swiper-slide"><div class="dyslideItem"><img class="individulimages" src="${imageUrl}" alt="Aircraft Interior Image" /></div></div>`
+          (imageUrl) => `
+            <div class="swiper-slide">
+              <div class="dyslideItem">
+                <img class="individulimages" src="${imageUrl}" alt="Aircraft Interior Image" />
+              </div>
+            </div>
+          `
         )
         .join("")
     : "";
 
+  // 4) Amenities
   const amenities = Array.isArray(item.amenities_txt_list_text)
     ? item.amenities_txt_list_text
     : null;
@@ -2624,15 +2400,17 @@ function createItemBlock(item, index, isHotDeal, fragment, distance) {
           const firstLetter = wordsArr[0][0];
           const lastFirstLetter = wordsArr[wordsArr.length - 1][0];
           return `
-              <div class="detleft_item">
-                <span>${firstLetter}${lastFirstLetter}</span>
-                <p>${amen}</p>                      
-              </div>
-            `;
+            <div class="detleft_item">
+              <span>${firstLetter}${lastFirstLetter}</span>
+              <p>${amen}</p>                      
+            </div>
+          `;
         })
         .join("")
     : `<p class="Notfoundarray">Amenities Not Listed? Contact Us for the Latest Details!</p>`;
 
+  // 5) Determine Direct / 1 Stop / 2 Stop based on `longestFlight` variable
+  //    (Make sure `longestFlight` is defined in your scope)
   const stopInfo =
     item.range_number > longestFlight
       ? "Direct"
@@ -2640,11 +2418,119 @@ function createItemBlock(item, index, isHotDeal, fragment, distance) {
       ? "1 Stop"
       : "2 Stop";
 
+  // 6) Build HTML for all flight legs (using .map(...) to get each leg's date/time)
+  const intabWrapper = apiData.response.flight_legs
+    .map((leg) => {
+      const hoursLeg = Math.floor(getTotalTime);
+      const minutesLeg = Math.round((getTotalTime - hoursLeg) * 60);
+      const totalSecondsLeg = hoursLeg * 3600 + minutesLeg * 60;
+
+      // Use the leg's date_date for the start time
+      const dateStart = leg.date_date;
+      const dateObjStart = new Date(dateStart * 1000);
+      const formattedDateStart = dateObjStart.toLocaleDateString("en-US", {
+        year: "numeric",
+        month: "short",
+        day: "numeric",
+      });
+      const formattedTimeStart = dateObjStart.toLocaleTimeString("en-US", {
+        hour: "numeric",
+        minute: "2-digit",
+        hour12: true,
+      });
+
+      // End time is start time + totalSecondsLeg
+      const finalTimeLeg = dateStart + totalSecondsLeg;
+      const dateObjEnd = new Date(finalTimeLeg * 1000);
+      const formattedDateEnd = dateObjEnd.toLocaleDateString("en-US", {
+        year: "numeric",
+        month: "short",
+        day: "numeric",
+      });
+      const formattedTimeEnd = dateObjEnd.toLocaleTimeString("en-US", {
+        hour: "numeric",
+        minute: "2-digit",
+        hour12: true,
+      });
+
+      return `
+        <div class="intdet_wrapper">
+          <div class="intdet_left">
+            <img class="operatorlogo" src="${
+              item.operator_logo_image
+            }" alt="Operator Logo" />
+          </div>
+          <div class="intdet_middle">
+            <div class="intdet_middle_date">
+              <p class="takeoffdate">${formattedDateStart}</p>
+              <p class="landdate"> - Lands ${formattedDateEnd}</p>
+            </div>
+            <div class="inted_middle_time">
+              <p>${formattedTimeStart} - ${formattedTimeEnd}</p>
+            </div>
+            <div class="airportformatname">
+              <p>
+                ${leg.mobile_app_from_airport_name_short_text}
+                (${
+                  leg.mobile_app_from_airport_iata_code_text
+                    ? leg.mobile_app_from_airport_iata_code_text
+                    : leg.mobile_app_from_airport_icao_code_text
+                    ? leg.mobile_app_from_airport_icao_code_text
+                    : leg.mobile_app_from_airport_faa_code_text || "N/A"
+                })
+                -
+                ${leg.mobile_app_to_airport_name_short_text}
+                (${
+                  leg.mobile_app_to_airport_iata_code_text
+                    ? leg.mobile_app_to_airport_iata_code_text
+                    : leg.mobile_app_to_airport_icao_code_text
+                    ? leg.mobile_app_to_airport_icao_code_text
+                    : leg.mobile_app_to_airport_faa_code_text || "N/A"
+                })
+              </p>
+            </div>
+            <div class="operator_textlist">
+              <p>${item.operator_txt_text} • ${item.class_text} • ${
+        item.description_text
+      }</p>
+            </div>   
+            ${
+              item.range_number >= longestFlight
+                ? `
+                  <div class="fuelstop">
+                    <p>
+                      <img 
+                        src="https://cdn.prod.website-files.com/6713759f858863c516dbaa19/6753e62479df68bd6de939cd_Jettly-Search-Results-Page-(List-View-Itinerary-Tab).png" 
+                        alt="Fuel Stop Icon" /> 
+                      Possible fuel stop enroute - 
+                      <span>+20 mins</span>
+                    </p>
+                  </div>`
+                : ""
+            }
+          </div>
+          <div class="indetright_wrapper">
+            <div class="indet_right">
+              <img 
+                src="https://cdn.prod.website-files.com/6713759f858863c516dbaa19/6753e928907492da22caf7fe_flighticon.png" 
+                alt="Flight Time Icon" />
+              <span>Flight Time</span>
+              <p>${hoursLeg} H ${minutesLeg} M</p>
+            </div>
+          </div>
+        </div>
+      `;
+    })
+    .join("");
+
+  // 7) Create a wrapper DIV for this entire item
   const itemWrapper = document.createElement("div");
   itemWrapper.className = isHotDeal
     ? "item_block_wrapper hotwrapper"
     : "item_block_wrapper";
 
+  // 8) Insert the final HTML by calling your existing getHotDealHtml or getRegularItemHtml
+  //    Now we pass intabWrapper to display all legs instead of just leg[0]
   if (isHotDeal) {
     itemWrapper.innerHTML = getHotDealHtml(
       item,
@@ -2652,16 +2538,13 @@ function createItemBlock(item, index, isHotDeal, fragment, distance) {
       calculateTotal,
       totalHours,
       totalMinutes,
-      formattedDateStart,
-      formattedDateEnd,
-      formattedTimeStart,
-      formattedTimeEnd,
       allImageExt,
       allImageInt,
       checkExtLength,
       checkIntLength,
       words,
-      apiData
+      apiData,
+      intabWrapper
     );
   } else {
     itemWrapper.innerHTML = getRegularItemHtml(
@@ -2671,19 +2554,17 @@ function createItemBlock(item, index, isHotDeal, fragment, distance) {
       totalHours,
       totalMinutes,
       stopInfo,
-      formattedDateStart,
-      formattedDateEnd,
-      formattedTimeStart,
-      formattedTimeEnd,
       allImageExt,
       allImageInt,
       checkExtLength,
       checkIntLength,
       words,
-      apiData
+      apiData,
+      intabWrapper
     );
   }
 
+  // 9) Finally, append this completed item to your fragment
   fragment.appendChild(itemWrapper);
 }
 

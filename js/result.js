@@ -431,7 +431,6 @@ multiCitySubmit.addEventListener("click", function () {
     };
 
     sessionStorage.setItem("storeData", JSON.stringify(storeData));
-    console.log("Stored Data:", storeData);
     window.location.href = `/search-result`;
   } else {
     alert("Please fill up the form properly.");
