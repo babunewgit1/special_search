@@ -1290,13 +1290,8 @@ img.seat_logo {
 
 .changeview .item_cnt p {
   height: 30px;
-  font-size: 18px;
+  font-size: 16px;
   margin-top: 4px;
-}
-
-.changeview .bookingbutton a,
-.bookingbutton button {
-  letter-spacing: 1px;
 }
 
 .changeview .item_cnt img {
@@ -1487,4 +1482,17 @@ img.seat_logo {
 .hourrate {
   padding-left: 10px;
   padding-right: 10px;
+}
+.broker_mode {
+  margin-top: 12px;
+}
+
+.reset {
+  background-color: var(--red);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  border-radius: 0.75rem;
+  padding: 0.75rem 2.25rem;
+  font-weight: 700;
+  transition: all 0.3s;
 }

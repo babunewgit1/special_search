@@ -196,7 +196,6 @@ document.addEventListener("DOMContentLoaded", function () {
               <input
                 class="algolio_input multicityform"
                 type="text"
-                placeholder="Enter departure location"
               />
               <p class="portid multicityformid"></p>
               <img
@@ -212,7 +211,6 @@ document.addEventListener("DOMContentLoaded", function () {
               <input
                 class="algolio_input multicityto"
                 type="text"
-                placeholder="Enter destination location"
               />
               <p class="portid multicitytoid"></p>
               <img
@@ -290,7 +288,7 @@ document.addEventListener("DOMContentLoaded", function () {
             .querySelector(".add-search-input")
             .classList.remove("noentry");
           document.querySelector(".add-search-input span").textContent =
-            "Another";
+            "ADD LEG";
         }
         const emform = removeBtn.closest(".algolio_length");
         if (emform) {

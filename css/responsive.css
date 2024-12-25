@@ -1,15 +1,3 @@
-.onwaygrid {
-  grid-template-columns: repeat(4, 1fr) !important;
-}
-
-.opadet_bottom_heading ul li {
-  color: #03141b !important;
-}
-
-img.mbcross {
-  display: none;
-}
-
 @media screen and (min-width: 992px) and (max-width: 1200px) {
 }
 
@@ -470,5 +458,29 @@ img.mbcross {
 
   .changeview .item_tab_heading_block {
     border-radius: 12px 12px 0px 0px;
+  }
+
+  .pagiprev,
+  .paginext {
+    width: 38px !important;
+    height: 30px !important;
+  }
+
+  .pagination button {
+    height: 40px;
+    width: 35px;
+  }
+
+  .eminputblock input {
+    padding: 6px 36px 6px 14px;
+  }
+
+  .search-results {
+    top: 58px;
+  }
+
+  .emform {
+    display: grid;
+    grid-template-columns: 1fr;
   }
 }

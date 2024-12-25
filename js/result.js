@@ -147,6 +147,7 @@ if (getstoredData.way === "multi-city") {
     document.querySelector(".multicity_data").innerHTML += `
     <div class="emform">
           <div class="eminputblock">
+          <label>From</label>
             <div class="eminput_field">
               <input
                 class="algolio_input multicityform"
@@ -162,6 +163,7 @@ if (getstoredData.way === "multi-city") {
             </div>
           </div>
           <div class="eminputblock">
+          <label>To</label>
             <div class="eminput_field">
               <input
                 class="algolio_input multicityto"
@@ -177,11 +179,13 @@ if (getstoredData.way === "multi-city") {
             </div>
           </div>
           <div class="eminputblock">
+          <label>Date</label>
             <div class="eminput_field">
               <input class="multicitydate" type="date" value="${getstoredData.dateAsText[i]}" />
             </div>
           </div>
           <div class="eminputblock">
+          <label>PAX</label>
             <div class="eminput_field">
               <div class="empax_wrapper">
                 <div class="empax_minus">-</div>

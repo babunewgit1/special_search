@@ -202,14 +202,6 @@ p.uniqueid {
   margin-bottom: 16px;
 }
 
-.mcity_none .eminputblock label {
-  display: none;
-}
-
-.search_pik .search-results {
-  top: 50px;
-}
-
 .noentry span {
   background-color: #72706d;
   cursor: not-allowed;
@@ -225,4 +217,16 @@ p.uniqueid {
   bottom: 0;
   right: 0;
   z-index: 99;
+}
+
+.onwaygrid {
+  grid-template-columns: repeat(4, 1fr) !important;
+}
+
+.opadet_bottom_heading ul li {
+  color: #03141b !important;
+}
+
+img.mbcross {
+  display: none;
 }

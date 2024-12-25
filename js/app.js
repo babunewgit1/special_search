@@ -334,7 +334,7 @@ oneWaySubmit.addEventListener("click", function () {
     };
 
     sessionStorage.setItem("storeData", JSON.stringify(storeData));
-    window.location.href = `/search-result`;
+    window.location.href = `/aircraft`;
   } else {
     alert("Please fill up the form properly");
   }
@@ -403,8 +403,6 @@ roundTripSubmit.addEventListener("click", function () {
     alert("Please fill up the form properly");
   }
 });
-
-// code for multi city api submition
 
 // Submission logic for multi-city
 multiCitySubmit.addEventListener("click", function () {

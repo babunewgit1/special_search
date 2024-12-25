@@ -545,12 +545,17 @@ function getHotDealHtml(
   item,
   index,
   calculateTotal,
+  totalHours,
+  totalMinutes,
+  stopInfo,
   allImageExt,
   allImageInt,
   checkExtLength,
   checkIntLength,
   words,
-  intabWrapper
+  apiData,
+  intabWrapper,
+  calculateHoursRate
 ) {
   const operatorAddress =
     item.base_airport_fixed_address_geographic_address?.address ||
@@ -585,9 +590,9 @@ function getHotDealHtml(
 
       <div class="item_cnt">
         <h4>${item.description_text}</h4>
-        <p> and ${
+        <p> and similar ${
           item.class_text
-        } <img class="seat_logo" src="https://cdn.prod.website-files.com/6713759f858863c516dbaa19/674f4ca8521e970e24495468_seat.png" alt="Seat Icon" />
+        }s <br /> <img class="seat_logo" src="https://cdn.prod.website-files.com/6713759f858863c516dbaa19/674f4ca8521e970e24495468_seat.png" alt="Seat Icon" />
           <span>${item.pax_number}</span> seats
         </p>
         <div class="hot_feature">
@@ -613,13 +618,11 @@ function getHotDealHtml(
         </div>
         <div class="price">
           <h3>$ ${calculateTotal}</h3>
-          <h5>$ ${Math.round(
-            item.price_per_hour_fixedrate_number
-          ).toLocaleString()}/hr</h5>
+          <h5>$ ${Math.round(calculateHoursRate).toLocaleString()}/hr</h5>
           <p>Taxes calculated at checkout</p>
         </div>
         <div class="bookingbutton">
-          <a class="button fill_button" href="#">Instant Book</a>
+          <a class="button fill_button" href="#">REQUEST TO BOOK</a>
           <button class="details-button button fill_button grey_button" data-index="${index}">View Details <img src="https://cdn.prod.website-files.com/6713759f858863c516dbaa19/67459d1f63b186d24efc3bbe_Jettly-Search-Results-Page-(List-View-Details-Tab).png" alt="View Details Icon" />
           </button>
         </div>
@@ -640,7 +643,7 @@ function getHotDealHtml(
                   <h3>${item.class_text} Exteriors</h3>
                   <p>Note: The images depicted are examples of ${
                     item.class_text
-                  } and may not represent the specific aircraft you will be flying on.</p>
+                  }s and may not represent the specific aircraft you will be flying on.</p>
                 </div>
                 <div class="tab_one_slider ${
                   checkExtLength <= 3 ? "sliderOn" : ""
@@ -661,7 +664,7 @@ function getHotDealHtml(
                   <h3>${item.class_text} Interiors</h3>
                   <p>Note: The images depicted are examples of ${
                     item.class_text
-                  } and may not represent the specific aircraft you will be flying on.</p>
+                  }s and may not represent the specific aircraft you will be flying on.</p>
                 </div>
                 <div class="tab_one_slider ${
                   checkIntLength <= 3 ? "sliderOn" : ""
@@ -1044,7 +1047,7 @@ function getHotDealHtml(
               <h3>${item.class_text} Exteriors</h3>
               <p>Note: The images depicted are examples of ${
                 item.class_text
-              } and may not represent the specific aircraft you will be flying on.</p>
+              }s and may not represent the specific aircraft you will be flying on.</p>
             </div>
             <div class="tab_one_slider ${
               checkExtLength <= 3 ? "sliderOn" : ""
@@ -1065,7 +1068,7 @@ function getHotDealHtml(
               <h3>${item.class_text} Interiors</h3>
               <p>Note: The images depicted are examples of ${
                 item.class_text
-              } and may not represent the specific aircraft you will be flying on.</p>
+              }s and may not represent the specific aircraft you will be flying on.</p>
             </div>
             <div class="tab_one_slider ${
               checkIntLength <= 3 ? "sliderOn" : ""
@@ -1446,7 +1449,8 @@ function getRegularItemHtml(
   checkIntLength,
   words,
   apiData,
-  intabWrapper
+  intabWrapper,
+  calculateHoursRate
 ) {
   const operatorAddress =
     item.base_airport_fixed_address_geographic_address?.address ||
@@ -1457,6 +1461,16 @@ function getRegularItemHtml(
   if (item.interior_image1_image) {
     allImages.push(item.interior_image1_image);
   }
+
+  const legStumolatedNumber =
+    apiData.response.flight_legs[0].total_distance__statute_m__number /
+    item.cruise_speed_avg_fixedrate_number;
+
+  const legHours = Math.floor(legStumolatedNumber);
+  const legMin = Math.floor((legStumolatedNumber - legHours) * 60);
+
+  const legFormattedTime = `${legHours} H ${legMin} M`;
+
   return `
       <div class="item_wrapper">
         <div class="item_img slider-container" id="slider-${index}">
@@ -1478,7 +1492,7 @@ function getRegularItemHtml(
           <h4>${item.description_text}</h4>
           <p>${
             item.class_text
-          } <img class="seat_logo" src="https://cdn.prod.website-files.com/6713759f858863c516dbaa19/674f4ca8521e970e24495468_seat.png" alt="Seat Icon" />
+          } <br /> <img class="seat_logo" src="https://cdn.prod.website-files.com/6713759f858863c516dbaa19/674f4ca8521e970e24495468_seat.png" alt="Seat Icon" />
             <span>${item.pax_number}</span> seats
           </p>
           <img class="operatorlogo" src="${
@@ -1498,7 +1512,7 @@ function getRegularItemHtml(
             <div class="itemstop_middle">
               <p>${stopInfo}</p>
               <span>|</span>
-              <p>${totalHours} H ${totalMinutes} M</p>
+              <p>${legFormattedTime}</p>
             </div>
             <div class="itemstop_left">
               <p>${apiData.response.arrival_main_code}</p>
@@ -1506,13 +1520,11 @@ function getRegularItemHtml(
           </div>
           <div class="price">
             <h3>$ ${calculateTotal}</h3>
-            <h5>$ ${Math.round(
-              item.price_per_hour_fixedrate_number
-            ).toLocaleString()}/hr</h5>
+           <h5>$ ${Math.round(calculateHoursRate).toLocaleString()}/hr</h5>
             <p>Taxes calculated at checkout</p>
           </div>
           <div class="bookingbutton">
-            <a class="button fill_button" href="#">Instant Book</a>
+            <a class="button fill_button" href="#">REQUEST TO BOOK</a>
             <button class="details-button button fill_button grey_button" data-index="${index}">View Details <img src="https://cdn.prod.website-files.com/6713759f858863c516dbaa19/67459d1f63b186d24efc3bbe_Jettly-Search-Results-Page-(List-View-Details-Tab).png" alt="View Details Icon" />
             </button>
           </div>
@@ -1520,8 +1532,7 @@ function getRegularItemHtml(
       </div>
       <div class="item_tab_block" data-index="${index}">
         <div class="overflow_wrapper">
-        <div class="cross_mb_icon">
-        
+        <div class="cross_mb_icon">        
           <div class="item_tab_heading_block">
           <div class="cross_itemx">
             <span><img src="https://cdn.prod.website-files.com/6713759f858863c516dbaa19/6767c563264061ca37171a7c_x-square.svg" alt="" /></span>
@@ -1531,10 +1542,7 @@ function getRegularItemHtml(
             <!-- Images Tab -->
             <div data-cnt="tab${index}img" class="item_tab_one tabitem_inline" style="display:block;">
               <div class="tab_one_heading">
-                <h3>${item.class_text} Exteriors</h3>
-                <p>Note: The images depicted are examples of ${
-                  item.class_text
-                } and may not represent the specific aircraft you will be flying on.</p>
+                <h3>EXTERIOR IMAGES</h3>
               </div>
               <div class="tab_one_slider ${
                 checkExtLength <= 3 ? "sliderOn" : ""
@@ -1552,10 +1560,7 @@ function getRegularItemHtml(
                 </div>
               </div>
               <div class="tab_one_heading tab_one_next_heading">
-                <h3>${item.class_text} Interiors</h3>
-                <p>Note: The images depicted are examples of ${
-                  item.class_text
-                } and may not represent the specific aircraft you will be flying on.</p>
+                <h3>INTERIOR IMAGES</h3>
               </div>
               <div class="tab_one_slider ${
                 checkIntLength <= 3 ? "sliderOn" : ""
@@ -1631,7 +1636,7 @@ function getRegularItemHtml(
                 </div>
               </div> 
           </div>
-          <div class="tabxholder"><li class="tiggitem" data-item="tab${index}op">Operators</li>
+          <div class="tabxholder"><li class="tiggitem" data-item="tab${index}op">Operator</li>
               <!-- Operators Tab -->
               <div data-cnt="tab${index}op" class="item_tab_one">
                 <div class="opadetails">
@@ -1938,10 +1943,7 @@ function getRegularItemHtml(
         <!-- Images Tab -->
         <div data-cnt="tab${index}img" class="item_tab_one">
           <div class="tab_one_heading">
-            <h3>${item.class_text} Exteriors</h3>
-            <p>Note: The images depicted are examples of ${
-              item.class_text
-            } and may not represent the specific aircraft you will be flying on.</p>
+            <h3>EXTERIOR IMAGES</h3>
           </div>
           <div class="tab_one_slider ${checkExtLength <= 3 ? "sliderOn" : ""}">
             <div class="swiper slide${index}block">
@@ -1957,10 +1959,7 @@ function getRegularItemHtml(
             </div>
           </div>
           <div class="tab_one_heading tab_one_next_heading">
-            <h3>${item.class_text} Interiors</h3>
-            <p>Note: The images depicted are examples of ${
-              item.class_text
-            } and may not represent the specific aircraft you will be flying on.</p>
+            <h3>INTERIOR IMAGES</h3>
           </div>
           <div class="tab_one_slider ${checkIntLength <= 3 ? "sliderOn" : ""}">
             <div class="swiper slide${index}int">
@@ -2327,7 +2326,6 @@ function getRegularItemHtml(
 
 // Function to create and append an item block
 function createItemBlock(item, index, isHotDeal, fragment, distance, TimeDown) {
-  // 1) Calculate total flight time for this entire item (used in summary)
   const getTotalTime = TimeDown / item.cruise_speed_avg_fixedrate_number;
   const totalHours = Math.floor(getTotalTime);
   const totalMinutes = Math.round((getTotalTime - totalHours) * 60);
@@ -2350,6 +2348,8 @@ function createItemBlock(item, index, isHotDeal, fragment, distance, TimeDown) {
     );
   }
   const calculateTotal = calculatedValue.toLocaleString();
+
+  const calculateHoursRate = item.price_per_hour_fixedrate_number * multiplier;
 
   // 3) Count exterior/interior images
   const checkExtLength = Array.isArray(item.exterior_images_list_image)
@@ -2418,14 +2418,15 @@ function createItemBlock(item, index, isHotDeal, fragment, distance, TimeDown) {
       ? "1 Stop"
       : "2 Stop";
 
-  // 6) Build HTML for all flight legs (using .map(...) to get each leg's date/time)
-  const intabWrapper = apiData.response.flight_legs
+  const flightLegs = Array.isArray(apiData.response.flight_legs)
+    ? apiData.response.flight_legs
+    : [];
+
+  const intabWrapper = flightLegs
     .map((leg) => {
       const hoursLeg = Math.floor(getTotalTime);
       const minutesLeg = Math.round((getTotalTime - hoursLeg) * 60);
       const totalSecondsLeg = hoursLeg * 3600 + minutesLeg * 60;
-
-      // Use the leg's date_date for the start time
       const dateStart = leg.date_date;
       const dateObjStart = new Date(dateStart * 1000);
       const formattedDateStart = dateObjStart.toLocaleDateString("en-US", {
@@ -2453,6 +2454,12 @@ function createItemBlock(item, index, isHotDeal, fragment, distance, TimeDown) {
         hour12: true,
       });
 
+      const legTime =
+        leg.total_distance__statute_m__number /
+        item.cruise_speed_avg_fixedrate_number;
+      const legTimehours = Math.floor(legTime);
+      const legTimeminutes = Math.floor((legTime - legTimehours) * 60);
+      const legformattedTime = `${legTimehours} H ${legTimeminutes} M`;
       return `
         <div class="intdet_wrapper">
           <div class="intdet_left">
@@ -2495,7 +2502,7 @@ function createItemBlock(item, index, isHotDeal, fragment, distance, TimeDown) {
       }</p>
             </div>   
             ${
-              item.range_number >= longestFlight
+              item.range_number < longestFlight
                 ? `
                   <div class="fuelstop">
                     <p>
@@ -2515,7 +2522,7 @@ function createItemBlock(item, index, isHotDeal, fragment, distance, TimeDown) {
                 src="https://cdn.prod.website-files.com/6713759f858863c516dbaa19/6753e928907492da22caf7fe_flighticon.png" 
                 alt="Flight Time Icon" />
               <span>Flight Time</span>
-              <p>${hoursLeg} H ${minutesLeg} M</p>
+              <p>${legformattedTime}</p>
             </div>
           </div>
         </div>
@@ -2538,13 +2545,15 @@ function createItemBlock(item, index, isHotDeal, fragment, distance, TimeDown) {
       calculateTotal,
       totalHours,
       totalMinutes,
+      stopInfo,
       allImageExt,
       allImageInt,
       checkExtLength,
       checkIntLength,
       words,
       apiData,
-      intabWrapper
+      intabWrapper,
+      calculateHoursRate
     );
   } else {
     itemWrapper.innerHTML = getRegularItemHtml(
@@ -2560,7 +2569,8 @@ function createItemBlock(item, index, isHotDeal, fragment, distance, TimeDown) {
       checkIntLength,
       words,
       apiData,
-      intabWrapper
+      intabWrapper,
+      calculateHoursRate
     );
   }
 
@@ -3331,8 +3341,10 @@ function initialize() {
       const priceMaxValueInput = document.querySelector("span#max");
 
       // Initialize numeric inputs to the initial min/max
-      priceMinValueInput.textContent = Math.round(currentMinPrice);
-      priceMaxValueInput.textContent = Math.round(currentMaxPrice);
+      priceMinValueInput.textContent =
+        Math.round(currentMinPrice).toLocaleString();
+      priceMaxValueInput.textContent =
+        Math.round(currentMaxPrice).toLocaleString();
 
       // Utility: convert "price" to % along the slider track
       function priceToPercent(price) {
@@ -3413,11 +3425,11 @@ function initialize() {
 
         if (draggingPriceLeft) {
           currentMinPrice = clampPrice(newPrice, true);
-          priceMinValueInput.textContent = currentMinPrice;
+          priceMinValueInput.textContent = currentMinPrice.toLocaleString();
         }
         if (draggingPriceRight) {
           currentMaxPrice = clampPrice(newPrice, false);
-          priceMaxValueInput.textContent = currentMaxPrice;
+          priceMaxValueInput.textContent = currentMaxPrice.toLocaleString();
         }
 
         updatePriceSliderPositions();
