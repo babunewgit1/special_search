@@ -101,6 +101,7 @@ function recalculateFuelCounts(items) {
     Direct: 0,
     "1 Stop": 0,
     "2 Stop": 0,
+    "": 0,
   };
 
   items.forEach((item) => {
@@ -108,8 +109,10 @@ function recalculateFuelCounts(items) {
       fuelCount["Direct"]++;
     } else if (item.range_number * 2 > longestFlight) {
       fuelCount["1 Stop"]++;
-    } else {
+    } else if (item.range_number * 2 < longestFlight) {
       fuelCount["2 Stop"]++;
+    } else {
+      fuelCount[""]++;
     }
   });
 
@@ -291,8 +294,10 @@ function applyFuelFilters(sets, filters) {
       stopCategory = "Direct";
     } else if (item.range_number * 2 > longestFlight) {
       stopCategory = "1 Stop";
-    } else {
+    } else if (item.range_number * 2 < longestFlight) {
       stopCategory = "2 Stop";
+    } else {
+      stopCategory = "";
     }
     return filters.includes(stopCategory);
   });
@@ -1462,8 +1467,12 @@ function getRegularItemHtml(
     allImages.push(item.interior_image1_image);
   }
 
+  const legReverse = Array.isArray(apiData.response.flight_legs)
+    ? [...apiData.response.flight_legs].reverse()
+    : [];
+
   const legStumolatedNumber =
-    apiData.response.flight_legs[0].total_distance__statute_m__number /
+    legReverse[0].total_distance__statute_m__number /
     item.cruise_speed_avg_fixedrate_number;
 
   const legHours = Math.floor(legStumolatedNumber);
@@ -2409,18 +2418,18 @@ function createItemBlock(item, index, isHotDeal, fragment, distance, TimeDown) {
         .join("")
     : `<p class="Notfoundarray">Amenities Not Listed? Contact Us for the Latest Details!</p>`;
 
-  // 5) Determine Direct / 1 Stop / 2 Stop based on `longestFlight` variable
-  //    (Make sure `longestFlight` is defined in your scope)
-  const stopInfo =
-    item.range_number > longestFlight
-      ? "Direct"
-      : item.range_number * 2 > longestFlight
-      ? "1 Stop"
-      : "2 Stop";
-
   const flightLegs = Array.isArray(apiData.response.flight_legs)
-    ? apiData.response.flight_legs
+    ? [...apiData.response.flight_legs].reverse()
     : [];
+
+  const stopInfo =
+    item.range_number > flightLegs[0].total_distance__statute_m__number
+      ? "Direct"
+      : item.range_number * 2 > flightLegs[0].total_distance__statute_m__number
+      ? "1 Stop"
+      : item.range_number * 2 < flightLegs[0].total_distance__statute_m__number
+      ? "2 Stop"
+      : "";
 
   const intabWrapper = flightLegs
     .map((leg) => {
@@ -2460,6 +2469,7 @@ function createItemBlock(item, index, isHotDeal, fragment, distance, TimeDown) {
       const legTimehours = Math.floor(legTime);
       const legTimeminutes = Math.floor((legTime - legTimehours) * 60);
       const legformattedTime = `${legTimehours} H ${legTimeminutes} M`;
+
       return `
         <div class="intdet_wrapper">
           <div class="intdet_left">
@@ -2502,9 +2512,20 @@ function createItemBlock(item, index, isHotDeal, fragment, distance, TimeDown) {
       }</p>
             </div>   
             ${
-              item.range_number < longestFlight
-                ? `
-                  <div class="fuelstop">
+              item.range_number > leg.total_distance__statute_m__number
+                ? ""
+                : item.range_number * 2 > leg.total_distance__statute_m__number
+                ? `<div class="fuelstop">
+                      <p>
+                        <img 
+                          src="https://cdn.prod.website-files.com/6713759f858863c516dbaa19/6753e62479df68bd6de939cd_Jettly-Search-Results-Page-(List-View-Itinerary-Tab).png" 
+                          alt="Fuel Stop Icon" /> 
+                        Possible fuel stop enroute - 
+                        <span>+20 mins</span>
+                      </p>
+                    </div>`
+                : item.range_number * 2 < leg.total_distance__statute_m__number
+                ? `<div class="fuelstop">
                     <p>
                       <img 
                         src="https://cdn.prod.website-files.com/6713759f858863c516dbaa19/6753e62479df68bd6de939cd_Jettly-Search-Results-Page-(List-View-Itinerary-Tab).png" 
@@ -2953,6 +2974,7 @@ function generateFuelCheckboxes() {
     Direct: 0,
     "1 Stop": 0,
     "2 Stop": 0,
+    "": 0,
   };
 
   aircraftSets.forEach((item) => {
@@ -2960,8 +2982,10 @@ function generateFuelCheckboxes() {
       fuelCount["Direct"]++;
     } else if (item.range_number * 2 > longestFlight) {
       fuelCount["1 Stop"]++;
-    } else {
+    } else if (item.range_number * 2 < longestFlight) {
       fuelCount["2 Stop"]++;
+    } else {
+      fuelCount[""]++;
     }
   });
 
@@ -3462,13 +3486,17 @@ function initialize() {
       minYearExt = Math.min(
         ...aircraftSets
           .map((item) => item.exterior_refurbished_year_number)
-          .filter((year) => typeof year === "number" && !isNaN(year))
+          .filter(
+            (year) => typeof year === "number" && !isNaN(year) && year > 0
+          )
       );
 
       minYearInt = Math.min(
         ...aircraftSets
           .map((item) => item.refurbished_year_number)
-          .filter((year) => typeof year === "number" && !isNaN(year))
+          .filter(
+            (year) => typeof year === "number" && !isNaN(year) && year > 0
+          )
       );
 
       minYearIns = Math.min(
