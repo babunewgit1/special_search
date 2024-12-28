@@ -1517,3 +1517,91 @@ img.inputarrowx {
 .changeview .item_tab_heading_block {
   width: 60%;
 }
+
+.hide_view {
+  display: none;
+}
+
+.showbroker {
+  display: block;
+}
+
+.broker_mode_cnt {
+  display: none;
+}
+
+.broker_change .broker_mode_cnt {
+  display: block;
+}
+
+.broker_change .search_heading {
+  /* display: flex;
+  align-items: center;
+  gap: 20px;
+  justify-content: space-between;
+  padding-right: 115px; */
+
+  display: grid;
+  grid-template-columns: 300px 1fr 1fr 1fr 200px 1fr 1fr;
+  align-items: center;
+  gap: 20px;
+}
+
+.broker_change .item_img,
+.broker_change .item_cnt,
+.broker_change .item_book {
+  display: none;
+}
+
+.broker_change .item_wrapper {
+  display: block;
+  margin: 0;
+  padding: 0;
+}
+
+.broker_change .broker_mode_cnt {
+  display: grid;
+  grid-template-columns: 1fr 100px;
+  align-items: center;
+}
+
+.broker_checkbox {
+  margin-left: auto;
+}
+
+.broker_change .broker_item_img_wrapper {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.broker_change .broker_item {
+  display: grid;
+  grid-template-columns: 300px 1fr 1fr 1fr 200px 1fr;
+  align-items: center;
+  gap: 20px;
+}
+
+.broker_change .broker_item_img img {
+  width: 110px;
+  border-radius: 10px;
+}
+
+.broker_change .item_block_wrapper {
+  padding: 10px 20px;
+  margin-bottom: 0px;
+  border-radius: 0px;
+  border-bottom: 1px solid #d9d9d9;
+}
+
+.search_heading p:first-child,
+.broker_item_img_wrapper {
+  width: 240px;
+  text-align: center;
+}
+
+.broker_item_para p {
+  white-space: nowrap;
+  font-size: 16px;
+  color: #ff5d47;
+}

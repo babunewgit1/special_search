@@ -1477,11 +1477,46 @@ function getRegularItemHtml(
 
   const legHours = Math.floor(legStumolatedNumber);
   const legMin = Math.floor((legStumolatedNumber - legHours) * 60);
-
   const legFormattedTime = `${legHours} H ${legMin} M`;
 
+  const decimalTime = `${legHours}.${legMin}`;
+
   return `
+      
       <div class="item_wrapper">
+        <div class="broker_mode_cnt">
+          <div class="broker_item details-button" data-index="${index}">
+            <div class="broker_item_img_wrapper">
+              <div class="broker_item_img">
+                <img src="${item.exterior_image1_image}" alt="" />
+              </div>
+              <div class="broker_item_para">
+                <p>${item.description_text}</p>
+              </div>
+            </div>
+            <div class="broker_pax">
+              <p>${item.pax_number}</p>
+            </div>
+            <div class="broker_pax">
+              <p>${item.year_of_manufacture_number}</p>
+            </div>
+            <div class="broker_pax">
+              <p>${decimalTime}</p>
+            </div>
+            <div class="broker_pax" style="display: none">
+              <p>2.52 KMKE</p>
+            </div>
+            <div class="broker_pax">
+              <p>${item.operator_txt_text}</p>
+            </div>
+            <div class="broker_pax">
+              <p>$ ${calculateTotal}</p>
+            </div>
+          </div>
+          <div class="broker_checkbox">
+            <input type="checkbox" />
+          </div>
+        </div>        
         <div class="item_img slider-container" id="slider-${index}">
           ${allImages
             .map(

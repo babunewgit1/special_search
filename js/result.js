@@ -464,3 +464,20 @@ gridAndListView.forEach((view) => {
     view.classList.add("activeview");
   });
 });
+
+// code for broker mode
+const brokerModeRadio = document.querySelector(".broker_mode_radio");
+const glView = document.querySelector(".sr_exp_right");
+const requestBroker = document.querySelector(".request_br_mode");
+const brokerChange = document.querySelector(".item_reslt_wrapper");
+const mainChanger = document.querySelector(".sr_main_right");
+
+brokerModeRadio.addEventListener("click", function () {
+  glView.classList.toggle("hide_view");
+  requestBroker.classList.toggle("showbroker");
+  brokerChange.classList.toggle("broker_change");
+  mainChanger.classList.remove("changeview");
+  mainChanger.classList.add("listview");
+  document.querySelector(".grid_view").classList.remove("activeview");
+  document.querySelector(".list_view ").classList.add("activeview");
+});
