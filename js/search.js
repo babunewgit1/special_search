@@ -7,6 +7,12 @@ function debounce(fn, delay) {
   };
 }
 
+let checkedItems = {};
+const storedCheckedItems = sessionStorage.getItem("checkedItems");
+if (storedCheckedItems) {
+  checkedItems = JSON.parse(storedCheckedItems);
+}
+
 // Global variables
 let apiData = {};
 let aircraftSets = [];
@@ -303,6 +309,231 @@ function applyFuelFilters(sets, filters) {
   });
 }
 
+// Function to update the display div with checked items
+function updateCheckedItemsDisplay() {
+  const displayDiv = document.getElementById("checkedItemsDiv");
+  if (!displayDiv) return;
+
+  const checkedIds = Object.keys(checkedItems);
+  if (checkedIds.length === 0) {
+    displayDiv.innerHTML = "<p>No items selected.</p>";
+    return;
+  }
+
+  // Fetch details of checked items
+  const checkedItemsDetails = aircraftSets.filter((item) => {
+    const itemId = item._id || `item-${aircraftSets.indexOf(item)}`;
+    return checkedIds.includes(itemId);
+  });
+
+  // Generate HTML to display (customize as needed)
+  const html = checkedItemsDetails
+    .map(
+      (item) => `
+    <div class="selected-item">
+      <img src="${item.exterior_image1_image}" alt="${item.description_text}" />
+      <p>${item.description_text}</p>
+      <p>Pax: ${item.pax_number}</p>
+      <p>Year: ${item.year_of_manufacture_number}</p>
+      <p>Operator: ${item.operator_txt_text}</p>
+      <p>Price: $${item.price_per_hour_fixedrate_number.toLocaleString()}</p>
+    </div>
+  `
+    )
+    .join("");
+
+  displayDiv.innerHTML = html;
+}
+
+document.querySelector(".crosspop").addEventListener("click", function () {
+  document.querySelector(".popupwrapper").style.display = "none";
+});
+
+// Function to handle the .request_br_btn click
+function handleRequestBrBtnClick() {
+  const selectedItems = aircraftSets.filter((item) => {
+    const itemId = item._id || `item-${aircraftSets.indexOf(item)}`;
+    return checkedItems[itemId];
+  });
+
+  if (selectedItems.length === 0) {
+    alert("No items selected.");
+    return;
+  }
+
+  document.querySelector(".popupwrapper").style.display = "flex";
+
+  // Reference to the container where you want to display the selected items
+  const selectedItemsContainer = document.getElementById(
+    "selectedItemsContainer"
+  );
+  if (!selectedItemsContainer) {
+    console.error("selectedItemsContainer div not found.");
+    return;
+  }
+
+  const tripName = document.querySelector(".tripname");
+  tripName.innerHTML = "";
+
+  const leg = apiData.response.flight_legs;
+
+  const filterleg = leg.map((leg) => {
+    const dateStart = leg.date_date;
+    const dateObjStart = new Date(dateStart * 1000);
+    const formattedDateStart = dateObjStart.toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "short",
+      day: "numeric",
+    });
+    const formattedTimeStart = dateObjStart.toLocaleTimeString("en-US", {
+      hour: "numeric",
+      minute: "2-digit",
+      hour12: true,
+    });
+
+    return `
+      <div class="legoption">
+        <p>${formattedDateStart} ${formattedTimeStart}, |</p>
+        <div class="airportformatname">
+          <p>
+            ${
+              leg.mobile_app_from_airport_iata_code_text
+                ? leg.mobile_app_from_airport_iata_code_text
+                : leg.mobile_app_from_airport_icao_code_text
+                ? leg.mobile_app_from_airport_icao_code_text
+                : leg.mobile_app_from_airport_faa_code_text || "N/A"
+            }
+            -
+            ${
+              leg.mobile_app_to_airport_iata_code_text
+                ? leg.mobile_app_to_airport_iata_code_text
+                : leg.mobile_app_to_airport_icao_code_text
+                ? leg.mobile_app_to_airport_icao_code_text
+                : leg.mobile_app_to_airport_faa_code_text || "N/A"
+            }, |
+          </p>
+        </div>
+        <p>${leg.pax1_number}</p>
+      </div>
+    `;
+  });
+
+  tripName.innerHTML = `
+    <div class="tripname_wrap">
+      <div class="tripleft">
+        <h3>Trip name:</h3>
+        <p>${apiData.response.trip_name}</p>
+      </div>
+      <div class="tripright">
+        <h3>Itinerary:</h3>
+        <div class="triprightcnt">
+          ${filterleg}
+        </div>
+      </div>
+    </div>
+  `;
+
+  // Clear previous content
+  selectedItemsContainer.innerHTML = "";
+
+  // Generate and append HTML for each selected item
+  selectedItems.forEach((item, index) => {
+    const uniqueId = item._id || `item-${aircraftSets.indexOf(item)}`;
+    const decimalTime = `${item.year_of_manufacture_number}.${item.pax_number}`; // Adjust as needed
+
+    const html = `
+      <div class="broker_mode_cnt">
+        <div class="broker_item details-button" data-index="${index}">
+          <div class="broker_item_img_wrapper">
+            <div class="broker_item_img">
+              <img src="${item.exterior_image1_image}" alt="${
+      item.description_text
+    }" />
+            </div>
+            <div class="broker_item_para">
+              <p>${item.description_text}</p>
+            </div>
+          </div>
+          <div class="broker_pax">
+            <p>${item.pax_number}</p>
+          </div>
+          <div class="broker_pax">
+            <p>${item.year_of_manufacture_number}</p>
+          </div>
+          <div class="broker_pax">
+            <p>${decimalTime}</p>
+          </div>
+          <div class="broker_pax" style="display: none">
+            <p>2.52 KMKE</p>
+          </div>
+          <div class="broker_pax">
+            <p>${item.operator_txt_text}</p>
+          </div>
+          <div class="broker_pax">
+            <p>$${item.price_per_hour_fixedrate_number.toLocaleString()}</p>
+          </div>
+        </div>
+        <div class="broker_checkbox">
+        <label class="check-box">
+          <input type="checkbox" data-id="${uniqueId}" checked />
+          <span class="checkmark"></span>
+        </label>
+        </div>
+      </div>
+    `;
+    selectedItemsContainer.insertAdjacentHTML("beforeend", html);
+  });
+
+  // Attach event listeners to popup checkboxes
+  attachPopupCheckboxListeners();
+
+  // Optionally, scroll to the selected items container
+  selectedItemsContainer.scrollIntoView({ behavior: "smooth" });
+}
+
+document
+  .querySelector(".request_br_btn")
+  .addEventListener("click", handleRequestBrBtnClick);
+
+// Function to attach event listeners to popup checkboxes
+function attachPopupCheckboxListeners() {
+  document
+    .querySelectorAll(
+      '#selectedItemsContainer .broker_checkbox input[type="checkbox"]'
+    )
+    .forEach((checkbox) => {
+      const uniqueId = checkbox.getAttribute("data-id");
+      if (uniqueId) {
+        // Ensure checkbox reflects the state
+        checkbox.checked = checkedItems[uniqueId] || false;
+
+        // Add event listener to update checkedItems
+        checkbox.addEventListener("change", (e) => {
+          if (!e.target.checked) {
+            // If unchecked in popup
+            delete checkedItems[uniqueId];
+            // Persist the state to sessionStorage
+            sessionStorage.setItem(
+              "checkedItems",
+              JSON.stringify(checkedItems)
+            );
+            // Update the main list checkboxes
+            const mainCheckbox = document.querySelector(
+              `.broker_checkbox input[data-id="${uniqueId}"]`
+            );
+            if (mainCheckbox) {
+              mainCheckbox.checked = false;
+            }
+            // Remove the item from the popup
+            e.target.closest(".broker_mode_cnt").remove();
+            // Update the display div (if applicable)
+            updateCheckedItemsDisplay();
+          }
+        });
+      }
+    });
+}
+
 // Function to render a page of items
 function renderPage(page, filteredSets) {
   const distance = apiData.response.total_distance;
@@ -341,6 +572,8 @@ function renderPage(page, filteredSets) {
   attachImageClickListeners(); // Attach image click listeners after rendering
   closeSideBar();
   closeDownbar();
+  attachItemCheckboxListeners();
+  updateCheckedItemsDisplay();
 }
 
 // Function to initialize Swiper sliders
@@ -545,6 +778,65 @@ function submitMessage() {
   });
 }
 
+function attachItemCheckboxListeners() {
+  document
+    .querySelectorAll('.broker_checkbox input[type="checkbox"]')
+    .forEach((checkbox) => {
+      const uniqueId = checkbox.getAttribute("data-id");
+      if (uniqueId) {
+        // Ensure checkbox reflects the state
+        checkbox.checked = checkedItems[uniqueId] || false;
+
+        // Add event listener to update checkedItems
+        checkbox.addEventListener("change", (e) => {
+          if (e.target.checked) {
+            checkedItems[uniqueId] = true;
+          } else {
+            delete checkedItems[uniqueId];
+            // If the popup is open, remove the corresponding item
+            const popupCheckbox = document.querySelector(
+              `#selectedItemsContainer .broker_checkbox input[data-id="${uniqueId}"]`
+            );
+            if (popupCheckbox) {
+              popupCheckbox.checked = false;
+              popupCheckbox.closest(".broker_mode_cnt").remove();
+            }
+          }
+          // Persist the state to sessionStorage
+          sessionStorage.setItem("checkedItems", JSON.stringify(checkedItems));
+          // Update the display div
+          updateCheckedItemsDisplay();
+        });
+      }
+    });
+}
+
+// Function to update the display div with checked items
+function attachItemCheckboxListeners() {
+  document
+    .querySelectorAll('.broker_checkbox input[type="checkbox"]')
+    .forEach((checkbox) => {
+      const uniqueId = checkbox.getAttribute("data-id");
+      if (uniqueId) {
+        // Ensure checkbox reflects the state
+        checkbox.checked = checkedItems[uniqueId] || false;
+
+        // Add event listener to update checkedItems
+        checkbox.addEventListener("change", (e) => {
+          if (e.target.checked) {
+            checkedItems[uniqueId] = true;
+          } else {
+            delete checkedItems[uniqueId];
+          }
+          // Persist the state to sessionStorage
+          sessionStorage.setItem("checkedItems", JSON.stringify(checkedItems));
+          // Update the display div
+          updateCheckedItemsDisplay();
+        });
+      }
+    });
+}
+
 // Function to generate HTML for Hot Deal items
 function getHotDealHtml(
   item,
@@ -560,7 +852,9 @@ function getHotDealHtml(
   words,
   apiData,
   intabWrapper,
-  calculateHoursRate
+  calculateHoursRate,
+  uniqueId,
+  isChecked
 ) {
   const operatorAddress =
     item.base_airport_fixed_address_geographic_address?.address ||
@@ -1455,7 +1749,9 @@ function getRegularItemHtml(
   words,
   apiData,
   intabWrapper,
-  calculateHoursRate
+  calculateHoursRate,
+  uniqueId,
+  isChecked
 ) {
   const operatorAddress =
     item.base_airport_fixed_address_geographic_address?.address ||
@@ -1514,7 +1810,12 @@ function getRegularItemHtml(
             </div>
           </div>
           <div class="broker_checkbox">
-            <input type="checkbox" />
+            <label class="check-box">
+              <input type="checkbox" data-id="${uniqueId}" ${
+    isChecked ? "checked" : ""
+  } />
+              <span class="checkmark"></span>
+            </label>            
           </div>
         </div>        
         <div class="item_img slider-container" id="slider-${index}">
@@ -2592,8 +2893,10 @@ function createItemBlock(item, index, isHotDeal, fragment, distance, TimeDown) {
     ? "item_block_wrapper hotwrapper"
     : "item_block_wrapper";
 
-  // 8) Insert the final HTML by calling your existing getHotDealHtml or getRegularItemHtml
-  //    Now we pass intabWrapper to display all legs instead of just leg[0]
+  const uniqueId = item._id || `item-${globalIndex}`;
+  const isChecked = checkedItems[uniqueId] || false;
+  globalIndex++;
+
   if (isHotDeal) {
     itemWrapper.innerHTML = getHotDealHtml(
       item,
@@ -2609,7 +2912,9 @@ function createItemBlock(item, index, isHotDeal, fragment, distance, TimeDown) {
       words,
       apiData,
       intabWrapper,
-      calculateHoursRate
+      calculateHoursRate,
+      uniqueId,
+      isChecked
     );
   } else {
     itemWrapper.innerHTML = getRegularItemHtml(
@@ -2626,7 +2931,9 @@ function createItemBlock(item, index, isHotDeal, fragment, distance, TimeDown) {
       words,
       apiData,
       intabWrapper,
-      calculateHoursRate
+      calculateHoursRate,
+      uniqueId,
+      isChecked
     );
   }
 
