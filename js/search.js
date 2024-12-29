@@ -364,7 +364,6 @@ function handleRequestBrBtnClick() {
     alert("No items selected.");
     return;
   }
-
   document.querySelector(".popupwrapper").style.display = "flex";
 
   // Reference to the container where you want to display the selected items
@@ -489,11 +488,7 @@ function handleRequestBrBtnClick() {
     `;
     selectedItemsContainer.insertAdjacentHTML("beforeend", html);
   });
-
-  // Attach event listeners to popup checkboxes
   attachPopupCheckboxListeners();
-
-  // Optionally, scroll to the selected items container
   selectedItemsContainer.scrollIntoView({ behavior: "smooth" });
 }
 
@@ -581,6 +576,33 @@ function renderPage(page, filteredSets) {
   closeDownbar();
   attachItemCheckboxListeners();
   updateCheckedItemsDisplay();
+
+  document.querySelectorAll(".check-box input").forEach((checkbox) => {
+    checkbox.addEventListener("change", function () {
+      const checkedItems =
+        JSON.parse(sessionStorage.getItem("checkedItems")) || {};
+
+      if (Object.keys(checkedItems).length > 0) {
+        document.querySelector(".broker_count").innerHTML = `(${
+          Object.keys(checkedItems).length
+        })`;
+      } else {
+        document.querySelector(".broker_count").innerHTML = "(0)";
+      }
+    });
+  });
+
+  document.querySelector(".crosspop").addEventListener("click", function () {
+    const checkedItems =
+      JSON.parse(sessionStorage.getItem("checkedItems")) || {};
+    if (Object.keys(checkedItems).length > 0) {
+      document.querySelector(".broker_count").innerHTML = `(${
+        Object.keys(checkedItems).length
+      })`;
+    } else {
+      document.querySelector(".broker_count").innerHTML = "(0)";
+    }
+  });
 }
 
 // Function to initialize Swiper sliders
@@ -2806,8 +2828,12 @@ function createItemBlock(item, index, isHotDeal, fragment, distance, TimeDown) {
         .join("")
     : `<p class="Notfoundarray">Amenities Not Listed? Contact Us for the Latest Details!</p>`;
 
+  // const flightLegs = Array.isArray(apiData.response.flight_legs)
+  //   ? [...apiData.response.flight_legs].reverse()
+  //   : [];
+
   const flightLegs = Array.isArray(apiData.response.flight_legs)
-    ? [...apiData.response.flight_legs].reverse()
+    ? [...apiData.response.flight_legs]
     : [];
 
   const stopInfo =

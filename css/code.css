@@ -1776,3 +1776,7 @@ img.seat_logo {
 .broker_item_para {
   width: calc(100% - 135px);
 }
+
+.broker_change .hotwrapper {
+  display: none;
+}

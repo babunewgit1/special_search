@@ -622,7 +622,8 @@
 
   .changeview .item_tab_heading_block {
     overflow: hidden !important;
-    padding: 20px 0px 60px 0px;
+    padding: 55px 0px 20px 0px;
+    position: relative;
   }
 
   .item_tab_heading_block ul {
@@ -637,8 +638,10 @@
     width: 40px;
     margin: auto;
     cursor: pointer;
-    position: relative;
-    top: 14px;
+    position: absolute;
+    top: 24px;
+    right: -16px;
+    transform: translate(-50%, -50%);
   }
 
   .changeview .overflow_wrapper {
@@ -1068,7 +1071,8 @@
 
   .changeview .item_tab_heading_block {
     overflow: hidden !important;
-    padding: 20px 0px 60px 0px;
+    padding: 55px 0px 20px 0px;
+    position: relative;
   }
 
   .item_tab_heading_block ul {
@@ -1083,8 +1087,10 @@
     width: 40px;
     margin: auto;
     cursor: pointer;
-    position: relative;
-    top: 14px;
+    position: absolute;
+    top: 24px;
+    right: -16px;
+    transform: translate(-50%, -50%);
   }
 
   .changeview .overflow_wrapper {
@@ -1527,7 +1533,8 @@
 
   .changeview .item_tab_heading_block {
     overflow: hidden !important;
-    padding: 20px 0px 60px 0px;
+    padding: 55px 0px 20px 0px;
+    position: relative;
   }
 
   .item_tab_heading_block ul {
@@ -1542,8 +1549,10 @@
     width: 40px;
     margin: auto;
     cursor: pointer;
-    position: relative;
-    top: 14px;
+    position: absolute;
+    top: 24px;
+    right: -16px;
+    transform: translate(-50%, -50%);
   }
 
   .changeview .overflow_wrapper {
