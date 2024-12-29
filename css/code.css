@@ -1530,11 +1530,13 @@ img.inputarrowx {
   display: none;
 }
 
-.broker_change .broker_mode_cnt {
+.broker_change .broker_mode_cnt,
+.popmini .broker_mode_cnt {
   display: block;
 }
 
-.broker_change .search_heading {
+.broker_change .search_heading,
+.popmini .search_heading {
   display: grid;
   grid-template-columns: 300px 1fr 1fr 1fr 200px 1fr 1fr;
   align-items: center;
@@ -1547,15 +1549,17 @@ img.inputarrowx {
   display: none;
 }
 
-.broker_change .item_wrapper {
+.broker_change .item_wrapper,
+.popmini .item_wrapper {
   display: block;
   margin: 0;
   padding: 0;
 }
 
-.broker_change .broker_mode_cnt {
+.broker_change .broker_mode_cnt,
+.popmini .broker_mode_cnt {
   display: grid;
-  grid-template-columns: 1fr 100px;
+  grid-template-columns: 1fr 115px;
   align-items: center;
 }
 
@@ -1563,25 +1567,32 @@ img.inputarrowx {
   margin-left: auto;
 }
 
-.broker_change .broker_item_img_wrapper {
+.broker_change .broker_item_img_wrapper,
+.popmini .broker_item_img_wrapper {
   display: flex;
   align-items: center;
   gap: 15px;
 }
 
-.broker_change .broker_item {
+.broker_change .broker_item,
+.popmini .broker_item {
   display: grid;
   grid-template-columns: 300px 1fr 1fr 1fr 200px 1fr;
   align-items: center;
   gap: 20px;
+  cursor: pointer;
 }
 
-.broker_change .broker_item_img img {
+.broker_change .broker_item_img img,
+.popmini .broker_item_img img {
   width: 110px;
   border-radius: 10px;
+  height: 60px;
+  object-fit: cover;
 }
 
-.broker_change .item_block_wrapper {
+.broker_change .item_block_wrapper,
+.popmini .item_block_wrapper {
   padding: 10px 20px;
   margin-bottom: 0px;
   border-radius: 0px;
@@ -1598,6 +1609,7 @@ img.inputarrowx {
   white-space: nowrap;
   font-size: 16px;
   color: #ff5d47;
+  text-align: left;
 }
 
 .check-box {
@@ -1611,6 +1623,7 @@ img.inputarrowx {
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
+  top: -6px;
 }
 
 .check-box input {
@@ -1662,6 +1675,104 @@ img.inputarrowx {
   transform: rotate(45deg);
 }
 
+.selecteditemscontainer {
+  max-height: 300px;
+  overflow-y: auto;
+}
+
 .selecteditemscontainer .broker_mode_cnt {
   display: block;
+}
+
+.broker_change .activeTabPanel {
+  margin-top: 20px;
+}
+
+.broker_change .activeBtn .details-button img {
+  transform: none;
+}
+
+.tripname_wrap {
+  display: flex;
+  justify-content: space-between;
+}
+
+.tripname_wrap h3 {
+  font-size: 18px;
+  color: #03141b;
+  text-transform: uppercase;
+}
+
+.tripname_wrap p {
+  font-size: 18px;
+  color: #1e1e1e;
+}
+
+.legoption {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.legoption p {
+  white-space: nowrap;
+  margin-top: 6px;
+}
+
+.legoption .airportformatname {
+  margin: 0;
+  width: 100%;
+}
+
+.popitem_heading {
+  display: grid;
+  grid-template-columns: 300px 1fr 1fr 1fr 200px 1fr;
+  align-items: center;
+  gap: 20px;
+  margin-top: 40px;
+  margin-bottom: 10px;
+  padding-right: 100px;
+}
+
+.popitem_heading p {
+  font-size: 17px;
+  color: #1e1e1e;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.popitem_heading p:first-child {
+  text-align: center;
+}
+
+.selecteditemscontainer .broker_item {
+  display: grid;
+  grid-template-columns: 300px 1fr 1fr 1fr 200px 1fr;
+  align-items: center;
+  gap: 20px;
+  cursor: auto;
+}
+
+.selecteditemscontainer .broker_mode_cnt {
+  display: grid;
+  grid-template-columns: 1fr 100px;
+  align-items: center;
+  padding: 12px 0px;
+  border-top: 1px solid #d9d9d9;
+}
+
+.tripname {
+  margin-top: 25px;
+}
+
+img.seat_logo {
+  margin-top: 0 !important;
+}
+
+.broker_pax:last-child p {
+  white-space: nowrap;
+}
+
+.broker_item_para {
+  width: calc(100% - 135px);
 }

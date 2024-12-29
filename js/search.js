@@ -1,3 +1,4 @@
+sessionStorage.removeItem("checkedItems");
 // Debounce utility for search input
 function debounce(fn, delay) {
   let timeout;
@@ -351,12 +352,15 @@ document.querySelector(".crosspop").addEventListener("click", function () {
 
 // Function to handle the .request_br_btn click
 function handleRequestBrBtnClick() {
+  document.querySelector(".selecteditemscontainer").innerHTML = "";
   const selectedItems = aircraftSets.filter((item) => {
     const itemId = item._id || `item-${aircraftSets.indexOf(item)}`;
     return checkedItems[itemId];
   });
 
-  if (selectedItems.length === 0) {
+  const checkedIds = Object.keys(checkedItems);
+
+  if (checkedIds.length < 1) {
     alert("No items selected.");
     return;
   }
@@ -377,21 +381,22 @@ function handleRequestBrBtnClick() {
 
   const leg = apiData.response.flight_legs;
 
-  const filterleg = leg.map((leg) => {
-    const dateStart = leg.date_date;
-    const dateObjStart = new Date(dateStart * 1000);
-    const formattedDateStart = dateObjStart.toLocaleDateString("en-US", {
-      year: "numeric",
-      month: "short",
-      day: "numeric",
-    });
-    const formattedTimeStart = dateObjStart.toLocaleTimeString("en-US", {
-      hour: "numeric",
-      minute: "2-digit",
-      hour12: true,
-    });
+  const filterleg = leg
+    .map((leg) => {
+      const dateStart = leg.date_date;
+      const dateObjStart = new Date(dateStart * 1000);
+      const formattedDateStart = dateObjStart.toLocaleDateString("en-US", {
+        year: "numeric",
+        month: "short",
+        day: "numeric",
+      });
+      const formattedTimeStart = dateObjStart.toLocaleTimeString("en-US", {
+        hour: "numeric",
+        minute: "2-digit",
+        hour12: true,
+      });
 
-    return `
+      return `
       <div class="legoption">
         <p>${formattedDateStart} ${formattedTimeStart}, |</p>
         <div class="airportformatname">
@@ -413,10 +418,11 @@ function handleRequestBrBtnClick() {
             }, |
           </p>
         </div>
-        <p>${leg.pax1_number}</p>
+        <p>${leg.pax1_number} PAX</p>
       </div>
     `;
-  });
+    })
+    .join("");
 
   tripName.innerHTML = `
     <div class="tripname_wrap">
@@ -439,11 +445,11 @@ function handleRequestBrBtnClick() {
   // Generate and append HTML for each selected item
   selectedItems.forEach((item, index) => {
     const uniqueId = item._id || `item-${aircraftSets.indexOf(item)}`;
-    const decimalTime = `${item.year_of_manufacture_number}.${item.pax_number}`; // Adjust as needed
+    const decimalTime = `${item.year_of_manufacture_number}`;
 
     const html = `
       <div class="broker_mode_cnt">
-        <div class="broker_item details-button" data-index="${index}">
+        <div class="broker_item" data-index="${index}">
           <div class="broker_item_img_wrapper">
             <div class="broker_item_img">
               <img src="${item.exterior_image1_image}" alt="${
@@ -463,7 +469,7 @@ function handleRequestBrBtnClick() {
           <div class="broker_pax">
             <p>${decimalTime}</p>
           </div>
-          <div class="broker_pax" style="display: none">
+          <div class="broker_pax" style="display: none;">
             <p>2.52 KMKE</p>
           </div>
           <div class="broker_pax">
@@ -475,7 +481,7 @@ function handleRequestBrBtnClick() {
         </div>
         <div class="broker_checkbox">
         <label class="check-box">
-          <input type="checkbox" data-id="${uniqueId}" checked />
+          <input type="checkbox" data-id="${uniqueId}" />
           <span class="checkmark"></span>
         </label>
         </div>
@@ -509,26 +515,26 @@ function attachPopupCheckboxListeners() {
 
         // Add event listener to update checkedItems
         checkbox.addEventListener("change", (e) => {
-          if (!e.target.checked) {
+          if (e.target.checked) {
+            // If checked in popup
+            checkedItems[uniqueId] = true;
+          } else {
             // If unchecked in popup
             delete checkedItems[uniqueId];
-            // Persist the state to sessionStorage
-            sessionStorage.setItem(
-              "checkedItems",
-              JSON.stringify(checkedItems)
-            );
-            // Update the main list checkboxes
-            const mainCheckbox = document.querySelector(
-              `.broker_checkbox input[data-id="${uniqueId}"]`
-            );
-            if (mainCheckbox) {
-              mainCheckbox.checked = false;
-            }
             // Remove the item from the popup
-            e.target.closest(".broker_mode_cnt").remove();
-            // Update the display div (if applicable)
-            updateCheckedItemsDisplay();
+            // e.target.closest(".broker_mode_cnt").remove();
           }
+          // Persist the state to sessionStorage
+          sessionStorage.setItem("checkedItems", JSON.stringify(checkedItems));
+          // Update the main list checkboxes
+          const mainCheckbox = document.querySelector(
+            `.broker_checkbox input[data-id="${uniqueId}"]`
+          );
+          if (mainCheckbox) {
+            mainCheckbox.checked = e.target.checked;
+          }
+          // Update the display div (if applicable)
+          updateCheckedItemsDisplay();
         });
       }
     });
@@ -567,6 +573,7 @@ function renderPage(page, filteredSets) {
   attachDetailsButtonListeners();
   tabControl();
   submitMessage();
+  brokerMesage();
   // initializeSwipers();
   initializeSimpleSliders();
   attachImageClickListeners(); // Attach image click listeners after rendering
@@ -756,7 +763,7 @@ function submitMessage() {
       };
       try {
         const response = await fetch(
-          "https://jettly.com/api/1.1/wf/send_message",
+          "https://operators-dashboard.bubbleapps.io/api/1.1/wf/send_message",
           {
             method: "POST",
             headers: {
@@ -777,6 +784,51 @@ function submitMessage() {
     });
   });
 }
+
+function brokerMesage() {
+  const brokerSubmitBtn = document.querySelector(".consubtn");
+
+  // Remove any existing event listeners to prevent multiple alerts
+  brokerSubmitBtn.removeEventListener("click", handleBrokerSubmit);
+  brokerSubmitBtn.addEventListener("click", handleBrokerSubmit);
+}
+
+async function handleBrokerSubmit() {
+  const brokerMessagetext = document.querySelector(
+    ".contact_text textarea"
+  ).value;
+  const checkedItems = JSON.parse(sessionStorage.getItem("checkedItems")) || {};
+  const aircraftIds = Object.keys(checkedItems);
+  const requestData = {
+    aircraftids: aircraftIds,
+    message: brokerMessagetext,
+  };
+
+  if (!brokerMessagetext || aircraftIds.length < 1) {
+    alert("Please enter a message or select an aircraft.");
+    return;
+  } else {
+    try {
+      const response = await fetch(
+        "https://operators-dashboard.bubbleapps.io/api/1.1/wf/broker_request",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(requestData),
+        }
+      );
+      const data = await response.json();
+      alert("Message sent successfully.");
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  }
+}
+
+// Call the function to set up the event listener
+brokerMesage();
 
 function attachItemCheckboxListeners() {
   document
@@ -1811,7 +1863,7 @@ function getRegularItemHtml(
           </div>
           <div class="broker_checkbox">
             <label class="check-box">
-              <input type="checkbox" data-id="${uniqueId}" ${
+              <input autocomplete="off" type="checkbox" data-id="${uniqueId}" ${
     isChecked ? "checked" : ""
   } />
               <span class="checkmark"></span>
@@ -3593,12 +3645,13 @@ function initializeSwipers() {
 }
 
 function initialize() {
-  const apiUrlOneWay = "https://jettly.com/api/1.1/wf/webflow_one_way_flight";
+  const apiUrlOneWay =
+    "https://operators-dashboard.bubbleapps.io/api/1.1/wf/webflow_one_way_flight";
   const apiUrlRoundTrip =
-    "https://jettly.com/api/1.1/wf/webflow_round_trip_flight";
+    "https://operators-dashboard.bubbleapps.io/api/1.1/wf/webflow_round_trip_flight";
 
   const apiUrlMultiCity =
-    "https://jettly.com/api/1.1/wf/webflow_submitmultileg";
+    "https://operators-dashboard.bubbleapps.io/api/1.1/wf/webflow_submitmultileg";
   const storedData = sessionStorage.getItem("storeData");
   let way;
 
